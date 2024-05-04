@@ -1,19 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:gravity="center_vertical"
         android:text="@string/main_header"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textColor="@color/white"
+        android:textSize="22sp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
+        android:text="@string/main_search"
+        android:textColor="@color/black"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_search_lightmode"
+        app:iconTint="@color/black"
+        app:iconGravity="textStart"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
+        android:text="@string/main_meadia"
+        android:textColor="@color/black"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_library"
+        app:iconTint="@color/black"
+        app:iconGravity="textStart"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
+        android:text="@string/main_settings"
+        android:textColor="@color/black"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_settings_lightmode"
+        app:iconTint="@color/black"
+        app:iconGravity="textStart"/>
+
+
+    </LinearLayout>
