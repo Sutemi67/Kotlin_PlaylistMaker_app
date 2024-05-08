@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
 import android.os.Bundle
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +12,24 @@ class MainActivity : AppCompatActivity() {
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       enableEdgeToEdge()
-      setContentView(R.layout.lesson_images)
-      ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main2)) { v, insets ->
+      setContentView(R.layout.activity_main)
+      ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
          val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
          v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
          insets
+         
       }
-      val image = findViewById<ImageView>(R.id.poster)
-      image.setOnClickListener{Toast.makeText(this, "You clicked the image", Toast.LENGTH_SHORT).show()}
+      val buttonSearch = findViewById<Button>(R.id.button_search)
+      buttonSearch.setOnClickListener {
+         Toast.makeText(this@MainActivity, "За любовь!", Toast.LENGTH_SHORT).show()
+      }
+      val buttonMedia = findViewById<Button>(R.id.button_media)
+      buttonSearch.setOnClickListener {
+         Toast.makeText(this@MainActivity, "За любовь!", Toast.LENGTH_SHORT).show()
+      }
+      val buttonSettings = findViewById<Button>(R.id.button_settings)
+      buttonSearch.setOnClickListener {
+         Toast.makeText(this@MainActivity, "За любовь!", Toast.LENGTH_SHORT).show()
+      }
    }
 }
