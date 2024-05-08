@@ -24,11 +24,11 @@ class MainActivity : AppCompatActivity() {
          Toast.makeText(this@MainActivity, "За любовь!", Toast.LENGTH_SHORT).show()
       }
       val buttonMedia = findViewById<Button>(R.id.button_media)
-      buttonSearch.setOnClickListener {
+      buttonMedia.setOnClickListener {
          Toast.makeText(this@MainActivity, "За любовь!", Toast.LENGTH_SHORT).show()
       }
       val buttonSettings = findViewById<Button>(R.id.button_settings)
-      buttonSearch.setOnClickListener {
+      buttonSettings.setOnClickListener {
          Toast.makeText(this@MainActivity, "За любовь!", Toast.LENGTH_SHORT).show()
       }
    }
