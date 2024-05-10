@@ -1,9 +1,9 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -21,19 +21,21 @@ class MainActivity : AppCompatActivity() {
          
       }
       val buttonSearch = findViewById<Button>(R.id.button_search)
-      val buttonSearchOnClickListener: View.OnClickListener = object : View.OnClickListener {
+      val buttonSearchClickListener: View.OnClickListener = object : View.OnClickListener {
          override fun onClick(v: View?) {
-            Toast.makeText(this@MainActivity, "За любовь!", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this@MainActivity, Search::class.java))
          }
       }
+      buttonSearch.setOnClickListener { buttonSearchClickListener.onClick(it) }
+      
       val buttonMedia = findViewById<Button>(R.id.button_media)
       buttonMedia.setOnClickListener {
-         Toast.makeText(this@MainActivity, "Чтоб деньги были!", Toast.LENGTH_SHORT).show()
+         startActivity(Intent(this, Media::class.java))
       }
       val buttonSettings = findViewById<Button>(R.id.button_settings)
       buttonSettings.setOnClickListener {
-         Toast.makeText(this@MainActivity, "Живите счастливо!", Toast.LENGTH_SHORT).show()
+         startActivity(Intent(this, SettingsActivity::class.java))
       }
-      buttonSearch.setOnClickListener(buttonSearchOnClickListener)
+      
    }
 }

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -15,10 +16,11 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
+            android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:contentDescription="back_arrow"
+            android:contentDescription="@string/back_arrow_icon"
             android:src="@drawable/ic_back_arrow"
             app:iconTint="@color/black" />
 
@@ -38,21 +40,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="6dp"
+        android:layout_height="@dimen/height_common_list_element"
+        android:layout_marginStart="@dimen/margin_common_left"
+        android:layout_marginEnd="12dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8"
+            android:layout_weight="1"
             android:text="@string/settings_dark"
             android:textColor="@color/black" />
 
         <Switch
-            android:layout_width="100dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:gravity="center"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
@@ -60,8 +62,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="@dimen/height_common_list_element"
+        android:layout_marginStart="@dimen/margin_common_left"
         android:layout_marginEnd="12dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -76,16 +78,16 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:contentDescription="share_icon"
+            android:layout_height="@dimen/height_common_list_image"
+            android:contentDescription="@string/share_icon"
             android:gravity="center_horizontal"
             android:src="@drawable/ic_share" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="@dimen/height_common_list_element"
+        android:layout_marginStart="@dimen/margin_common_left"
         android:layout_marginEnd="12dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -100,17 +102,19 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="18dp"
+            android:layout_height="@dimen/height_common_list_image"
+            android:contentDescription="@string/support_icon"
             android:src="@drawable/ic_support" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="@dimen/height_common_list_element"
+        android:layout_marginStart="@dimen/margin_common_left"
         android:layout_marginEnd="12dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <TextView
             android:layout_width="0dp"
@@ -121,7 +125,8 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="18dp"
+            android:layout_height="@dimen/height_common_list_image"
+            android:contentDescription="@string/agreement_icon"
             android:src="@drawable/ic_agreement" />
     </LinearLayout>
 
