@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -18,9 +17,9 @@ class SettingsActivity : AppCompatActivity() {
          v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
          insets
       }
-      val backButton= findViewById<ImageView>(R.id.back_button)
-      backButton.setOnClickListener{
-         startActivity(Intent(this, MainActivity::class.java))
+      val backButton = findViewById<ImageView>(R.id.back_button)
+      backButton.setOnClickListener {
+         onBackPressedDispatcher.onBackPressed()
       }
    }
 }
