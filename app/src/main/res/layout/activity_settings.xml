@@ -14,6 +14,7 @@
         android:layout_height="56dp"
         android:layout_margin="@dimen/margin_mainScreen_common_left"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
