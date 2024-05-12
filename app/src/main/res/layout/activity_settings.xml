@@ -46,74 +46,34 @@
         android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
         android:text="@string/settings_dark" />
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_common_list_element"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
         android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        android:text="@string/settings_share"
+        android:textColor="@color/black"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
+        app:drawableEndCompat="@drawable/ic_share" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:text="@string/settings_share"
-            android:textColor="@color/black" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_common_list_image"
-            android:contentDescription="@string/share_icon"
-            android:gravity="center_horizontal"
-            android:src="@drawable/ic_share" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_common_list_element"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
         android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        android:text="@string/settings_support"
+        android:textColor="@color/black"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
+        app:drawableEndCompat="@drawable/ic_support" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:text="@string/settings_support"
-            android:textColor="@color/black" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_common_list_image"
-            android:contentDescription="@string/support_icon"
-            android:src="@drawable/ic_support" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_common_list_element"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
         android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        android:text="@string/settings_agreement"
+        android:textColor="@color/black"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:text="@string/settings_agreement"
-            android:textColor="@color/black" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_common_list_image"
-            android:contentDescription="@string/agreement_icon"
-            android:src="@drawable/ic_agreement" />
-    </LinearLayout>
+        app:drawableEndCompat="@drawable/ic_agreement" />
 
 </LinearLayout>
