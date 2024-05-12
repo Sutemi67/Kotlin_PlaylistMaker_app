@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="margin_common_left">16dp</dimen>
+    <dimen name="margin_mainScreen_common_left">16dp</dimen>
+    <dimen name="margin_settingScreen_common_right">12dp</dimen>
     <dimen name="height_common_list_element">61dp</dimen>
     <dimen name="height_common_list_image">18dp</dimen>
+    <dimen name="corners_main_menu">16dp</dimen>
+    <dimen name="font_size_main">22sp</dimen>
+    <dimen name="button_settingScreen_back">24dp</dimen>
 </resources>

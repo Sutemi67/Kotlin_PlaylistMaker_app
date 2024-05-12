@@ -6,19 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="UseSwitchCompatOrMaterialXml">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_margin="@dimen/margin_common_left"
+        android:layout_margin="@dimen/margin_mainScreen_common_left"
         android:gravity="center_vertical"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:id="@+id/back_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/button_settingScreen_back"
+            android:layout_height="@dimen/button_settingScreen_back"
             android:backgroundTint="@color/white"
             android:contentDescription="@string/back_arrow_icon"
             android:src="@drawable/ic_back_arrow"
@@ -31,40 +32,25 @@
             android:gravity="center_vertical"
             android:text="@string/main_settings"
             android:textColor="@color/black"
-            android:textSize="22sp"
+            android:textSize="@dimen/font_size_main"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
-    <LinearLayout
+    <Switch
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_common_left"
-        android:layout_marginEnd="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/settings_dark"
-            android:textColor="@color/black" />
-
-        <Switch
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-    </LinearLayout>
+        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
+        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        android:text="@string/settings_dark" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_common_left"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
+        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
@@ -87,8 +73,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_common_left"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
+        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
@@ -110,8 +96,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_common_left"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
+        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
