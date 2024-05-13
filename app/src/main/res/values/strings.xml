@@ -2,10 +2,16 @@
     <string name="app_name">Playlist Maker</string>
     <string name="main_header">Playlist maker</string>
     <string name="main_search">Поиск</string>
-    <string name="main_meadia">Медиатека</string>
+    <string name="main_media">Медиатека</string>
     <string name="main_settings">Настройки</string>
-    <string name="settings_dark">Темная тема</string>
+    <string name="settings_dark">Тёмная тема</string>
     <string name="settings_share">Поделиться приложением</string>
     <string name="settings_support">Написать в поддержку</string>
     <string name="settings_agreement">Пользовательское соглашение</string>
+    <string name="media_activity">Media Activity</string>
+    <string name="search_activity">Search Activity</string>
+    <string name="share_icon">share_icon</string>
+    <string name="support_icon">support_icon</string>
+    <string name="agreement_icon">agreement_icon</string>
+    <string name="back_arrow_icon">back arrow icon</string>
 </resources>
