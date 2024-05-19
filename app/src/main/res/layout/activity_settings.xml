@@ -5,7 +5,7 @@
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/YP_white"
     android:orientation="vertical"
     tools:ignore="UseSwitchCompatOrMaterialXml">
 
@@ -21,10 +21,10 @@
             android:id="@+id/back_button"
             android:layout_width="@dimen/button_settingScreen_back"
             android:layout_height="@dimen/button_settingScreen_back"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/YP_white"
             android:contentDescription="@string/back_arrow_icon"
             android:src="@drawable/ic_back_arrow"
-            app:iconTint="@color/black" />
+            app:iconTint="@color/YP_black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
             android:text="@string/main_settings"
-            android:textColor="@color/black"
+            android:textColor="@color/YP_black"
             android:textSize="@dimen/font_size_main"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,39 +42,25 @@
 
     <Switch
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
-        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        style="@style/SettingsMenuButtons"
         android:text="@string/settings_dark" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
-        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        style="@style/SettingsMenuButtons"
         android:text="@string/settings_share"
-        android:textColor="@color/black"
-        android:gravity="center_vertical"
         app:drawableEndCompat="@drawable/ic_share" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
-        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        style="@style/SettingsMenuButtons"
         android:text="@string/settings_support"
-        android:textColor="@color/black"
-        android:gravity="center_vertical"
         app:drawableEndCompat="@drawable/ic_support" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_common_list_element"
-        android:layout_marginStart="@dimen/margin_mainScreen_common_left"
-        android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
+        style="@style/SettingsMenuButtons"
         android:text="@string/settings_agreement"
-        android:textColor="@color/black"
-        android:gravity="center_vertical"
         app:drawableEndCompat="@drawable/ic_agreement" />
 
 </LinearLayout>

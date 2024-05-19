@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/YP_blue"
     tools:context=".MainActivity">
 
     <TextView
@@ -42,6 +43,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/main_settings"
-        app:icon="@drawable/ic_settings_lightmode" />
+        app:icon="@drawable/ic_settings_light" />
 
 </LinearLayout>
