@@ -17,21 +17,19 @@
 
         <ImageView
             android:id="@+id/back_button"
+            style="@style/BG_icons"
             android:layout_width="@dimen/button_settingScreen_back"
             android:layout_height="@dimen/button_settingScreen_back"
-            android:backgroundTint="@color/YP_white"
+            android:backgroundTint="@color/YP_black"
             android:contentDescription="@string/back_arrow_icon"
-            android:src="@drawable/ic_back_arrow"
-            app:iconTint="@color/YP_black" />
+            android:src="@drawable/ic_back_arrow" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/MessageTextStyle"
             android:layout_marginStart="16dp"
-            android:gravity="center_vertical"
             android:text="@string/main_settings"
-            android:textColor="@color/YP_black"
-            android:textSize="@dimen/font_size_main"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
