@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="BG_color">
+        <item name="android:background">@color/YP_blue</item>
+    </style>
+
     <style name="MessageTextStyle">
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/YP_white</item>

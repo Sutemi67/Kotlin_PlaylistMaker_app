@@ -5,9 +5,7 @@
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/YP_white"
-    android:orientation="vertical"
-    tools:ignore="UseSwitchCompatOrMaterialXml">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +41,8 @@
     <Switch
         android:layout_width="match_parent"
         style="@style/SettingsMenuButtons"
-        android:text="@string/settings_dark" />
+        android:text="@string/settings_dark"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:layout_width="match_parent"
