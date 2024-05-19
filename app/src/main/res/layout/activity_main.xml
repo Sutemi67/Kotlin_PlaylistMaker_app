@@ -6,43 +6,42 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
+        style="@style/MessageTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/MessageTextStyle"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
         android:layout_marginTop="14dp"
-        android:text="@string/main_header"/>
+        android:text="@string/main_header" />
 
     <Button
         android:id="@+id/button_search"
-        android:layout_width="match_parent"
         style="@style/ButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/main_search"
-        app:icon="@drawable/ic_search_lightmode"/>
+        app:icon="@drawable/ic_search_light" />
 
     <Button
         android:id="@+id/button_media"
-        android:layout_width="match_parent"
         style="@style/ButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/main_media"
-        app:icon="@drawable/ic_library"/>
+        app:icon="@drawable/ic_library" />
 
     <Button
         android:id="@+id/button_settings"
-        android:layout_width="match_parent"
         style="@style/ButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/main_settings"
-        app:icon="@drawable/ic_settings_lightmode"/>
+        app:icon="@drawable/ic_settings_lightmode" />
 
 </LinearLayout>
