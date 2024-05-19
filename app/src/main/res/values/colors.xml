@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="bg_main">#3772E7</color>
+    <color name="teal_200">#FF03DAC5</color>
 </resources>

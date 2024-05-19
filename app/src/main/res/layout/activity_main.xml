@@ -11,14 +11,12 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/MessageTextStyle"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
         android:layout_marginTop="14dp"
-        android:gravity="center_vertical"
-        android:text="@string/main_header"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_size_main"/>
+        android:text="@string/main_header"/>
 
     <Button
         android:id="@+id/button_search"
