@@ -43,18 +43,21 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
+        android:id="@+id/button_share"
         android:layout_width="match_parent"
         style="@style/SettingsMenuButtons"
         android:text="@string/settings_share"
         app:drawableEndCompat="@drawable/ic_share" />
 
     <TextView
+        android:id="@+id/button_support"
         android:layout_width="match_parent"
         style="@style/SettingsMenuButtons"
         android:text="@string/settings_support"
         app:drawableEndCompat="@drawable/ic_support" />
 
     <TextView
+        android:id="@+id/button_agreement"
         android:layout_width="match_parent"
         style="@style/SettingsMenuButtons"
         android:text="@string/settings_agreement"
