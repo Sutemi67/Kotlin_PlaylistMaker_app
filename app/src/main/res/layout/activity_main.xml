@@ -11,7 +11,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        style="@style/MessageTextStyle"
+        style="@style/HeaderTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"

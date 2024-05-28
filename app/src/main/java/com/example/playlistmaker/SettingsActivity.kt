@@ -25,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         val agreementButton = findViewById<TextView>(R.id.button_agreement)
-        agreementButton.setOnClickListener() {
+        agreementButton.setOnClickListener {
             val url = Uri.parse("https://yandex.ru/legal/practicum_offer/")
             startActivity(Intent(Intent.ACTION_VIEW, url))
         }

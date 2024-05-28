@@ -8,7 +8,7 @@
         <item name="android:tint">@color/YP_black</item>
     </style>
 
-    <style name="MessageTextStyle">
+    <style name="HeaderTextStyle">
         <item name="android:textColor">@color/YP_black</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textFontWeight">500</item>

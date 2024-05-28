@@ -3,5 +3,8 @@
     <color name="YP_black">#1A1B22</color>
     <color name="YP_white">#FFFFFF</color>
     <color name="YP_blue">#3772E7</color>
-    <color name="teal_200">#FF03DAC5</color>
+    <color name="YP_light_gray">#E6E8EB</color>
+    <color name="YP_light_gray_text">#AEAFB4</color>
+    <color name="Transparent">#00FFFFFF</color>
+
 </resources>

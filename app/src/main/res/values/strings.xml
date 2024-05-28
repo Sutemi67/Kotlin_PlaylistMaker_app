@@ -9,9 +9,7 @@
     <string name="settings_support">Написать в поддержку</string>
     <string name="settings_agreement">Пользовательское соглашение</string>
     <string name="media_activity">Media Activity</string>
-    <string name="search_activity">Search Activity</string>
-    <string name="share_icon">share_icon</string>
-    <string name="support_icon">support_icon</string>
-    <string name="agreement_icon">agreement_icon</string>
+    <string name="search_activity">Поиск</string>
     <string name="back_arrow_icon">back arrow icon</string>
+    <string name="description_search_icon">search_icon</string>
 </resources>
