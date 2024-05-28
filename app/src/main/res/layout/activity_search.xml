@@ -9,14 +9,17 @@
     tools:context=".SearchActivity">
 
     <Toolbar
+
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        android:padding="4dp"
+        android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="@dimen/iconSize_topScreen"
-            android:layout_height="@dimen/iconSize_topScreen"
-            android:layout_marginStart="@dimen/margin_mainScreen_common_left"
-            android:layout_marginEnd="@dimen/margin_mainScreen_common_left"
+            android:id="@+id/backIcon_search_screen"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="16dp"
             android:contentDescription="@string/description_search_icon"
             android:src="@drawable/ic_back_arrow" />
 
@@ -24,8 +27,7 @@
             style="@style/HeaderTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="@dimen/margin_screenHeader_common_top"
+            android:layout_marginStart="32dp"
             android:text="@string/search_activity" />
     </Toolbar>
 
@@ -50,7 +52,8 @@
             style="@style/SettingsMenuButtons"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:backgroundTint="@color/Transparent"
+            android:background="@null"
+            android:gravity="center_vertical"
             android:hint="@string/search_activity"
             android:importantForAutofill="no"
             android:inputType="text"

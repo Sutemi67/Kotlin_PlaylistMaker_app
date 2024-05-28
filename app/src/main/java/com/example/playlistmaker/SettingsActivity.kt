@@ -22,7 +22,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            finish()
         }
         val agreementButton = findViewById<TextView>(R.id.button_agreement)
         agreementButton.setOnClickListener {
@@ -30,7 +30,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(Intent.ACTION_VIEW, url))
         }
         val supportButton = findViewById<TextView>(R.id.button_support)
-        supportButton.setOnClickListener{
+        supportButton.setOnClickListener {
             val message = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
             val supportMessage = Intent(Intent.ACTION_SENDTO)
             supportMessage.data = Uri.parse("mailto:")
@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
         val shareButton = findViewById<TextView>(R.id.button_share)
-        shareButton.setOnClickListener{
+        shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, "Message to share")
             startActivity(intent)
