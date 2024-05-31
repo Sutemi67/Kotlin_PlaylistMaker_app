@@ -2,7 +2,6 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -16,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class SearchActivity : AppCompatActivity() {
 
-    var inputText: EditText = findViewById(R.id.search_input_text)
+private var restoredText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +27,15 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-//        if(savedInstanceState!=null){
-//            inputText = savedInstanceState.getString("inputText", "")
-//        }
         val backButton = findViewById<ImageView>(R.id.backIcon_search_screen)
         backButton.setOnClickListener {
             finish()
         }
-        //val inputText = findViewById<EditText>(R.id.search_input_text)
+
+        val inputText = findViewById<EditText>(R.id.search_input_text)
+        if(savedInstanceState != null){
+            inputText.setText(savedInstanceState.getString("inputText", ""))
+        }
 
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         clearButton.setOnClickListener {
@@ -57,8 +57,8 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.INVISIBLE
                 } else {
                     clearButton.visibility = View.VISIBLE
+                    restoredText = inputText.text.toString()
                 }
-                val getText = inputText.text
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -69,7 +69,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("inputText", inputText.text.toString())
         super.onSaveInstanceState(outState)
+        outState.putString("inputText", restoredText)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        restoredText = savedInstanceState.getString("inputText").toString()
     }
 }

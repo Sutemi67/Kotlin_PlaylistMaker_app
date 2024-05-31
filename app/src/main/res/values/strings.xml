@@ -12,4 +12,6 @@
     <string name="search_activity">Поиск</string>
     <string name="back_arrow_icon">back arrow icon</string>
     <string name="description_search_icon">search_icon</string>
+    <string name="support_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="support_message_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
 </resources>

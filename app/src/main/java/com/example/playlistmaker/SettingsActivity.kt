@@ -31,10 +31,12 @@ class SettingsActivity : AppCompatActivity() {
         }
         val supportButton = findViewById<TextView>(R.id.button_support)
         supportButton.setOnClickListener {
-            val message = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+            val message = R.string.support_message
+            val messageTitle = R.string.support_message_subject
             val supportMessage = Intent(Intent.ACTION_SENDTO)
             supportMessage.data = Uri.parse("mailto:")
             supportMessage.putExtra(Intent.EXTRA_EMAIL, arrayOf("sutemi67@gmail.com"))
+            supportMessage.putExtra(Intent.EXTRA_SUBJECT, messageTitle)
             supportMessage.putExtra(Intent.EXTRA_TEXT, message)
             startActivity(supportMessage)
 
@@ -42,6 +44,7 @@ class SettingsActivity : AppCompatActivity() {
         val shareButton = findViewById<TextView>(R.id.button_share)
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
+            intent.setType("text/plain")
             intent.putExtra(Intent.EXTRA_TEXT, "Message to share")
             startActivity(intent)
         }
