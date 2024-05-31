@@ -2,9 +2,8 @@
 <resources>
     <dimen name="margin_mainScreen_common_left">16dp</dimen>
     <dimen name="margin_settingScreen_common_right">12dp</dimen>
+    <dimen name="margin_screenHeader_common_top">14dp</dimen>
     <dimen name="height_common_list_element">61dp</dimen>
-    <dimen name="height_common_list_image">18dp</dimen>
-    <dimen name="corners_main_menu">16dp</dimen>
-    <dimen name="font_size_main">22sp</dimen>
     <dimen name="button_settingScreen_back">24dp</dimen>
+    <dimen name="iconSize_topScreen">16dp</dimen>
 </resources>
