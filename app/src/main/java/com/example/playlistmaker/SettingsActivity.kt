@@ -26,18 +26,16 @@ class SettingsActivity : AppCompatActivity() {
         }
         val agreementButton = findViewById<TextView>(R.id.button_agreement)
         agreementButton.setOnClickListener {
-            val url = Uri.parse("https://yandex.ru/legal/practicum_offer/")
+            val url = Uri.parse(this.getString(R.string.link_public_offer))
             startActivity(Intent(Intent.ACTION_VIEW, url))
         }
         val supportButton = findViewById<TextView>(R.id.button_support)
         supportButton.setOnClickListener {
-            val message = R.string.support_message
-            val messageTitle = R.string.support_message_subject
             val supportMessage = Intent(Intent.ACTION_SENDTO)
             supportMessage.data = Uri.parse("mailto:")
-            supportMessage.putExtra(Intent.EXTRA_EMAIL, arrayOf("sutemi67@gmail.com"))
-            supportMessage.putExtra(Intent.EXTRA_SUBJECT, messageTitle)
-            supportMessage.putExtra(Intent.EXTRA_TEXT, message)
+            supportMessage.putExtra(Intent.EXTRA_EMAIL, arrayOf(this.getString(R.string.email_support_message_sender)))
+            supportMessage.putExtra(Intent.EXTRA_SUBJECT, this.getString(R.string.support_message_subject))
+            supportMessage.putExtra(Intent.EXTRA_TEXT, this.getString(R.string.support_message))
             startActivity(supportMessage)
 
         }
@@ -45,7 +43,7 @@ class SettingsActivity : AppCompatActivity() {
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.setType("text/plain")
-            intent.putExtra(Intent.EXTRA_TEXT, "Message to share")
+            intent.putExtra(Intent.EXTRA_TEXT, this.getString(R.string.link_to_android_course))
             startActivity(intent)
         }
     }

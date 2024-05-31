@@ -34,7 +34,7 @@ private var restoredText = ""
 
         val inputText = findViewById<EditText>(R.id.search_input_text)
         if(savedInstanceState != null){
-            inputText.setText(savedInstanceState.getString("inputText", ""))
+            inputText.setText(restoredText)
         }
 
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
