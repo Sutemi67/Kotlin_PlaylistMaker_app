@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,6 +15,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class SearchActivity : AppCompatActivity() {
+
+    var inputText: EditText = findViewById(R.id.search_input_text)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,11 +28,14 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+//        if(savedInstanceState!=null){
+//            inputText = savedInstanceState.getString("inputText", "")
+//        }
         val backButton = findViewById<ImageView>(R.id.backIcon_search_screen)
         backButton.setOnClickListener {
             finish()
         }
-        val inputText = findViewById<EditText>(R.id.search_input_text)
+        //val inputText = findViewById<EditText>(R.id.search_input_text)
 
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         clearButton.setOnClickListener {
@@ -51,6 +58,7 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     clearButton.visibility = View.VISIBLE
                 }
+                val getText = inputText.text
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -58,5 +66,10 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputText.addTextChangedListener(searchTextWatcher)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("inputText", inputText.text.toString())
+        super.onSaveInstanceState(outState)
     }
 }
