@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    style="@style/BG_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    style="@style/BG_color"
     tools:context=".MainActivity">
 
     <TextView
@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
         android:layout_marginTop="14dp"
-        android:text="@string/main_header" />
+        android:text="@string/main_header"
+        android:textColor="@color/YP_white" />
 
     <Button
         android:id="@+id/button_search"
