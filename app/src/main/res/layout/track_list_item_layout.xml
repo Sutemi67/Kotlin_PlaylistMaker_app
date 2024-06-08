@@ -22,20 +22,24 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/track_name"
+            style="@style/TracksNames"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Track name" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/track_artist"
+                style="@style/TracksArtists"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="trackArtist" />
@@ -43,10 +47,13 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back_arrow" />
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_tracks_divider" />
 
             <TextView
                 android:id="@+id/track_time"
+                style="@style/TracksArtists"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="4;13" />
