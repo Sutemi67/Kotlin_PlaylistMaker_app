@@ -10,17 +10,17 @@
 
     <Toolbar
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         android:gravity="center_vertical"
         android:padding="4dp">
 
         <ImageView
             android:id="@+id/backIcon_search_screen"
             style="@style/icons_main"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/button_backTo_size"
+            android:layout_height="@dimen/button_backTo_size"
             android:contentDescription="@string/description_search_icon"
-            android:padding="16dp"
+            android:padding="@dimen/button_backTo_padding"
             android:src="@drawable/ic_back_arrow" />
 
         <TextView
@@ -54,7 +54,7 @@
             android:id="@+id/search_input_text"
             style="@style/editTextElements"
             android:layout_width="0dp"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/search_editText_height"
             android:layout_marginStart="@dimen/margin_mainScreen_common_left"
             android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
             android:layout_weight="1"
@@ -68,8 +68,8 @@
         <ImageView
             android:id="@+id/search_clear_button"
             style="@style/editTextElements"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/button_clearSearch_size"
+            android:layout_height="@dimen/button_clearSearch_size"
             android:contentDescription="@string/description_search_icon"
             android:padding="14dp"
             android:src="@drawable/ic_clear"

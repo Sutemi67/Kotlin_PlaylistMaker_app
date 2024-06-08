@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="album_cover">album_cover</string>
+    <string name="play_track_image">play_track_image</string>
 </resources>

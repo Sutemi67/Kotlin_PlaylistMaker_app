@@ -6,4 +6,14 @@
     <dimen name="height_common_list_element">61dp</dimen>
     <dimen name="button_settingScreen_back">24dp</dimen>
     <dimen name="iconSize_topScreen">16dp</dimen>
+    <dimen name="track_cover_size">45dp</dimen>
+    <dimen name="track_line_height">61dp</dimen>
+    <dimen name="track_divider_size">5dp</dimen>
+    <dimen name="track_nextButton_size">24dp</dimen>
+    <dimen name="button_clearSearch_size">40dp</dimen>
+    <dimen name="button_backTo_size">48dp</dimen>
+    <dimen name="button_backTo_padding">16dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="search_editText_height">36dp</dimen>
+
 </resources>
