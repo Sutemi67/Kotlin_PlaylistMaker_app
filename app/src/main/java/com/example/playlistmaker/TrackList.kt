@@ -13,8 +13,8 @@ class TrackList {
             "4:35",
             "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
         ), Track(
-            "Stayin' Alive 1111111111111111111111111ß1111111111111123231231231231231",
-            "Bee Gees111111111111111111111111111ß11111111111111232312312312312311",
+            "Stayin' Alive",
+            "Bee Gees",
             "4:10",
             "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
         ), Track(
