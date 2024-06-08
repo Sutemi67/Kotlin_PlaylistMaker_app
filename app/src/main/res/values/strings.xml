@@ -17,4 +17,5 @@
     <string name="link_to_android_course">https://practicum.yandex.ru/profile/android-developer-plus/</string>
     <string name="link_public_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="email_support_message_sender">"sutemi67@gmail.com"</string>
+    <string name="album_cover">album_cover</string>
 </resources>

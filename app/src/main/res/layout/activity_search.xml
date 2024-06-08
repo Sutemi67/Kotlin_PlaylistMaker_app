@@ -62,7 +62,6 @@
             android:hint="@string/search_activity"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:maxLines="1"
             android:singleLine="true"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck,DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
@@ -82,6 +81,7 @@
         android:id="@+id/search_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track_list_item_layout" />
 </LinearLayout>
