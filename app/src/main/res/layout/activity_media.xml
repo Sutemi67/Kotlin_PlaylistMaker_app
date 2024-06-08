@@ -14,10 +14,4 @@
         android:text="@string/media_activity"
         android:textSize="30sp" />
 
-    <ImageView
-        android:id="@+id/man"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="kk" />
-
 </LinearLayout>
