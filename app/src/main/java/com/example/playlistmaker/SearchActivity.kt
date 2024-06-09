@@ -12,10 +12,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
 
-private var restoredText = ""
+    private var restoredText = ""
+    private val trackList = TrackList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +36,7 @@ private var restoredText = ""
         }
 
         val inputText = findViewById<EditText>(R.id.search_input_text)
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             inputText.setText(restoredText)
         }
 
@@ -66,6 +69,11 @@ private var restoredText = ""
             }
         }
         inputText.addTextChangedListener(searchTextWatcher)
+
+        val recycler = findViewById<RecyclerView>(R.id.search_list)
+
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = TrackAdapter(trackList.tracks)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
