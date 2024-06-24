@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activities
 
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +14,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.recyclerView.TrackAdapter
+import com.example.playlistmaker.recyclerView.TrackList
 
 class SearchActivity : AppCompatActivity() {
 
@@ -30,15 +33,13 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<ImageView>(R.id.backIcon_search_screen)
-        backButton.setOnClickListener {
-            finish()
-        }
+        findViewById<ImageView>(R.id.backIcon_search_screen).setOnClickListener { finish() }
 
         val inputText = findViewById<EditText>(R.id.search_input_text)
         if (savedInstanceState != null) {
             inputText.setText(restoredText)
         }
+
 
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         clearButton.setOnClickListener {
@@ -50,6 +51,8 @@ class SearchActivity : AppCompatActivity() {
                 0
             )
         }
+
+
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //

@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.recyclerView
 
 data class Track(
     val trackName: String,

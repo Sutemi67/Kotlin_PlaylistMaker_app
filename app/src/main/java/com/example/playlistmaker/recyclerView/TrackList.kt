@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.recyclerView
 
 class TrackList {
     val tracks = listOf(
