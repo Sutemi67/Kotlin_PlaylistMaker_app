@@ -36,13 +36,10 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
-
-    val adapter = TrackAdapter()
     private val trackList = ArrayList<Track>()
-
     private var restoredText = ""
-
     private lateinit var recycler: RecyclerView
+    val adapter = TrackAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +60,6 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
-
 
         clearButton.setOnClickListener {
             inputText.setText("")
@@ -97,10 +93,8 @@ class SearchActivity : AppCompatActivity() {
                                 connectionProblemError.visibility = View.VISIBLE
                             }
                         }
-
                         override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-                            Toast.makeText(applicationContext, "Нет ответа", Toast.LENGTH_LONG)
-                                .show()
+                            connectionProblemError.visibility = View.VISIBLE
                         }
                     })
             }
