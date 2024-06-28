@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -15,13 +16,25 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
-import com.example.playlistmaker.recyclerView.TrackList
+import com.example.playlistmaker.retrofit.ITunesApi
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var queryInput: EditText
+
+    private val imdbBaseUrl = "https://itunes.apple.com"
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(imdbBaseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val imdbService = retrofit.create(ITunesApi::class.java)
+
 
     private var restoredText = ""
-    private val trackList = TrackList()
+    private val trackList = ArrayList<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +49,7 @@ class SearchActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.backIcon_search_screen).setOnClickListener { finish() }
 
         val inputText = findViewById<EditText>(R.id.search_input_text)
-        if (savedInstanceState != null) {
-            inputText.setText(restoredText)
-        }
+        if (savedInstanceState != null) inputText.setText(restoredText)
 
 
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
@@ -52,6 +63,13 @@ class SearchActivity : AppCompatActivity() {
             )
         }
 
+        queryInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
+                true
+            }
+            false
+        }
 
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -76,7 +94,7 @@ class SearchActivity : AppCompatActivity() {
         val recycler = findViewById<RecyclerView>(R.id.search_list)
 
         recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = TrackAdapter(trackList.tracks)
+        recycler.adapter = TrackAdapter(trackList)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
