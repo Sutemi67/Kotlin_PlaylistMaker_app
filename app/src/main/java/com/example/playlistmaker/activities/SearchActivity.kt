@@ -36,9 +36,12 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
 
+    val adapter = TrackAdapter()
+    private val trackList = ArrayList<Track>()
 
     private var restoredText = ""
-    private val trackList = ArrayList<Track>()
+
+    private lateinit var recycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +56,9 @@ class SearchActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.backIcon_search_screen).setOnClickListener { finish() }
 
         val inputText = findViewById<EditText>(R.id.search_input_text)
+        recycler = findViewById(R.id.search_list)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
-
 
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         clearButton.setOnClickListener {
@@ -80,9 +83,8 @@ class SearchActivity : AppCompatActivity() {
                                 trackList.clear()
                                 if (response.body()?.results?.isNotEmpty() == true) {
                                     trackList.addAll(response.body()?.results!!)
-                                    TrackAdapter(trackList).notifyDataSetChanged()
-                                }
-                                if (trackList.isEmpty()) {
+                                    adapter.notifyDataSetChanged()
+                                } else {
                                     Toast.makeText(
                                         applicationContext,
                                         R.string.nothing_found,
@@ -127,10 +129,9 @@ class SearchActivity : AppCompatActivity() {
         }
         inputText.addTextChangedListener(searchTextWatcher)
 
-        val recycler = findViewById<RecyclerView>(R.id.search_list)
-
         recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = TrackAdapter(trackList)
+        adapter.tracks = trackList
+        recycler.adapter = adapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
