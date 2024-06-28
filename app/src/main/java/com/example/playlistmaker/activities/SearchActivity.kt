@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -57,10 +58,13 @@ class SearchActivity : AppCompatActivity() {
 
         val inputText = findViewById<EditText>(R.id.search_input_text)
         recycler = findViewById(R.id.search_list)
+        val nothingImage = findViewById<LinearLayout>(R.id.nothingFound)
+        val connectionProblemError = findViewById<LinearLayout>(R.id.connectionProblem)
+        val clearButton = findViewById<ImageView>(R.id.search_clear_button)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
-        val clearButton = findViewById<ImageView>(R.id.search_clear_button)
+
         clearButton.setOnClickListener {
             inputText.setText("")
             val inputMethodManager =
@@ -80,23 +84,17 @@ class SearchActivity : AppCompatActivity() {
                             response: Response<TracksResponse>
                         ) {
                             if (response.code() == 200) {
+                                nothingImage.visibility = View.GONE
+                                connectionProblemError.visibility = View.GONE
                                 trackList.clear()
                                 if (response.body()?.results?.isNotEmpty() == true) {
                                     trackList.addAll(response.body()?.results!!)
                                     adapter.notifyDataSetChanged()
                                 } else {
-                                    Toast.makeText(
-                                        applicationContext,
-                                        R.string.nothing_found,
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                                    nothingImage.visibility = View.VISIBLE
                                 }
                             } else {
-                                Toast.makeText(
-                                    applicationContext,
-                                    response.code().toString(),
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                connectionProblemError.visibility = View.VISIBLE
                             }
                         }
 
