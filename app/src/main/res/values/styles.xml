@@ -37,6 +37,13 @@
         <item name="android:textFontWeight">400</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
+    <style name="reloadButton">
+        <item name="android:textColor">@color/YP_white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:backgroundTint">@color/YP_black</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
 
     <style name="SettingsMenuButtons">
         <item name="android:layout_height">@dimen/height_common_list_element</item>

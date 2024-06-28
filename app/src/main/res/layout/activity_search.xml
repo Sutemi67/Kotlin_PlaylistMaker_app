@@ -85,13 +85,13 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="102dp"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/nothing_found_light" />
+            android:src="@drawable/img_nothing_found_light" />
 
         <TextView
             style="@style/errorText"
@@ -107,29 +107,31 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="24dp"
-        android:layout_marginTop="102dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:paddingTop="102dp"
         android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/connection_problem" />
-
-        <TextView
-            style="@style/errorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/connection_problem" />
+            android:src="@drawable/img_connection_problem" />
 
         <TextView
             style="@style/errorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/internet_check" />
+            android:text="@string/connection_problem" />
+
+        <Button
+            android:id="@+id/reload_button"
+            style="@style/reloadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/reload" />
 
     </LinearLayout>
 

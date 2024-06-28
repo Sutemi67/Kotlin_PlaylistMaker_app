@@ -20,6 +20,6 @@
     <string name="album_cover">album_cover</string>
     <string name="play_track_image">play_track_image</string>
     <string name="nothing_found">Ничего не нашлось</string>
-    <string name="connection_problem">Проблемы со связью.</string>
-    <string name="internet_check">Загрузка не удалась. Проверьте ваше подключение к интернету</string>
+    <string name="connection_problem">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте ваше подключение к интернету</string>
+    <string name="reload">Обновить</string>
 </resources>
