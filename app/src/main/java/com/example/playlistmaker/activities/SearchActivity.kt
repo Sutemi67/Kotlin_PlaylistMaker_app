@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -19,11 +20,14 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
+import com.example.playlistmaker.retrofit.TracksResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-    private lateinit var queryInput: EditText
 
     private val imdbBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -49,6 +53,7 @@ class SearchActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.backIcon_search_screen).setOnClickListener { finish() }
 
         val inputText = findViewById<EditText>(R.id.search_input_text)
+
         if (savedInstanceState != null) inputText.setText(restoredText)
 
 
@@ -63,10 +68,41 @@ class SearchActivity : AppCompatActivity() {
             )
         }
 
-        queryInput.setOnEditorActionListener { _, actionId, _ ->
+        inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
-                true
+                imdbService.search(inputText.text.toString())
+                    .enqueue(object : Callback<TracksResponse> {
+                        override fun onResponse(
+                            p0: Call<TracksResponse>,
+                            response: Response<TracksResponse>
+                        ) {
+                            if (response.code() == 200) {
+                                trackList.clear()
+                                if (response.body()?.results?.isNotEmpty() == true) {
+                                    trackList.addAll(response.body()?.results!!)
+                                    TrackAdapter(trackList).notifyDataSetChanged()
+                                }
+                                if (trackList.isEmpty()) {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        R.string.nothing_found,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            } else {
+                                Toast.makeText(
+                                    applicationContext,
+                                    response.code().toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
+                            Toast.makeText(applicationContext, "Нет ответа", Toast.LENGTH_LONG)
+                                .show()
+                        }
+                    })
             }
             false
         }
