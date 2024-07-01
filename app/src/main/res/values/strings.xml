@@ -19,4 +19,7 @@
     <string name="email_support_message_sender">"sutemi67@gmail.com"</string>
     <string name="album_cover">album_cover</string>
     <string name="play_track_image">play_track_image</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="connection_problem">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте ваше подключение к интернету</string>
+    <string name="reload">Обновить</string>
 </resources>
