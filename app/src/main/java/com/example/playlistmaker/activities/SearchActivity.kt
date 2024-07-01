@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -58,8 +59,37 @@ class SearchActivity : AppCompatActivity() {
         val nothingImage = findViewById<LinearLayout>(R.id.nothingFound)
         val connectionProblemError = findViewById<LinearLayout>(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
+        val reloadButton = findViewById<Button>(R.id.reload_button)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
+
+        fun searchAction() {
+            imdbService.search(inputText.text.toString())
+                .enqueue(object : Callback<TracksResponse> {
+                    override fun onResponse(
+                        p0: Call<TracksResponse>,
+                        response: Response<TracksResponse>
+                    ) {
+                        if (response.code() == 200) {
+                            nothingImage.visibility = View.GONE
+                            connectionProblemError.visibility = View.GONE
+                            trackList.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                trackList.addAll(response.body()?.results!!)
+                                adapter.notifyDataSetChanged()
+                            } else {
+                                nothingImage.visibility = View.VISIBLE
+                            }
+                        } else {
+                            connectionProblemError.visibility = View.VISIBLE
+                        }
+                    }
+
+                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
+                        connectionProblemError.visibility = View.VISIBLE
+                    }
+                })
+        }
 
         clearButton.setOnClickListener {
             inputText.setText("")
@@ -70,33 +100,12 @@ class SearchActivity : AppCompatActivity() {
                 0
             )
         }
-
+        reloadButton.setOnClickListener {
+            searchAction()
+        }
         inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                imdbService.search(inputText.text.toString())
-                    .enqueue(object : Callback<TracksResponse> {
-                        override fun onResponse(
-                            p0: Call<TracksResponse>,
-                            response: Response<TracksResponse>
-                        ) {
-                            if (response.code() == 200) {
-                                nothingImage.visibility = View.GONE
-                                connectionProblemError.visibility = View.GONE
-                                trackList.clear()
-                                if (response.body()?.results?.isNotEmpty() == true) {
-                                    trackList.addAll(response.body()?.results!!)
-                                    adapter.notifyDataSetChanged()
-                                } else {
-                                    nothingImage.visibility = View.VISIBLE
-                                }
-                            } else {
-                                connectionProblemError.visibility = View.VISIBLE
-                            }
-                        }
-                        override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-                            connectionProblemError.visibility = View.VISIBLE
-                        }
-                    })
+                searchAction()
             }
             false
         }
@@ -105,7 +114,6 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     clearButton.visibility = View.INVISIBLE
@@ -114,7 +122,6 @@ class SearchActivity : AppCompatActivity() {
                     restoredText = inputText.text.toString()
                 }
             }
-
             override fun afterTextChanged(s: Editable?) {
                 //
             }
