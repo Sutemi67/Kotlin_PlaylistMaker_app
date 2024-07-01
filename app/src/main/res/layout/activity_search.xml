@@ -85,7 +85,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="102dp"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -110,7 +111,8 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingTop="102dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"
