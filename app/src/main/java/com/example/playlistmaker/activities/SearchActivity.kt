@@ -1,5 +1,6 @@
 package com.example.playlistmaker.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +28,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
+const val INPUT_TEXT_KEY = "inputText"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -65,21 +68,25 @@ class SearchActivity : AppCompatActivity() {
         fun searchAction() {
             imdbService.search(inputText.text.toString())
                 .enqueue(object : Callback<TracksResponse> {
+                    @SuppressLint("NotifyDataSetChanged")
                     override fun onResponse(
                         p0: Call<TracksResponse>,
                         response: Response<TracksResponse>
                     ) {
-                        if (response.code() == 200) {
+                        if (response.isSuccessful) {
                             nothingImage.visibility = View.GONE
                             connectionProblemError.visibility = View.GONE
                             trackList.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                trackList.addAll(response.body()?.results!!)
+                            val resultsResponse = response.body()?.results
+                            if (resultsResponse?.isNotEmpty() == true) {
+                                trackList.addAll(resultsResponse)
                                 adapter.notifyDataSetChanged()
                             } else {
+                                connectionProblemError.visibility = View.GONE
                                 nothingImage.visibility = View.VISIBLE
                             }
                         } else {
+                            nothingImage.visibility = View.GONE
                             connectionProblemError.visibility = View.VISIBLE
                         }
                     }
@@ -113,6 +120,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     clearButton.visibility = View.INVISIBLE
@@ -121,6 +129,7 @@ class SearchActivity : AppCompatActivity() {
                     restoredText = inputText.text.toString()
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {
                 //
             }
@@ -134,11 +143,11 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("inputText", restoredText)
+        outState.putString(INPUT_TEXT_KEY, restoredText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        restoredText = savedInstanceState.getString("inputText").toString()
+        restoredText = savedInstanceState.getString(INPUT_TEXT_KEY).toString()
     }
 }
