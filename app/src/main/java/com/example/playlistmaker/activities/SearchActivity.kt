@@ -95,6 +95,7 @@ class SearchActivity : AppCompatActivity() {
 
                     override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
                         connectionProblemError.visibility = View.VISIBLE
+                        recycler.visibility = View.GONE
                     }
                 })
         }
