@@ -75,6 +75,7 @@ class SearchActivity : AppCompatActivity() {
                     ) {
                         if (response.isSuccessful) {
                             nothingImage.visibility = View.GONE
+                            recycler.visibility = View.VISIBLE
                             connectionProblemError.visibility = View.GONE
                             trackList.clear()
                             val resultsResponse = response.body()?.results
@@ -88,6 +89,7 @@ class SearchActivity : AppCompatActivity() {
                         } else {
                             nothingImage.visibility = View.GONE
                             connectionProblemError.visibility = View.VISIBLE
+                            recycler.visibility = View.GONE
                         }
                     }
 
