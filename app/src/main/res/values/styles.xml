@@ -37,6 +37,7 @@
         <item name="android:textFontWeight">400</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
+
     <style name="reloadButton">
         <item name="android:textColor">@color/YP_white</item>
         <item name="android:textSize">14sp</item>
@@ -66,11 +67,12 @@
     </style>
 
     <style name="TracksArtists">
-        <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/YP_light_gray_text</item>
         <item name="android:textSize">11sp</item>
-        <item name="android:gravity">center_vertical</item>
         <item name="android:textFontWeight">400</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
