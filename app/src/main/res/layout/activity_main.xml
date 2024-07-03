@@ -12,38 +12,38 @@
 
     <TextView
         style="@style/HeaderTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
-        android:layout_marginTop="14dp"
+        android:gravity="center_vertical"
         android:text="@string/main_header"
         android:textColor="@color/YP_white" />
 
-    <Button
-        android:id="@+id/button_search"
-        style="@style/ButtonStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/main_search"
-        app:icon="@drawable/ic_search_light" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_media"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/main_media"
-        app:icon="@drawable/ic_library" />
+        <Button
+            android:id="@+id/button_search"
+            style="@style/ButtonStyle"
+            android:text="@string/main_search"
+            app:icon="@drawable/ic_search_light" />
 
-    <Button
-        android:id="@+id/button_settings"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/main_settings"
-        app:icon="@drawable/ic_settings_light" />
+        <Button
+            android:id="@+id/button_media"
+            style="@style/ButtonStyle"
+            android:text="@string/main_media"
+            app:icon="@drawable/ic_library" />
+
+        <Button
+            android:id="@+id/button_settings"
+            style="@style/ButtonStyle"
+            android:text="@string/main_settings"
+            app:icon="@drawable/ic_settings_light" />
+
+    </LinearLayout>
 
 </LinearLayout>

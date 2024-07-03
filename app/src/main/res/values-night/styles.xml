@@ -79,22 +79,22 @@
     </style>
 
     <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">24dp</item>
-        <item name="android:paddingRight">24dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingTop">16dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
         <item name="android:backgroundTint">@color/YP_white</item>
         <item name="android:textColor">@color/YP_black</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="iconGravity">textStart</item>
-        <item name="iconPadding">8dp</item>
+        <item name="iconPadding">4dp</item>
         <item name="cornerRadius">16dp</item>
         <item name="iconTint">@color/YP_black</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:layout_margin">@dimen/margin_mainScreen_common_left</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
     </style>
 </resources>
