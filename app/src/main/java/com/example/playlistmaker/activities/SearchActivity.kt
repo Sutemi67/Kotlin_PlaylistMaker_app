@@ -74,17 +74,20 @@ class SearchActivity : AppCompatActivity() {
                         response: Response<TracksResponse>
                     ) {
                         if (response.isSuccessful) {
+
                             nothingImage.visibility = View.GONE
-                            recycler.visibility = View.VISIBLE
                             connectionProblemError.visibility = View.GONE
+                            recycler.visibility = View.VISIBLE
+
                             trackList.clear()
                             val resultsResponse = response.body()?.results
                             if (resultsResponse?.isNotEmpty() == true) {
                                 trackList.addAll(resultsResponse)
                                 adapter.notifyDataSetChanged()
                             } else {
-                                connectionProblemError.visibility = View.GONE
                                 nothingImage.visibility = View.VISIBLE
+                                connectionProblemError.visibility = View.GONE
+                                recycler.visibility = View.GONE
                             }
                         } else {
                             nothingImage.visibility = View.GONE
@@ -94,6 +97,7 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
+                        nothingImage.visibility = View.GONE
                         connectionProblemError.visibility = View.VISIBLE
                         recycler.visibility = View.GONE
                     }
