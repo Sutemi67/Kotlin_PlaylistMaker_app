@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SearchActivity">
+    tools:context=".activities.SearchActivity">
 
     <Toolbar
         android:layout_width="match_parent"
@@ -60,6 +60,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:hint="@string/search_activity"
+            android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:inputType="text"
             android:singleLine="true"
@@ -74,6 +75,67 @@
             android:padding="14dp"
             android:src="@drawable/ic_clear"
             android:visibility="invisible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/nothingFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="102dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/nothing_found"
+            android:src="@drawable/img_nothing_found_light" />
+
+        <TextView
+            style="@style/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nothing_found" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/connectionProblem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="24dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="102dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/nothing_found"
+            android:src="@drawable/img_connection_problem" />
+
+        <TextView
+            style="@style/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/connection_problem" />
+
+        <Button
+            android:id="@+id/reload_button"
+            style="@style/reloadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/reload" />
 
     </LinearLayout>
 
