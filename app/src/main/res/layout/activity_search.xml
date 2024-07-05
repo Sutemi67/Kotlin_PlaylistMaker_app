@@ -113,7 +113,7 @@
         android:orientation="vertical"
         android:paddingTop="102dp"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -139,11 +139,20 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/text_hint_before_typing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="отображается когда не печатаешь"
+        android:visibility="visible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/track_list_item_layout" />
+        tools:listitem="@layout/track_list_item_layout"
+        tools:visibility="gone" />
 </LinearLayout>

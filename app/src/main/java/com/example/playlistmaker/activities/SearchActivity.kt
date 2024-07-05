@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -42,6 +43,10 @@ class SearchActivity : AppCompatActivity() {
     private val trackList = ArrayList<Track>()
     private var restoredText = ""
     private lateinit var recycler: RecyclerView
+    lateinit var inputText: EditText
+    private lateinit var hintText: TextView
+    private lateinit var nothingImage: LinearLayout
+    private lateinit var connectionProblemError: LinearLayout
     val adapter = TrackAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,12 +61,13 @@ class SearchActivity : AppCompatActivity() {
 
         findViewById<ImageView>(R.id.backIcon_search_screen).setOnClickListener { finish() }
 
-        val inputText = findViewById<EditText>(R.id.search_input_text)
+        inputText = findViewById(R.id.search_input_text)
         recycler = findViewById(R.id.search_list)
-        val nothingImage = findViewById<LinearLayout>(R.id.nothingFound)
-        val connectionProblemError = findViewById<LinearLayout>(R.id.connectionProblem)
+        nothingImage = findViewById(R.id.nothingFound)
+        connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
+        hintText = findViewById(R.id.text_hint_before_typing)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -74,44 +80,33 @@ class SearchActivity : AppCompatActivity() {
                         response: Response<TracksResponse>
                     ) {
                         if (response.isSuccessful) {
-
-                            nothingImage.visibility = View.GONE
-                            connectionProblemError.visibility = View.GONE
-                            recycler.visibility = View.VISIBLE
-
+                            showOnlyList()
                             trackList.clear()
                             val resultsResponse = response.body()?.results
                             if (resultsResponse?.isNotEmpty() == true) {
                                 trackList.addAll(resultsResponse)
                                 adapter.notifyDataSetChanged()
                             } else {
-                                nothingImage.visibility = View.VISIBLE
-                                connectionProblemError.visibility = View.GONE
-                                recycler.visibility = View.GONE
+                                showOnlyNothingFoundError()
                             }
                         } else {
-                            nothingImage.visibility = View.GONE
-                            connectionProblemError.visibility = View.VISIBLE
-                            recycler.visibility = View.GONE
+                            showOnlyConnectionError()
                         }
                     }
 
                     override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-                        nothingImage.visibility = View.GONE
-                        connectionProblemError.visibility = View.VISIBLE
-                        recycler.visibility = View.GONE
+                        showOnlyConnectionError()
                     }
                 })
         }
 
         clearButton.setOnClickListener {
             inputText.setText("")
+            trackList.clear()
+            showOnlyList()
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(
-                findViewById<View>(android.R.id.content).windowToken,
-                0
-            )
+            inputMethodManager?.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).windowToken, 0)
         }
         reloadButton.setOnClickListener {
             searchAction()
@@ -121,6 +116,10 @@ class SearchActivity : AppCompatActivity() {
                 searchAction()
             }
             false
+        }
+        inputText.setOnFocusChangeListener { _, hasFocus ->
+            hintText.visibility =
+                if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
         }
 
         val searchTextWatcher = object : TextWatcher {
@@ -135,6 +134,8 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
                 }
+                hintText.visibility =
+                    if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -146,6 +147,24 @@ class SearchActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         adapter.tracks = trackList
         recycler.adapter = adapter
+    }
+
+    private fun showOnlyNothingFoundError() {
+        nothingImage.visibility = View.VISIBLE
+        connectionProblemError.visibility = View.GONE
+        recycler.visibility = View.GONE
+    }
+
+    private fun showOnlyConnectionError() {
+        nothingImage.visibility = View.GONE
+        connectionProblemError.visibility = View.VISIBLE
+        recycler.visibility = View.GONE
+    }
+
+    private fun showOnlyList() {
+        nothingImage.visibility = View.GONE
+        connectionProblemError.visibility = View.GONE
+        recycler.visibility = View.VISIBLE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
