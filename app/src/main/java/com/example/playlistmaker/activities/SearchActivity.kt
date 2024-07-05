@@ -43,7 +43,7 @@ class SearchActivity : AppCompatActivity() {
     private val trackList = ArrayList<Track>()
     private var restoredText = ""
     private lateinit var recycler: RecyclerView
-    lateinit var inputText: EditText
+    private lateinit var inputText: EditText
     private lateinit var hintText: TextView
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
