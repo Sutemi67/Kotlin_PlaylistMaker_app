@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/trackItem"
     android:layout_width="match_parent"
     android:layout_height="@dimen/track_line_height"
     android:gravity="center_vertical"
@@ -43,9 +44,9 @@
             <TextView
                 android:id="@+id/track_artist"
                 style="@style/TracksArtists"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
                 tools:ignore="TextContrastCheck"
                 tools:text="trackArtist" />
 

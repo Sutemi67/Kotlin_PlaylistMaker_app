@@ -2,12 +2,11 @@ package com.example.playlistmaker.recyclerView
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 
-class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
-    var tracks = ArrayList<Track>()
+class HistoryAdapter : RecyclerView.Adapter<TrackViewHolder>() {
+    var historyList = ArrayList<Track>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater
@@ -17,9 +16,10 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
-        holder.itemView.setOnClickListener {}
+        holder.bind(historyList[position])
+
     }
 
-    override fun getItemCount(): Int = tracks.size
+    override fun getItemCount(): Int = historyList.size
+
 }

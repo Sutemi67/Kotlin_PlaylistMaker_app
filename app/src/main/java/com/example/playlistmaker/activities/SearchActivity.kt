@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
@@ -31,6 +31,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val INPUT_TEXT_KEY = "inputText"
+const val HISTORY_KEY = "history_key"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -40,14 +41,19 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
-    private val trackList = ArrayList<Track>()
-    private var restoredText = ""
+
     private lateinit var recycler: RecyclerView
+    private val trackList = ArrayList<Track>()
+    val trackListAdapter = TrackAdapter()
+
+    private var restoredText = ""
+//    val historySharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
     private lateinit var inputText: EditText
-    private lateinit var hintText: TextView
     private lateinit var nothingImage: LinearLayout
+    private lateinit var historyList: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
-    val adapter = TrackAdapter()
+    private lateinit var trackItem: LinearLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +73,7 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
-        hintText = findViewById(R.id.text_hint_before_typing)
+        historyList = findViewById(R.id.historyList)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -85,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
                             val resultsResponse = response.body()?.results
                             if (resultsResponse?.isNotEmpty() == true) {
                                 trackList.addAll(resultsResponse)
-                                adapter.notifyDataSetChanged()
+                                trackListAdapter.notifyDataSetChanged()
                             } else {
                                 showOnlyNothingFoundError()
                             }
@@ -101,12 +107,15 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearButton.setOnClickListener {
-            inputText.setText("")
+            inputText.text.clear()
             trackList.clear()
             showOnlyList()
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).windowToken, 0)
+            inputMethodManager?.hideSoftInputFromWindow(
+                findViewById<View>(android.R.id.content).windowToken,
+                0
+            )
         }
         reloadButton.setOnClickListener {
             searchAction()
@@ -118,7 +127,7 @@ class SearchActivity : AppCompatActivity() {
             false
         }
         inputText.setOnFocusChangeListener { _, hasFocus ->
-            hintText.visibility =
+            historyList.visibility =
                 if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
         }
 
@@ -134,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
                 }
-                hintText.visibility =
+                historyList.visibility =
                     if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
             }
 
@@ -145,8 +154,8 @@ class SearchActivity : AppCompatActivity() {
         inputText.addTextChangedListener(searchTextWatcher)
 
         recycler.layoutManager = LinearLayoutManager(this)
-        adapter.tracks = trackList
-        recycler.adapter = adapter
+        trackListAdapter.tracks = trackList
+        recycler.adapter = trackListAdapter
     }
 
     private fun showOnlyNothingFoundError() {
