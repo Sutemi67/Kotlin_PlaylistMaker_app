@@ -2,6 +2,7 @@ package com.example.playlistmaker.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,11 +15,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
@@ -41,11 +44,12 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
 
+
     private lateinit var recycler: RecyclerView
     private val trackList = ArrayList<Track>()
     private val historyList = ArrayList<Track>()
     val trackListAdapter = TrackAdapter()
-
+    val history = SearchHistory()
     private var restoredText = ""
 
     private lateinit var inputText: EditText
@@ -65,7 +69,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         findViewById<ImageView>(R.id.backIcon_search_screen).setOnClickListener { finish() }
-
         inputText = findViewById(R.id.search_input_text)
         recycler = findViewById(R.id.search_list)
         nothingImage = findViewById(R.id.nothingFound)
@@ -75,6 +78,8 @@ class SearchActivity : AppCompatActivity() {
         historyListLayout = findViewById(R.id.historyList)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
+
+        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
 
         clearButton.setOnClickListener {
             inputText.text.clear()
@@ -120,8 +125,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-
-    private fun searchAction(){
+    private fun searchAction() {
         imdbService.search(inputText.text.toString())
             .enqueue(object : Callback<TracksResponse> {
                 @SuppressLint("NotifyDataSetChanged")
@@ -143,11 +147,13 @@ class SearchActivity : AppCompatActivity() {
                         showOnlyConnectionError()
                     }
                 }
+
                 override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
                     showOnlyConnectionError()
                 }
             })
     }
+
     private fun init(searchTextWatcher: TextWatcher) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
