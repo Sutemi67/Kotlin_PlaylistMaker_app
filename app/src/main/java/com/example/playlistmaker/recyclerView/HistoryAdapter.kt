@@ -17,7 +17,6 @@ class HistoryAdapter : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(historyList[position])
-
     }
 
     override fun getItemCount(): Int = historyList.size

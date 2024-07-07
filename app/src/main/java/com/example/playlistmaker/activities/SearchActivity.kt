@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.recyclerView.HistoryAdapter
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
@@ -44,15 +44,15 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var recycler: RecyclerView
     private val trackList = ArrayList<Track>()
+    private val historyList = ArrayList<Track>()
     val trackListAdapter = TrackAdapter()
 
     private var restoredText = ""
-//    val historySharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
+
     private lateinit var inputText: EditText
     private lateinit var nothingImage: LinearLayout
-    private lateinit var historyList: LinearLayout
+    private lateinit var historyListLayout: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
-    private lateinit var trackItem: LinearLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +73,7 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
-        historyList = findViewById(R.id.historyList)
+        historyListLayout = findViewById(R.id.historyList)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -127,7 +127,7 @@ class SearchActivity : AppCompatActivity() {
             false
         }
         inputText.setOnFocusChangeListener { _, hasFocus ->
-            historyList.visibility =
+            historyListLayout.visibility =
                 if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
         }
 
@@ -143,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
                 }
-                historyList.visibility =
+                historyListLayout.visibility =
                     if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
             }
 
@@ -156,6 +156,7 @@ class SearchActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         trackListAdapter.tracks = trackList
         recycler.adapter = trackListAdapter
+
     }
 
     private fun showOnlyNothingFoundError() {
