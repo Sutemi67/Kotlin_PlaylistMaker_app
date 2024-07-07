@@ -19,7 +19,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.recyclerView.HistoryAdapter
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
@@ -77,35 +76,6 @@ class SearchActivity : AppCompatActivity() {
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
-        fun searchAction() {
-            imdbService.search(inputText.text.toString())
-                .enqueue(object : Callback<TracksResponse> {
-                    @SuppressLint("NotifyDataSetChanged")
-                    override fun onResponse(
-                        p0: Call<TracksResponse>,
-                        response: Response<TracksResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            showOnlyList()
-                            trackList.clear()
-                            val resultsResponse = response.body()?.results
-                            if (resultsResponse?.isNotEmpty() == true) {
-                                trackList.addAll(resultsResponse)
-                                trackListAdapter.notifyDataSetChanged()
-                            } else {
-                                showOnlyNothingFoundError()
-                            }
-                        } else {
-                            showOnlyConnectionError()
-                        }
-                    }
-
-                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-                        showOnlyConnectionError()
-                    }
-                })
-        }
-
         clearButton.setOnClickListener {
             inputText.text.clear()
             trackList.clear()
@@ -126,11 +96,6 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-        inputText.setOnFocusChangeListener { _, hasFocus ->
-            historyListLayout.visibility =
-                if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
-        }
-
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //
@@ -151,12 +116,47 @@ class SearchActivity : AppCompatActivity() {
                 //
             }
         }
-        inputText.addTextChangedListener(searchTextWatcher)
+        init(searchTextWatcher)
+    }
 
+
+
+    private fun searchAction(){
+        imdbService.search(inputText.text.toString())
+            .enqueue(object : Callback<TracksResponse> {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onResponse(
+                    p0: Call<TracksResponse>,
+                    response: Response<TracksResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        showOnlyList()
+                        trackList.clear()
+                        val resultsResponse = response.body()?.results
+                        if (resultsResponse?.isNotEmpty() == true) {
+                            trackList.addAll(resultsResponse)
+                            trackListAdapter.notifyDataSetChanged()
+                        } else {
+                            showOnlyNothingFoundError()
+                        }
+                    } else {
+                        showOnlyConnectionError()
+                    }
+                }
+                override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
+                    showOnlyConnectionError()
+                }
+            })
+    }
+    private fun init(searchTextWatcher: TextWatcher) {
+        inputText.addTextChangedListener(searchTextWatcher)
+        inputText.setOnFocusChangeListener { _, hasFocus ->
+            historyListLayout.visibility =
+                if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
+        }
         recycler.layoutManager = LinearLayoutManager(this)
         trackListAdapter.tracks = trackList
         recycler.adapter = trackListAdapter
-
     }
 
     private fun showOnlyNothingFoundError() {

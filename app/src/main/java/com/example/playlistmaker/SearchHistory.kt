@@ -5,6 +5,8 @@ import com.example.playlistmaker.activities.HISTORY_KEY
 
 class SearchHistory {
 
+
+
     fun addAndSaveList(sharedPreferences: SharedPreferences) {
 //        sharedPreferences.edit().putString(HISTORY_KEY, "").apply()
 
