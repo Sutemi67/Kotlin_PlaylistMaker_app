@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
@@ -46,16 +47,18 @@ class SearchActivity : AppCompatActivity() {
 
 
     private lateinit var recycler: RecyclerView
-    private val trackList = ArrayList<Track>()
-    private val historyList = ArrayList<Track>()
+    private var trackList = ArrayList<Track>()
+    private var historyList = ArrayList<Track>()
     val trackListAdapter = TrackAdapter()
     val history = SearchHistory()
     private var restoredText = ""
 
     private lateinit var inputText: EditText
     private lateinit var nothingImage: LinearLayout
-    private lateinit var historyListLayout: LinearLayout
+
+    //    private lateinit var historyListLayout: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
+    lateinit var history_hint_text: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +78,8 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
-        historyListLayout = findViewById(R.id.historyList)
+        history_hint_text = findViewById(R.id.text_hint_before_typing)
+//        historyListLayout = findViewById(R.id.historyList)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -84,6 +88,8 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             inputText.text.clear()
             trackList.clear()
+            trackListAdapter.tracks = historyList
+            trackListAdapter.notifyDataSetChanged()
             showOnlyList()
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -113,7 +119,7 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
                 }
-                historyListLayout.visibility =
+                history_hint_text.visibility =
                     if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
             }
 
@@ -136,6 +142,7 @@ class SearchActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         showOnlyList()
                         trackList.clear()
+                        trackListAdapter.tracks = trackList
                         val resultsResponse = response.body()?.results
                         if (resultsResponse?.isNotEmpty() == true) {
                             trackList.addAll(resultsResponse)
@@ -157,11 +164,12 @@ class SearchActivity : AppCompatActivity() {
     private fun init(searchTextWatcher: TextWatcher) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
-            historyListLayout.visibility =
+            history_hint_text.visibility =
                 if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
         }
         recycler.layoutManager = LinearLayoutManager(this)
         trackListAdapter.tracks = trackList
+        historyList = trackListAdapter.historyList
         recycler.adapter = trackListAdapter
     }
 
