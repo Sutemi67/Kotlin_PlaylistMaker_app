@@ -10,7 +10,7 @@ import java.sql.Array
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var tracks = ArrayList<Track>()
-    var historyList = arrayListOf<Track>()
+    var historyList = ArrayList<Track>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater
@@ -22,7 +22,6 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-//            Toast.makeText(holder.itemView.context,"${tracks[position]}", Toast.LENGTH_SHORT ).show()
             historyList.add(0, tracks[position])
             Toast.makeText(holder.itemView.context, "${historyList[0]}", Toast.LENGTH_SHORT).show()
         }

@@ -49,9 +49,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
-//    private var array = Array<Track?>(10) { null }
+
     val trackListAdapter = TrackAdapter()
-    private val historyClass = SearchHistory()
+//    private val historyClass = SearchHistory()
     private var restoredText = ""
 
     private lateinit var inputText: EditText
@@ -98,7 +98,10 @@ class SearchActivity : AppCompatActivity() {
             )
         }
         reloadButton.setOnClickListener { searchAction() }
-        clearHistoryButton.setOnClickListener { trackListAdapter.historyList.clear() }
+        clearHistoryButton.setOnClickListener {
+            trackListAdapter.historyList.clear()
+            trackListAdapter.notifyDataSetChanged()
+        }
         inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchAction()
@@ -131,34 +134,24 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         init(searchTextWatcher)
-//        historyList = historyRecovery()
     }
 
     override fun onStop() {
         super.onStop()
-        saveHistoryFun()
+        addHistory(trackListAdapter)
     }
 
 
-    private fun saveHistoryFun() {
-        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
-        val jsonHistory = Gson().toJson(trackListAdapter.historyList)
-        sharedPref.edit().putString(HISTORY_KEY, jsonHistory).apply()
+    private fun addHistory(history: TrackAdapter) {
+        val json = Gson().toJson(history.historyList)
+        getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
     }
 
-//    private fun historyRecovery(): Array<Track> {
-//        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
-//        val json = sharedPref.getString(HISTORY_KEY, emptyArray<Track>().toString())
-//        return Gson().fromJson(json, Array<Track>::class.java)
-//    }
-
-//    fun add() {
-//        historyClass.saveList(getSharedPreferences(ARRAY, MODE_PRIVATE), historyClass.array)
-//    }
-//
-//    fun get() {
-//        array = historyClass.getList(getSharedPreferences(ARRAY, MODE_PRIVATE))!!
-//    }
+    private fun getHistory(): ArrayList<Track> {
+        val json = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).getString(HISTORY_KEY, null)
+            ?: return ArrayList()
+        return Gson().fromJson(json, ArrayList<Track>()::class.java)
+    }
 
 
     private fun searchAction() {
@@ -199,8 +192,10 @@ class SearchActivity : AppCompatActivity() {
         }
         recycler.layoutManager = LinearLayoutManager(this)
         trackListAdapter.tracks = trackList
+//        trackListAdapter.historyList = getHistory()
         historyList = trackListAdapter.historyList
         recycler.adapter = trackListAdapter
+
     }
 
     private fun showOnlyNothingFoundError() {
