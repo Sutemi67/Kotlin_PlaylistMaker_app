@@ -25,6 +25,7 @@ import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
 import com.example.playlistmaker.retrofit.TracksResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val INPUT_TEXT_KEY = "inputText"
 const val HISTORY_KEY = "history_key"
+const val ARRAY = "array"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -47,8 +49,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
+//    private var array = Array<Track?>(10) { null }
     val trackListAdapter = TrackAdapter()
-    val historyClass = SearchHistory()
+    private val historyClass = SearchHistory()
     private var restoredText = ""
 
     private lateinit var inputText: EditText
@@ -78,7 +81,7 @@ class SearchActivity : AppCompatActivity() {
         val reloadButton = findViewById<Button>(R.id.reload_button)
         val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
-        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
+
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -128,7 +131,34 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         init(searchTextWatcher)
+//        historyList = historyRecovery()
     }
+
+    override fun onStop() {
+        super.onStop()
+        saveHistoryFun()
+    }
+
+
+    private fun saveHistoryFun() {
+        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
+        val jsonHistory = Gson().toJson(trackListAdapter.historyList)
+        sharedPref.edit().putString(HISTORY_KEY, jsonHistory).apply()
+    }
+
+//    private fun historyRecovery(): Array<Track> {
+//        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
+//        val json = sharedPref.getString(HISTORY_KEY, emptyArray<Track>().toString())
+//        return Gson().fromJson(json, Array<Track>::class.java)
+//    }
+
+//    fun add() {
+//        historyClass.saveList(getSharedPreferences(ARRAY, MODE_PRIVATE), historyClass.array)
+//    }
+//
+//    fun get() {
+//        array = historyClass.getList(getSharedPreferences(ARRAY, MODE_PRIVATE))!!
+//    }
 
 
     private fun searchAction() {

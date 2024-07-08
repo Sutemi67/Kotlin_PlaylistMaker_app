@@ -6,10 +6,11 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import kotlinx.coroutines.NonDisposableHandle.parent
+import java.sql.Array
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var tracks = ArrayList<Track>()
-    var historyList = ArrayList<Track>()
+    var historyList = arrayListOf<Track>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater
