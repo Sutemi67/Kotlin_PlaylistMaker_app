@@ -95,4 +95,24 @@
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginBottom">4dp</item>
     </style>
+
+    <style name="history_hint">
+        <item name="android:text">Вы искали</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">19sp</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">@color/YP_black</item>
+    </style>
+
+    <style name="clearHistoryButton">
+        <item name="iconTint">@color/YP_black</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:text">Очистить историю</item>
+        <item name="android:backgroundTint">@color/YP_black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">@color/YP_white</item>
+    </style>
 </resources>

@@ -2,7 +2,6 @@ package com.example.playlistmaker.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,17 +48,17 @@ class SearchActivity : AppCompatActivity() {
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
     val trackListAdapter = TrackAdapter()
-    val history = SearchHistory()
+    val historyClass = SearchHistory()
     private var restoredText = ""
 
     private lateinit var inputText: EditText
     private lateinit var nothingImage: LinearLayout
 
-    //    private lateinit var historyListLayout: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
-    lateinit var history_hint_text: TextView
+    lateinit var historyHintText: TextView
 
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -78,16 +76,14 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
-        history_hint_text = findViewById(R.id.text_hint_before_typing)
-//        historyListLayout = findViewById(R.id.historyList)
+        val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
+        historyHintText = findViewById(R.id.text_hint_before_typing)
+        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
-        val sharedPref = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
-
         clearButton.setOnClickListener {
             inputText.text.clear()
-            trackList.clear()
             trackListAdapter.tracks = historyList
             trackListAdapter.notifyDataSetChanged()
             showOnlyList()
@@ -98,15 +94,15 @@ class SearchActivity : AppCompatActivity() {
                 0
             )
         }
-        reloadButton.setOnClickListener {
-            searchAction()
-        }
+        reloadButton.setOnClickListener { searchAction() }
+        clearHistoryButton.setOnClickListener { trackListAdapter.historyList.clear() }
         inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchAction()
             }
             false
         }
+
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //
@@ -119,7 +115,11 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
                 }
-                history_hint_text.visibility =
+                historyHintText.visibility =
+                    if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                clearHistoryButton.visibility =
+                    if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                recycler.visibility =
                     if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
             }
 
@@ -164,7 +164,7 @@ class SearchActivity : AppCompatActivity() {
     private fun init(searchTextWatcher: TextWatcher) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
-            history_hint_text.visibility =
+            historyHintText.visibility =
                 if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
         }
         recycler.layoutManager = LinearLayoutManager(this)
