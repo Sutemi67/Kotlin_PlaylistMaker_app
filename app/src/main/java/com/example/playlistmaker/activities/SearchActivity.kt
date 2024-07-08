@@ -1,6 +1,7 @@
 package com.example.playlistmaker.activities
 
 import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -26,6 +27,7 @@ import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
 import com.example.playlistmaker.retrofit.TracksResponse
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,8 +52,8 @@ class SearchActivity : AppCompatActivity() {
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
 
-    val trackListAdapter = TrackAdapter()
-//    private val historyClass = SearchHistory()
+    var trackListAdapter = TrackAdapter()
+
     private var restoredText = ""
 
     private lateinit var inputText: EditText
@@ -81,7 +83,6 @@ class SearchActivity : AppCompatActivity() {
         val reloadButton = findViewById<Button>(R.id.reload_button)
         val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
-
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -138,21 +139,37 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        addHistory(trackListAdapter)
+        addHistory(trackListAdapter.historyList)
     }
 
 
-    private fun addHistory(history: TrackAdapter) {
-        val json = Gson().toJson(history.historyList)
+    private fun addHistory(history: ArrayList<Track>) {
+        val json = Gson().toJson(history.toTypedArray())
         getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
     }
 
     private fun getHistory(): ArrayList<Track> {
+        val itemType = object : TypeToken<ArrayList<Track>>() {}.type
         val json = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).getString(HISTORY_KEY, null)
             ?: return ArrayList()
-        return Gson().fromJson(json, ArrayList<Track>()::class.java)
+        return Gson().fromJson(json, itemType)
     }
 
+
+    private fun init(searchTextWatcher: TextWatcher) {
+        inputText.addTextChangedListener(searchTextWatcher)
+        inputText.setOnFocusChangeListener { _, hasFocus ->
+            historyHintText.visibility =
+                if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
+        }
+        recycler.layoutManager = LinearLayoutManager(this)
+
+        trackListAdapter.historyList = getHistory()
+        trackListAdapter.tracks = trackList//выдает LinkedList вместо ArrayList<Track>
+        historyList = trackListAdapter.historyList
+        recycler.adapter = trackListAdapter
+
+    }
 
     private fun searchAction() {
         imdbService.search(inputText.text.toString())
@@ -182,20 +199,6 @@ class SearchActivity : AppCompatActivity() {
                     showOnlyConnectionError()
                 }
             })
-    }
-
-    private fun init(searchTextWatcher: TextWatcher) {
-        inputText.addTextChangedListener(searchTextWatcher)
-        inputText.setOnFocusChangeListener { _, hasFocus ->
-            historyHintText.visibility =
-                if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
-        }
-        recycler.layoutManager = LinearLayoutManager(this)
-        trackListAdapter.tracks = trackList
-//        trackListAdapter.historyList = getHistory()
-        historyList = trackListAdapter.historyList
-        recycler.adapter = trackListAdapter
-
     }
 
     private fun showOnlyNothingFoundError() {
