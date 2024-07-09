@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
-import com.example.playlistmaker.activities.MainActivity
 
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
@@ -48,8 +47,6 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
                 Toast.makeText(holder.itemView.context, "добавлен вместо 10 элемента", Toast.LENGTH_SHORT).show()
             }
         }
-//        SearchHistory().addHistory(historyList, )
-
     }
 
     override fun getItemCount(): Int = tracks.size

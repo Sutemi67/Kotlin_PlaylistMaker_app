@@ -19,7 +19,7 @@ import com.example.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
     companion object {
-        const val IS_CHECKED = "is_night_theme"
+        const val IS_CHECKED = "is_checked"
         const val IS_NIGHT = "is_night"
     }
 
@@ -75,10 +75,6 @@ class SettingsActivity : AppCompatActivity() {
 
         val nightThemeSwitcher = findViewById<Switch>(R.id.nightThemeSwitch)
         nightThemeSwitcher.isChecked = spCH.getBoolean(IS_CHECKED, false)
-
-        val isNight = getIsNight(spNT)
-
-        setDefaultNightMode(isNight)
 
         nightThemeSwitcher.setOnClickListener {
             if (nightThemeSwitcher.isChecked) {
