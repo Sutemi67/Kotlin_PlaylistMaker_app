@@ -1,26 +1,41 @@
 package com.example.playlistmaker.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
+    companion object {
+        const val IS_CHECKED = "is_night_theme"
+        const val IS_NIGHT = "is_night"
+    }
+
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_settings)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener {
             finish()
@@ -34,8 +49,14 @@ class SettingsActivity : AppCompatActivity() {
         supportButton.setOnClickListener {
             val supportMessage = Intent(Intent.ACTION_SENDTO)
             supportMessage.data = Uri.parse("mailto:")
-            supportMessage.putExtra(Intent.EXTRA_EMAIL, arrayOf(this.getString(R.string.email_support_message_sender)))
-            supportMessage.putExtra(Intent.EXTRA_SUBJECT, this.getString(R.string.support_message_subject))
+            supportMessage.putExtra(
+                Intent.EXTRA_EMAIL,
+                arrayOf(this.getString(R.string.email_support_message_sender))
+            )
+            supportMessage.putExtra(
+                Intent.EXTRA_SUBJECT,
+                this.getString(R.string.support_message_subject)
+            )
             supportMessage.putExtra(Intent.EXTRA_TEXT, this.getString(R.string.support_message))
             startActivity(supportMessage)
 
@@ -47,5 +68,31 @@ class SettingsActivity : AppCompatActivity() {
             intent.putExtra(Intent.EXTRA_TEXT, this.getString(R.string.link_to_android_course))
             startActivity(intent)
         }
+
+
+        val spCH = getSharedPreferences(IS_CHECKED, MODE_PRIVATE)
+        val spNT = getSharedPreferences(IS_NIGHT, MODE_PRIVATE)
+
+        val nightThemeSwitcher = findViewById<Switch>(R.id.nightThemeSwitch)
+        nightThemeSwitcher.isChecked = spCH.getBoolean(IS_CHECKED, false)
+
+        val isNight = getIsNight(spNT)
+
+        setDefaultNightMode(isNight)
+
+        nightThemeSwitcher.setOnClickListener {
+            if (nightThemeSwitcher.isChecked) {
+                setDefaultNightMode(MODE_NIGHT_YES)
+                spCH.edit().putBoolean(IS_CHECKED, nightThemeSwitcher.isChecked).apply()
+                spNT.edit().putInt(IS_NIGHT, 2).apply()
+
+            } else {
+                setDefaultNightMode(MODE_NIGHT_NO)
+                spCH.edit().putBoolean(IS_CHECKED, nightThemeSwitcher.isChecked).apply()
+                spNT.edit().putInt(IS_NIGHT, 1).apply()
+            }
+        }
+
     }
+    fun getIsNight(spNT: SharedPreferences) = spNT.getInt(IS_NIGHT, 1)
 }

@@ -33,8 +33,9 @@
     </LinearLayout>
 
     <Switch
-        android:layout_width="match_parent"
+        android:id="@+id/nightThemeSwitch"
         style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
         android:text="@string/settings_dark"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 

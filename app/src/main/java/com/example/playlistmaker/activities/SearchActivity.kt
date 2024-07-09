@@ -1,7 +1,6 @@
 package com.example.playlistmaker.activities
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -21,7 +20,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
@@ -36,9 +34,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val INPUT_TEXT_KEY = "inputText"
 const val HISTORY_KEY = "history_key"
-const val ARRAY = "array"
 
 class SearchActivity : AppCompatActivity() {
+
 
     private val imdbBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -47,11 +45,11 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
 
-
     private lateinit var recycler: RecyclerView
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
 
+//        val searchHistoryClass = SearchHistory(this)
     var trackListAdapter = TrackAdapter()
 
     private var restoredText = ""
@@ -60,7 +58,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
     lateinit var historyHintText: TextView
-    lateinit var clearHistoryButton:Button
+    lateinit var clearHistoryButton: Button
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -83,7 +81,6 @@ class SearchActivity : AppCompatActivity() {
         val reloadButton = findViewById<Button>(R.id.reload_button)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
-
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -140,10 +137,13 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+//        searchHistoryClass.addHistory(trackListAdapter.historyList)
         addHistory(trackListAdapter.historyList)
     }
-    override fun onPause(){
+
+    override fun onPause() {
         super.onPause()
+//        searchHistoryClass.addHistory(trackListAdapter.historyList)
         addHistory(trackListAdapter.historyList)
     }
 
@@ -152,6 +152,7 @@ class SearchActivity : AppCompatActivity() {
         val json = Gson().toJson(history.toTypedArray())
         getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
     }
+
     private fun getHistory(): ArrayList<Track> {
         val itemType = object : TypeToken<ArrayList<Track>>() {}.type
         val json = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).getString(HISTORY_KEY, null)
@@ -171,7 +172,6 @@ class SearchActivity : AppCompatActivity() {
         historyList = trackListAdapter.historyList
         trackListAdapter.tracks = getHistory()
         recycler.adapter = trackListAdapter
-
     }
 
     private fun searchAction() {

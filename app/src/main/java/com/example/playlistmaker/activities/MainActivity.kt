@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
+import com.example.playlistmaker.activities.SettingsActivity.Companion.IS_NIGHT
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val spNT = getSharedPreferences(IS_NIGHT, MODE_PRIVATE)
+        setDefaultNightMode(SettingsActivity().getIsNight(spNT))
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         buttonSearch.setOnClickListener {
