@@ -3,6 +3,7 @@ package com.example.playlistmaker.recyclerView
 import com.google.gson.annotations.SerializedName
 
 data class Track(
+    val trackId: Int,
     @SerializedName("trackName") val trackName: String,
     @SerializedName("artistName") val artistName: String,
     @SerializedName("trackTimeMillis") val trackTime: Int,

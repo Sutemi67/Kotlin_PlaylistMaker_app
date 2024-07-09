@@ -58,9 +58,9 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var inputText: EditText
     private lateinit var nothingImage: LinearLayout
-
     private lateinit var connectionProblemError: LinearLayout
     lateinit var historyHintText: TextView
+    lateinit var clearHistoryButton:Button
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -81,8 +81,9 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
-        val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
+        clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
+
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -141,20 +142,22 @@ class SearchActivity : AppCompatActivity() {
         super.onStop()
         addHistory(trackListAdapter.historyList)
     }
+    override fun onPause(){
+        super.onPause()
+        addHistory(trackListAdapter.historyList)
+    }
 
 
     private fun addHistory(history: ArrayList<Track>) {
         val json = Gson().toJson(history.toTypedArray())
         getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
     }
-
     private fun getHistory(): ArrayList<Track> {
         val itemType = object : TypeToken<ArrayList<Track>>() {}.type
         val json = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).getString(HISTORY_KEY, null)
             ?: return ArrayList()
         return Gson().fromJson(json, itemType)
     }
-
 
     private fun init(searchTextWatcher: TextWatcher) {
         inputText.addTextChangedListener(searchTextWatcher)
@@ -165,8 +168,8 @@ class SearchActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
 
         trackListAdapter.historyList = getHistory()
-        trackListAdapter.tracks = trackList//выдает LinkedList вместо ArrayList<Track>
         historyList = trackListAdapter.historyList
+        trackListAdapter.tracks = getHistory()
         recycler.adapter = trackListAdapter
 
     }
@@ -217,6 +220,7 @@ class SearchActivity : AppCompatActivity() {
         nothingImage.visibility = View.GONE
         connectionProblemError.visibility = View.GONE
         recycler.visibility = View.VISIBLE
+        clearHistoryButton.visibility = View.VISIBLE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

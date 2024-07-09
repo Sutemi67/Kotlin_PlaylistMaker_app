@@ -5,16 +5,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import kotlinx.coroutines.NonDisposableHandle.parent
-import java.sql.Array
+
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var tracks = ArrayList<Track>()
     var historyList = ArrayList<Track>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater
-            .from(parent.context)
+        val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.track_list_item_layout, parent, false)
         return TrackViewHolder(view)
     }
@@ -22,8 +20,44 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-            historyList.add(0, tracks[position])
-            Toast.makeText(holder.itemView.context, "${historyList[0]}", Toast.LENGTH_SHORT).show()
+            if (historyList.size < 10) {
+                for (i in 0..<historyList.size) {
+                    if (tracks[position].trackId == historyList[i].trackId) {
+                        historyList.removeAt(i)
+                        historyList.add(0, tracks[position])
+                        Toast.makeText(
+                            holder.itemView.context,
+                            "замена",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                }
+                historyList.add(0, tracks[position])
+                Toast.makeText(
+                    holder.itemView.context,
+                    "добавлен в историю",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                for (i in 0..<historyList.size) {
+                    if (tracks[position].trackId == historyList[i].trackId) {
+                        historyList.removeAt(i)
+                        historyList.add(0, tracks[position])
+                        Toast.makeText(
+                            holder.itemView.context,
+                            "замена",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                }
+                historyList.removeAt(9)
+                historyList.add(0, tracks[position])
+                Toast.makeText(
+                    holder.itemView.context, "добавлен вместо 10 элемента", Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
