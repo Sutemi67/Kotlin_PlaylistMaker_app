@@ -25,38 +25,24 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
                     if (tracks[position].trackId == historyList[i].trackId) {
                         historyList.removeAt(i)
                         historyList.add(0, tracks[position])
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "замена",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(holder.itemView.context, "замена", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
                 }
                 historyList.add(0, tracks[position])
-                Toast.makeText(
-                    holder.itemView.context,
-                    "добавлен в историю",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(holder.itemView.context, "добавлен в историю", Toast.LENGTH_SHORT).show()
             } else {
                 for (i in 0..<historyList.size) {
                     if (tracks[position].trackId == historyList[i].trackId) {
                         historyList.removeAt(i)
                         historyList.add(0, tracks[position])
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "замена",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(holder.itemView.context, "замена", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
                 }
                 historyList.removeAt(9)
                 historyList.add(0, tracks[position])
-                Toast.makeText(
-                    holder.itemView.context, "добавлен вместо 10 элемента", Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(holder.itemView.context, "добавлен вместо 10 элемента", Toast.LENGTH_SHORT).show()
             }
         }
     }
