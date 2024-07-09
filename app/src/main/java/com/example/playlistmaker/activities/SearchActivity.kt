@@ -99,6 +99,7 @@ class SearchActivity : AppCompatActivity() {
         reloadButton.setOnClickListener { searchAction() }
         clearHistoryButton.setOnClickListener {
             trackListAdapter.historyList.clear()
+            trackListAdapter.tracks = trackListAdapter.historyList
             trackListAdapter.notifyDataSetChanged()
         }
         inputText.setOnEditorActionListener { _, actionId, _ ->
@@ -148,7 +149,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    fun addHistory(history: ArrayList<Track>) {
+    private fun addHistory(history: ArrayList<Track>) {
         val json = Gson().toJson(history.toTypedArray())
         getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
     }

@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.savings
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
