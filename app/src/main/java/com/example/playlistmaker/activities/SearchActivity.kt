@@ -49,7 +49,7 @@ class SearchActivity : AppCompatActivity() {
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
 
-//        val searchHistoryClass = SearchHistory(this)
+    //        val searchHistoryClass = SearchHistory(this)
     var trackListAdapter = TrackAdapter()
 
     private var restoredText = ""
@@ -148,7 +148,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    private fun addHistory(history: ArrayList<Track>) {
+    fun addHistory(history: ArrayList<Track>) {
         val json = Gson().toJson(history.toTypedArray())
         getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
     }

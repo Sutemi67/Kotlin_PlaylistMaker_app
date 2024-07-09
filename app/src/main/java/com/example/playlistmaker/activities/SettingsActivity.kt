@@ -90,5 +90,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
     }
+
     fun getIsNight(spNT: SharedPreferences) = spNT.getInt(IS_NIGHT, 1)
 }

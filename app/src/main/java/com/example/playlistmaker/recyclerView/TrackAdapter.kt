@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.activities.MainActivity
+import com.example.playlistmaker.activities.SearchActivity
 
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
@@ -44,8 +45,13 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
                 }
                 historyList.removeAt(9)
                 historyList.add(0, tracks[position])
-                Toast.makeText(holder.itemView.context, "добавлен вместо 10 элемента", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    holder.itemView.context,
+                    "добавлен вместо 10 элемента",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+//            SearchActivity().addHistory(historyList)
         }
     }
 
