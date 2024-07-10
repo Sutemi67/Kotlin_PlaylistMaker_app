@@ -2,7 +2,6 @@ package com.example.playlistmaker.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
@@ -21,6 +20,8 @@ class SettingsActivity : AppCompatActivity() {
     companion object {
         const val IS_CHECKED = "is_checked"
         const val IS_NIGHT = "is_night"
+        const val NIGHT_VALUE = 2
+        const val LIGHT_VALUE = 1
     }
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -80,16 +81,13 @@ class SettingsActivity : AppCompatActivity() {
             if (nightThemeSwitcher.isChecked) {
                 setDefaultNightMode(MODE_NIGHT_YES)
                 spCH.edit().putBoolean(IS_CHECKED, nightThemeSwitcher.isChecked).apply()
-                spNT.edit().putInt(IS_NIGHT, 2).apply()
+                spNT.edit().putInt(IS_NIGHT, NIGHT_VALUE).apply()
 
             } else {
                 setDefaultNightMode(MODE_NIGHT_NO)
                 spCH.edit().putBoolean(IS_CHECKED, nightThemeSwitcher.isChecked).apply()
-                spNT.edit().putInt(IS_NIGHT, 1).apply()
+                spNT.edit().putInt(IS_NIGHT, LIGHT_VALUE).apply()
             }
         }
-
     }
-
-    fun getIsNight(spNT: SharedPreferences) = spNT.getInt(IS_NIGHT, 1)
 }

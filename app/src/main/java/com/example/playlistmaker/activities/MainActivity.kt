@@ -10,8 +10,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.activities.SettingsActivity.Companion.IS_NIGHT
+import com.example.playlistmaker.savings.SearchHistory
 
 class MainActivity : AppCompatActivity() {
+    private val savings = SearchHistory()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         val spNT = getSharedPreferences(IS_NIGHT, MODE_PRIVATE)
-        setDefaultNightMode(SettingsActivity().getIsNight(spNT))
+        setDefaultNightMode(savings.getIsNight(spNT))
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         buttonSearch.setOnClickListener {

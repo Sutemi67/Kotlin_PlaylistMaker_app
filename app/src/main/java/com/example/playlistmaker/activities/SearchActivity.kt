@@ -17,6 +17,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -24,6 +25,7 @@ import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
 import com.example.playlistmaker.retrofit.TracksResponse
+import com.example.playlistmaker.savings.SearchHistory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -49,7 +51,7 @@ class SearchActivity : AppCompatActivity() {
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
 
-    //        val searchHistoryClass = SearchHistory(this)
+    private val searchHistoryClass = SearchHistory()
     var trackListAdapter = TrackAdapter()
 
     private var restoredText = ""
@@ -60,6 +62,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var historyHintText: TextView
     lateinit var clearHistoryButton: Button
 
+    private val spH = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,12 +124,10 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
                 }
-                historyHintText.visibility =
-                    if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
-                clearHistoryButton.visibility =
-                    if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
-                recycler.visibility =
-                    if (inputText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+                recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+                clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -138,28 +139,22 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-//        searchHistoryClass.addHistory(trackListAdapter.historyList)
-        addHistory(trackListAdapter.historyList)
-    }
-
-    override fun onPause() {
-        super.onPause()
-//        searchHistoryClass.addHistory(trackListAdapter.historyList)
-        addHistory(trackListAdapter.historyList)
+        searchHistoryClass.addHistory(spH, trackListAdapter.historyList)
+//        addHistory(trackListAdapter.historyList)
     }
 
 
-    private fun addHistory(history: ArrayList<Track>) {
-        val json = Gson().toJson(history.toTypedArray())
-        getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
-    }
-
-    private fun getHistory(): ArrayList<Track> {
-        val itemType = object : TypeToken<ArrayList<Track>>() {}.type
-        val json = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).getString(HISTORY_KEY, null)
-            ?: return ArrayList()
-        return Gson().fromJson(json, itemType)
-    }
+//    private fun addHistory(history: ArrayList<Track>) {
+//        val json = Gson().toJson(history.toTypedArray())
+//        getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
+//    }
+//
+//    private fun getHistory(): ArrayList<Track> {
+//        val itemType = object : TypeToken<ArrayList<Track>>() {}.type
+//        val json = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).getString(HISTORY_KEY, null)
+//            ?: return ArrayList()
+//        return Gson().fromJson(json, itemType)
+//    }
 
     private fun init(searchTextWatcher: TextWatcher) {
         inputText.addTextChangedListener(searchTextWatcher)
@@ -169,9 +164,11 @@ class SearchActivity : AppCompatActivity() {
         }
         recycler.layoutManager = LinearLayoutManager(this)
 
-        trackListAdapter.historyList = getHistory()
+//        trackListAdapter.historyList = getHistory()
+        trackListAdapter.historyList = searchHistoryClass.getHistory(spH)
         historyList = trackListAdapter.historyList
-        trackListAdapter.tracks = getHistory()
+//        trackListAdapter.tracks = getHistory()
+        trackListAdapter.tracks = searchHistoryClass.getHistory(spH)
         recycler.adapter = trackListAdapter
     }
 
