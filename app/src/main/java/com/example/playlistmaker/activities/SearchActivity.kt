@@ -158,7 +158,7 @@ class SearchActivity : AppCompatActivity() {
 
         trackListAdapter.historyList = searchClass.getHistory(preferencesForTrackHistory)
         historyList = trackListAdapter.historyList
-        trackListAdapter.tracks = searchClass.getHistory(preferencesForTrackHistory)
+        trackListAdapter.tracks = historyList
         recycler.adapter = trackListAdapter
         clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
 

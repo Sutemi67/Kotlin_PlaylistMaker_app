@@ -1,8 +1,8 @@
 package com.example.playlistmaker.recyclerView
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.savings.Savings
@@ -17,33 +17,34 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         override fun onTrackClick(holder: TrackViewHolder, position: Int) {
 
             if (historyList.size < 10) {
-                for (i in 0..<historyList.size) {
-                    if (tracks[position].trackId == historyList[i].trackId) {
-                        historyList.removeAt(i)
-                        historyList.add(0, tracks[position])
-                        Toast.makeText(holder.itemView.context, "замена", Toast.LENGTH_SHORT).show()
-                        return
+                if (historyList.isNotEmpty()) {
+                    for (i in 0..<historyList.size) {
+                        if (tracks[position].trackId == historyList[i].trackId) {
+                            historyList.removeAt(i)
+                            historyList.add(0, tracks[position])
+                            Log.d("Adding", "Удален трек из истории с индексом $i и добавлен ${historyList[0]})")
+                            return
+                        }
                     }
                 }
+                Log.d(
+                    "Adding",
+                    "Дошли до добавления трека, размер массива истории ${historyList.size}, треклиста ${tracks.size}"
+                )
                 historyList.add(0, tracks[position])
-                Toast.makeText(holder.itemView.context, "добавлен в историю", Toast.LENGTH_SHORT)
-                    .show()
+                Log.d("Adding", "Меньше 10 треков список, добавлено без повторений")
             } else {
                 for (i in 0..<historyList.size) {
                     if (tracks[position].trackId == historyList[i].trackId) {
                         historyList.removeAt(i)
                         historyList.add(0, tracks[position])
-                        Toast.makeText(holder.itemView.context, "замена", Toast.LENGTH_SHORT).show()
+                        Log.d("Adding", "Замена")
                         return
                     }
                 }
                 historyList.removeAt(9)
                 historyList.add(0, tracks[position])
-                Toast.makeText(
-                    holder.itemView.context,
-                    "добавлен вместо 10 элемента",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Log.d("Adding", "добавлен вместо 10 трека")
             }
         }
     }
