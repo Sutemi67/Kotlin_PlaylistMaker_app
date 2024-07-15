@@ -111,8 +111,6 @@ class SearchActivity : AppCompatActivity() {
             clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
         }
 
-
-
         inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchAction()
@@ -142,8 +140,8 @@ class SearchActivity : AppCompatActivity() {
                 //
             }
         }
-        init(searchTextWatcher, savingsClass, preferencesForTrackHistory)
 
+        init(searchTextWatcher, savingsClass, preferencesForTrackHistory)
     }
 
     private fun init(

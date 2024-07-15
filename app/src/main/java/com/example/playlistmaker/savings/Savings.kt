@@ -19,9 +19,8 @@ open class Savings {
 
     fun getIsNight(spNT: SharedPreferences) = spNT.getInt(IS_NIGHT, 1)
 
+
     interface OnTrackClickListener {
         fun onTrackClick(holder: TrackViewHolder, position: Int)
     }
-
-
 }
