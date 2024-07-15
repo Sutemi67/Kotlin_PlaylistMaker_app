@@ -2,6 +2,7 @@ package com.example.playlistmaker.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,11 +24,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
+import com.example.playlistmaker.recyclerView.TrackViewHolder.OnPlayClickListener
 import com.example.playlistmaker.retrofit.ITunesApi
 import com.example.playlistmaker.retrofit.TracksResponse
 import com.example.playlistmaker.savings.SearchHistory
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +38,6 @@ const val INPUT_TEXT_KEY = "inputText"
 const val HISTORY_KEY = "history_key"
 
 class SearchActivity : AppCompatActivity() {
-
 
     private val imdbBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -51,7 +50,6 @@ class SearchActivity : AppCompatActivity() {
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
 
-    private val searchHistoryClass = SearchHistory()
     var trackListAdapter = TrackAdapter()
 
     private var restoredText = ""
@@ -62,7 +60,6 @@ class SearchActivity : AppCompatActivity() {
     lateinit var historyHintText: TextView
     lateinit var clearHistoryButton: Button
 
-    private val spH = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +81,10 @@ class SearchActivity : AppCompatActivity() {
         val reloadButton = findViewById<Button>(R.id.reload_button)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
+
+        val spH = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
+        val searchHistoryClass = SearchHistory()
+
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -134,29 +135,16 @@ class SearchActivity : AppCompatActivity() {
                 //
             }
         }
-        init(searchTextWatcher)
+        init(searchTextWatcher, searchHistoryClass, spH)
+
+
     }
 
-    override fun onStop() {
-        super.onStop()
-        searchHistoryClass.addHistory(spH, trackListAdapter.historyList)
-//        addHistory(trackListAdapter.historyList)
-    }
-
-
-//    private fun addHistory(history: ArrayList<Track>) {
-//        val json = Gson().toJson(history.toTypedArray())
-//        getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).edit().putString(HISTORY_KEY, json).apply()
-//    }
-//
-//    private fun getHistory(): ArrayList<Track> {
-//        val itemType = object : TypeToken<ArrayList<Track>>() {}.type
-//        val json = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE).getString(HISTORY_KEY, null)
-//            ?: return ArrayList()
-//        return Gson().fromJson(json, itemType)
-//    }
-
-    private fun init(searchTextWatcher: TextWatcher) {
+    private fun init(
+        searchTextWatcher: TextWatcher,
+        searchClass: SearchHistory,
+        sp: SharedPreferences
+    ) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
             historyHintText.visibility =
@@ -164,12 +152,16 @@ class SearchActivity : AppCompatActivity() {
         }
         recycler.layoutManager = LinearLayoutManager(this)
 
-//        trackListAdapter.historyList = getHistory()
-        trackListAdapter.historyList = searchHistoryClass.getHistory(spH)
+        trackListAdapter.historyList = searchClass.getHistory(sp)
         historyList = trackListAdapter.historyList
-//        trackListAdapter.tracks = getHistory()
-        trackListAdapter.tracks = searchHistoryClass.getHistory(spH)
+        trackListAdapter.tracks = searchClass.getHistory(sp)
         recycler.adapter = trackListAdapter
+
+        trackListAdapter.onPlayClick = object : OnPlayClickListener {
+            override fun onPlayClick() {
+                searchClass.addHistory(sp, trackListAdapter.historyList)
+            }
+        }
     }
 
     private fun searchAction() {
@@ -230,4 +222,5 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         restoredText = savedInstanceState.getString(INPUT_TEXT_KEY).toString()
     }
+
 }
