@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -24,10 +25,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
-import com.example.playlistmaker.recyclerView.TrackViewHolder.OnPlayClickListener
 import com.example.playlistmaker.retrofit.ITunesApi
 import com.example.playlistmaker.retrofit.TracksResponse
 import com.example.playlistmaker.savings.SearchHistory
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -82,7 +83,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
 
-        val spH = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
+        val preferencesForTrackHistory = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
         val searchHistoryClass = SearchHistory()
 
 
@@ -105,6 +106,7 @@ class SearchActivity : AppCompatActivity() {
             trackListAdapter.historyList.clear()
             trackListAdapter.tracks = trackListAdapter.historyList
             trackListAdapter.notifyDataSetChanged()
+            addHistory(preferencesForTrackHistory, trackListAdapter.historyList)
         }
         inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -135,15 +137,13 @@ class SearchActivity : AppCompatActivity() {
                 //
             }
         }
-        init(searchTextWatcher, searchHistoryClass, spH)
-
-
+        init(searchTextWatcher, searchHistoryClass, preferencesForTrackHistory)
     }
 
     private fun init(
         searchTextWatcher: TextWatcher,
         searchClass: SearchHistory,
-        sp: SharedPreferences
+        preferencesForTrackHistory: SharedPreferences
     ) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
@@ -152,16 +152,23 @@ class SearchActivity : AppCompatActivity() {
         }
         recycler.layoutManager = LinearLayoutManager(this)
 
-        trackListAdapter.historyList = searchClass.getHistory(sp)
+        trackListAdapter.historyList = searchClass.getHistory(preferencesForTrackHistory)
         historyList = trackListAdapter.historyList
-        trackListAdapter.tracks = searchClass.getHistory(sp)
+        trackListAdapter.tracks = searchClass.getHistory(preferencesForTrackHistory)
         recycler.adapter = trackListAdapter
 
-        trackListAdapter.onPlayClick = object : OnPlayClickListener {
+        trackListAdapter.onPlayClick = object :TrackAdapter.OnPlayClickListener{
             override fun onPlayClick() {
-                searchClass.addHistory(sp, trackListAdapter.historyList)
+                Log.d("SaveTag", "Saving....")
+                addHistory(preferencesForTrackHistory, trackListAdapter.historyList)
             }
         }
+    }
+
+
+    fun addHistory(preferencesForTrackHistory: SharedPreferences, history: ArrayList<Track>) {
+        val json = Gson().toJson(history.toTypedArray())
+        preferencesForTrackHistory.edit().putString(HISTORY_KEY, json).apply()
     }
 
     private fun searchAction() {

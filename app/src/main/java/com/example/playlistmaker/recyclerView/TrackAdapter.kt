@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.recyclerView.TrackViewHolder.OnPlayClickListener
 import com.example.playlistmaker.savings.SearchHistory
 
 
@@ -14,6 +13,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var historyList = ArrayList<Track>()
 
     private val onClickListener = object : SearchHistory.OnTrackClickListener {
+
         override fun onTrackClick(holder: TrackViewHolder, position: Int) {
 
             if (historyList.size < 10) {
@@ -45,7 +45,6 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
         }
     }
 
@@ -61,14 +60,14 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             onClickListener.onTrackClick(holder, position)
-        }
-        holder.onPlayClick = object : OnPlayClickListener {
-            override fun onPlayClick() {
-                onPlayClick?.onPlayClick()
-            }
+            onPlayClick?.onPlayClick()
         }
     }
 
+
     override fun getItemCount(): Int = tracks.size
 
+    interface OnPlayClickListener {
+        fun onPlayClick()
+    }
 }
