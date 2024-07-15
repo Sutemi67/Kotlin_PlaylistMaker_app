@@ -27,7 +27,7 @@ import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
 import com.example.playlistmaker.retrofit.TracksResponse
-import com.example.playlistmaker.savings.SearchHistory
+import com.example.playlistmaker.savings.Savings
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -84,7 +84,7 @@ class SearchActivity : AppCompatActivity() {
         historyHintText = findViewById(R.id.text_hint_before_typing)
 
         val preferencesForTrackHistory = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
-        val searchHistoryClass = SearchHistory()
+        val savingsClass = Savings()
 
 
         if (savedInstanceState != null) inputText.setText(restoredText)
@@ -100,6 +100,7 @@ class SearchActivity : AppCompatActivity() {
                 findViewById<View>(android.R.id.content).windowToken,
                 0
             )
+            clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
         }
         reloadButton.setOnClickListener { searchAction() }
         clearHistoryButton.setOnClickListener {
@@ -107,7 +108,11 @@ class SearchActivity : AppCompatActivity() {
             trackListAdapter.tracks = trackListAdapter.historyList
             trackListAdapter.notifyDataSetChanged()
             addHistory(preferencesForTrackHistory, trackListAdapter.historyList)
+            clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
         }
+
+
+
         inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchAction()
@@ -137,12 +142,13 @@ class SearchActivity : AppCompatActivity() {
                 //
             }
         }
-        init(searchTextWatcher, searchHistoryClass, preferencesForTrackHistory)
+        init(searchTextWatcher, savingsClass, preferencesForTrackHistory)
+
     }
 
     private fun init(
         searchTextWatcher: TextWatcher,
-        searchClass: SearchHistory,
+        searchClass: Savings,
         preferencesForTrackHistory: SharedPreferences
     ) {
         inputText.addTextChangedListener(searchTextWatcher)
@@ -156,8 +162,9 @@ class SearchActivity : AppCompatActivity() {
         historyList = trackListAdapter.historyList
         trackListAdapter.tracks = searchClass.getHistory(preferencesForTrackHistory)
         recycler.adapter = trackListAdapter
+        clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
 
-        trackListAdapter.onPlayClick = object :TrackAdapter.OnPlayClickListener{
+        trackListAdapter.onPlayClick = object : TrackAdapter.OnPlayClickListener {
             override fun onPlayClick() {
                 Log.d("SaveTag", "Saving....")
                 addHistory(preferencesForTrackHistory, trackListAdapter.historyList)

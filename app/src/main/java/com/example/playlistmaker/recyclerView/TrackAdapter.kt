@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.savings.SearchHistory
+import com.example.playlistmaker.savings.Savings
 
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var tracks = ArrayList<Track>()
     var historyList = ArrayList<Track>()
 
-    private val onClickListener = object : SearchHistory.OnTrackClickListener {
+    private val onClickListener = object : Savings.OnTrackClickListener {
 
         override fun onTrackClick(holder: TrackViewHolder, position: Int) {
 

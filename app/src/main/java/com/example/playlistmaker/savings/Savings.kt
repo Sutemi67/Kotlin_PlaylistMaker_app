@@ -8,12 +8,7 @@ import com.example.playlistmaker.recyclerView.TrackViewHolder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-open class SearchHistory {
-
-//    fun addHistory(spH: SharedPreferences, history: ArrayList<Track>) {
-//        val json = Gson().toJson(history.toTypedArray())
-//        spH.edit().putString(HISTORY_KEY, json).apply()
-//    }
+open class Savings {
 
     fun getHistory(spH: SharedPreferences): ArrayList<Track> {
         val itemType = object : TypeToken<ArrayList<Track>>() {}.type

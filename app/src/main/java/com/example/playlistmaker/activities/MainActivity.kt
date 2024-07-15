@@ -10,10 +10,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.activities.SettingsActivity.Companion.IS_NIGHT
-import com.example.playlistmaker.savings.SearchHistory
+import com.example.playlistmaker.savings.Savings
 
 class MainActivity : AppCompatActivity() {
-    private val savings = SearchHistory()
+
+    private val savings = Savings()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
