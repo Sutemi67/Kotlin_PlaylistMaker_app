@@ -1,5 +1,6 @@
 package com.example.playlistmaker.recyclerView
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,15 +15,29 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
 
     private val onClickListener = object : Savings.OnTrackClickListener {
 
+        @SuppressLint("NotifyDataSetChanged")
         override fun onTrackClick(holder: TrackViewHolder, position: Int) {
 
             if (historyList.size < 10) {
                 if (historyList.isNotEmpty()) {
                     for (i in 0..<historyList.size) {
                         if (tracks[position].trackId == historyList[i].trackId) {
-                            historyList.removeAt(i)
-                            historyList.add(0, tracks[position])
-                            Log.d("Adding", "Удален трек из истории с индексом $i и добавлен ${historyList[0]})")
+
+                            tracks.add(0, tracks[position])
+                            notifyItemInserted(0)
+//                            historyList.add(0,tracks[position])
+                            Log.d(
+                                "Adding",
+                                "добавили трек с позиции $position"
+                            )
+
+                            tracks.removeAt(position+1)
+                            notifyDataSetChanged()
+//                            historyList.removeAt(position+1)
+                            Log.d(
+                                "Adding",
+                                "Удален трек с индексом $position"
+                            )
                             return
                         }
                     }
@@ -32,7 +47,11 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
                     "Дошли до добавления трека, размер массива истории ${historyList.size}, треклиста ${tracks.size}"
                 )
                 historyList.add(0, tracks[position])
-                Log.d("Adding", "Меньше 10 треков список, добавлено без повторений")
+                notifyItemInserted(0)
+                Log.d(
+                    "Adding",
+                    "Меньше 10 треков список, добавлен трек позиции $position без повторений, размер массива истории ${historyList.size}"
+                )
             } else {
                 for (i in 0..<historyList.size) {
                     if (tracks[position].trackId == historyList[i].trackId) {

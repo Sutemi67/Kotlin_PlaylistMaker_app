@@ -91,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             inputText.text.clear()
-            trackListAdapter.tracks = historyList
+            trackListAdapter.tracks = savingsClass.getHistory(preferencesForTrackHistory)
             trackListAdapter.notifyDataSetChanged()
             showOnlyList()
             val inputMethodManager =
