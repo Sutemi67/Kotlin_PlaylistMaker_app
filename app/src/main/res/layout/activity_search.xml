@@ -158,9 +158,10 @@
     <Button
         android:id="@+id/clearHistoryButton"
         style="@style/clearHistoryButton"
-        android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:text="@string/history_clean_button" />
 
 </LinearLayout>

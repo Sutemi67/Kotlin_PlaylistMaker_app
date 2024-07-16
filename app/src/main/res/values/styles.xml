@@ -108,7 +108,6 @@
     <style name="clearHistoryButton">
         <item name="iconTint">@color/YP_black</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:text">Очистить историю</item>
         <item name="android:backgroundTint">@color/YP_black</item>
         <item name="android:textSize">14sp</item>
         <item name="fontFamily">@font/ys_display_medium</item>
