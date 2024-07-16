@@ -35,14 +35,16 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val INPUT_TEXT_KEY = "inputText"
 const val HISTORY_KEY = "history_key"
 
 class SearchActivity : AppCompatActivity() {
+    companion object {
+        const val ITUNES_URL = "https://itunes.apple.com"
+        const val INPUT_TEXT_KEY = "inputText"
+    }
 
-    private val imdbBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
-        .baseUrl(imdbBaseUrl)
+        .baseUrl(ITUNES_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
