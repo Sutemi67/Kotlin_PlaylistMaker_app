@@ -31,7 +31,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
                                 "добавили трек с позиции $position"
                             )
 
-                            tracks.removeAt(position+1)
+                            tracks.removeAt(position + 1)
                             notifyDataSetChanged()
 //                            historyList.removeAt(position+1)
                             Log.d(
@@ -55,9 +55,19 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
             } else {
                 for (i in 0..<historyList.size) {
                     if (tracks[position].trackId == historyList[i].trackId) {
-                        historyList.removeAt(i)
-                        historyList.add(0, tracks[position])
-                        Log.d("Adding", "Замена")
+                        tracks.add(0, tracks[position])
+                        notifyItemInserted(0)
+                        Log.d(
+                            "Adding",
+                            "добавили трек с позиции $position"
+                        )
+
+                        tracks.removeAt(position + 1)
+                        notifyDataSetChanged()
+                        Log.d(
+                            "Adding",
+                            "Удален трек с индексом $position"
+                        )
                         return
                     }
                 }
