@@ -4,11 +4,12 @@ import android.content.SharedPreferences
 import com.example.playlistmaker.activities.HISTORY_KEY
 import com.example.playlistmaker.activities.SettingsActivity.Companion.IS_NIGHT
 import com.example.playlistmaker.recyclerView.Track
-import com.example.playlistmaker.recyclerView.TrackViewHolder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-open class Savings {
+class Savings {
+
+    var historyList = ArrayList<Track>()
 
     fun getHistory(spH: SharedPreferences): ArrayList<Track> {
         val itemType = object : TypeToken<ArrayList<Track>>() {}.type
@@ -19,8 +20,4 @@ open class Savings {
 
     fun getIsNight(spNT: SharedPreferences) = spNT.getInt(IS_NIGHT, 1)
 
-
-    interface OnTrackClickListener {
-        fun onTrackClick(holder: TrackViewHolder, position: Int)
-    }
 }

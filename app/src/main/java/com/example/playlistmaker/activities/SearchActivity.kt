@@ -106,10 +106,10 @@ class SearchActivity : AppCompatActivity() {
         }
         reloadButton.setOnClickListener { searchAction() }
         clearHistoryButton.setOnClickListener {
-            trackListAdapter.historyList.clear()
-            trackListAdapter.tracks = trackListAdapter.historyList
+            savingsClass.historyList.clear()
+            trackListAdapter.tracks = savingsClass.historyList
             trackListAdapter.notifyDataSetChanged()
-            addHistory(preferencesForTrackHistory, trackListAdapter.historyList)
+            addHistory(preferencesForTrackHistory, savingsClass.historyList)
             clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
         }
 
@@ -148,7 +148,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun init(
         searchTextWatcher: TextWatcher,
-        searchClass: Savings,
+        savingsClass: Savings,
         preferencesForTrackHistory: SharedPreferences
     ) {
         inputText.addTextChangedListener(searchTextWatcher)
@@ -158,16 +158,81 @@ class SearchActivity : AppCompatActivity() {
         }
         recycler.layoutManager = LinearLayoutManager(this)
 
-        trackListAdapter.historyList = searchClass.getHistory(preferencesForTrackHistory)
-        historyList = trackListAdapter.historyList
+        savingsClass.historyList = savingsClass.getHistory(preferencesForTrackHistory)
+        historyList = savingsClass.historyList
         trackListAdapter.tracks = historyList
         recycler.adapter = trackListAdapter
         clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
 
-        trackListAdapter.onPlayClick = object : TrackAdapter.OnPlayClickListener {
-            override fun onPlayClick() {
+
+        trackListAdapter.saveClick = object : TrackAdapter.SaveTrackInHistory {
+            override fun saveTrackInHistory() {
                 Log.d("SaveTag", "Saving....")
-                addHistory(preferencesForTrackHistory, trackListAdapter.historyList)
+                addHistory(preferencesForTrackHistory, savingsClass.historyList)
+            }
+        }
+        trackListAdapter.savingLogic = object : TrackAdapter.SavingLogic {
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun savingLogic(position: Int) {
+                val history2list = savingsClass.historyList
+                val tracks2list = trackListAdapter.tracks
+
+                if (history2list.size < 10) {
+                    if (history2list.isNotEmpty()) {
+                        for (i in 0..<history2list.size) {
+                            if (tracks2list[position].trackId == history2list[i].trackId) {
+
+                                tracks2list.add(0, tracks2list[position])
+                                trackListAdapter.notifyItemInserted(0)
+                                Log.d(
+                                    "Adding",
+                                    "добавили трек с позиции $position"
+                                )
+
+                                tracks2list.removeAt(position + 1)
+                                trackListAdapter.notifyDataSetChanged()
+                                Log.d(
+                                    "Adding",
+                                    "Удален трек с индексом $position"
+                                )
+                                return
+                            }
+                        }
+                    }
+                    Log.d(
+                        "Adding",
+                        "Дошли до добавления трека, размер массива истории ${history2list.size}, треклиста ${tracks2list.size}"
+                    )
+                    history2list.add(0, tracks2list[position])
+                    trackListAdapter.notifyItemInserted(0)
+                    Log.d(
+                        "Adding",
+                        "Меньше 10 треков список, добавлен трек позиции $position без повторений, размер массива истории ${historyList.size}"
+                    )
+                } else {
+                    for (i in 0..<history2list.size) {
+                        if (tracks2list[position].trackId == history2list[i].trackId) {
+                            tracks2list.add(0, tracks2list[position])
+                            trackListAdapter.notifyItemInserted(0)
+                            Log.d(
+                                "Adding",
+                                "добавили трек с позиции $position"
+                            )
+
+                            tracks2list.removeAt(position + 1)
+                            trackListAdapter.notifyDataSetChanged()
+                            Log.d(
+                                "Adding",
+                                "Удален трек с индексом $position"
+                            )
+                            return
+                        }
+                    }
+                    history2list.removeAt(9)
+                    history2list.add(0, tracks2list[position])
+                    Log.d("Adding", "добавлен вместо 10 трека")
+                }
             }
         }
     }

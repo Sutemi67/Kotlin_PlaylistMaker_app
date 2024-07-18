@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.MyApplication
 import com.example.playlistmaker.R
 import com.example.playlistmaker.activities.SettingsActivity.Companion.IS_NIGHT
 import com.example.playlistmaker.savings.Savings

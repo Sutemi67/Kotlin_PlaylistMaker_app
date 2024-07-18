@@ -15,9 +15,6 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackArtist: TextView = itemView.findViewById(R.id.track_artist)
     private val trackTime: TextView = itemView.findViewById(R.id.track_time)
     private val trackImage: ImageView = itemView.findViewById(R.id.track_image)
-//    private val playButton: ImageView = itemView.findViewById(R.id.play_track_button)
-
-//    var onPlayClick: OnPlayClickListener? = null
 
     fun bind(model: Track) {
         trackName.text = model.trackName
@@ -29,12 +26,6 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .transform(RoundedCorners(2))
             .placeholder(R.drawable.img_placeholder)
             .into(trackImage)
-//        playButton.setOnClickListener {
-//            onPlayClick?.onPlayClick()
-//        }
     }
 
-//    interface OnPlayClickListener {
-//        fun onPlayClick()
-//    }
 }
