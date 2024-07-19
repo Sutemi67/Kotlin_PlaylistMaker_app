@@ -138,19 +138,20 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_hint_before_typing"
-        style="@style/history_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="52dp"
-        android:layout_gravity="center"
-        android:text="@string/your_search"
-        android:visibility="visible" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_hint_before_typing"
+            style="@style/history_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:text="@string/your_search"
+            android:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_list"
@@ -172,5 +173,4 @@
             android:text="@string/history_clean_button" />
 
     </LinearLayout>
-
 </LinearLayout>
