@@ -103,6 +103,7 @@ class SearchActivity : AppCompatActivity() {
                 0
             )
             clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
+            historyHintText.isVisible = historyList.isEmpty() == false
         }
         reloadButton.setOnClickListener { searchAction() }
         clearHistoryButton.setOnClickListener {
@@ -111,6 +112,7 @@ class SearchActivity : AppCompatActivity() {
             trackListAdapter.notifyDataSetChanged()
             addHistory(preferencesForTrackHistory, savingsClass.historyList)
             clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
+            historyHintText.isVisible = historyList.isEmpty() == false
         }
 
         inputText.setOnEditorActionListener { _, actionId, _ ->
@@ -135,7 +137,6 @@ class SearchActivity : AppCompatActivity() {
                 historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                 recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                 clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
-
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -153,8 +154,7 @@ class SearchActivity : AppCompatActivity() {
     ) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
-            historyHintText.visibility =
-                if (hasFocus && inputText.text.isEmpty()) View.VISIBLE else View.GONE
+            historyHintText.isVisible = hasFocus && inputText.text.isEmpty() && historyList.isEmpty() == false
         }
         recycler.layoutManager = LinearLayoutManager(this)
 
@@ -163,6 +163,7 @@ class SearchActivity : AppCompatActivity() {
         trackListAdapter.tracks = historyList
         recycler.adapter = trackListAdapter
         clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
+        historyHintText.isVisible = historyList.isEmpty() == false
 
 
         trackListAdapter.saveClick = object : TrackAdapter.SaveTrackInHistory {
@@ -244,6 +245,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchAction() {
+        historyHintText.isVisible = false
+        clearHistoryButton.isVisible = false
+
         imdbService.search(inputText.text.toString())
             .enqueue(object : Callback<TracksResponse> {
                 @SuppressLint("NotifyDataSetChanged")
@@ -289,7 +293,7 @@ class SearchActivity : AppCompatActivity() {
         nothingImage.visibility = View.GONE
         connectionProblemError.visibility = View.GONE
         recycler.visibility = View.VISIBLE
-        clearHistoryButton.visibility = View.VISIBLE
+//        clearHistoryButton.visibility = View.VISIBLE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
