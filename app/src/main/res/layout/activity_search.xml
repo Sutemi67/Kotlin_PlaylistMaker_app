@@ -144,6 +144,7 @@
         android:layout_width="wrap_content"
         android:layout_height="52dp"
         android:layout_gravity="center"
+        android:text="@string/your_search"
         android:visibility="visible" />
 
     <LinearLayout
