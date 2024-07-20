@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -75,7 +76,7 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<ImageView>(R.id.backIcon_search_screen).setOnClickListener { finish() }
+        findViewById<Toolbar>(R.id.backIcon_search_screen2).setNavigationOnClickListener { finish() }
         inputText = findViewById(R.id.search_input_text)
         recycler = findViewById(R.id.search_list)
         nothingImage = findViewById(R.id.nothingFound)
@@ -154,7 +155,8 @@ class SearchActivity : AppCompatActivity() {
     ) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
-            historyHintText.isVisible = hasFocus && inputText.text.isEmpty() && historyList.isEmpty() == false
+            historyHintText.isVisible =
+                hasFocus && inputText.text.isEmpty() && historyList.isEmpty() == false
         }
         recycler.layoutManager = LinearLayoutManager(this)
 
@@ -190,9 +192,10 @@ class SearchActivity : AppCompatActivity() {
                                     "Adding",
                                     "добавили трек с позиции $position"
                                 )
-
                                 tracks2list.removeAt(position + 1)
-                                trackListAdapter.notifyDataSetChanged()
+                                if (tracks2list.size < 11) {
+                                    trackListAdapter.notifyDataSetChanged()
+                                }
                                 Log.d(
                                     "Adding",
                                     "Удален трек с индексом $position"
@@ -222,7 +225,9 @@ class SearchActivity : AppCompatActivity() {
                             )
 
                             tracks2list.removeAt(position + 1)
-                            trackListAdapter.notifyDataSetChanged()
+                            if (tracks2list.size < 11) {
+                                trackListAdapter.notifyDataSetChanged()
+                            }
                             Log.d(
                                 "Adding",
                                 "Удален трек с индексом $position"
@@ -293,7 +298,6 @@ class SearchActivity : AppCompatActivity() {
         nothingImage.visibility = View.GONE
         connectionProblemError.visibility = View.GONE
         recycler.visibility = View.VISIBLE
-//        clearHistoryButton.visibility = View.VISIBLE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

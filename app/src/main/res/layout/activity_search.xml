@@ -9,26 +9,14 @@
     tools:context=".activities.SearchActivity">
 
     <Toolbar
+        android:id="@+id/backIcon_search_screen2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:layout_margin="4dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:navigationIcon="@drawable/ic_back_arrow"
+        android:title="@string/search_activity">
 
-        <ImageView
-            android:id="@+id/backIcon_search_screen"
-            style="@style/icons_main"
-            android:layout_width="@dimen/button_backTo_size"
-            android:layout_height="@dimen/button_backTo_size"
-            android:contentDescription="@string/description_search_icon"
-            android:padding="@dimen/button_backTo_padding"
-            android:src="@drawable/ic_back_arrow" />
-
-        <TextView
-            style="@style/HeaderTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:text="@string/search_activity" />
     </Toolbar>
 
     <LinearLayout
@@ -140,9 +128,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_hint_before_typing"
