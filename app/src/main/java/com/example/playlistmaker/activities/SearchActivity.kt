@@ -135,9 +135,11 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
                 }
-                historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
-                recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
-                clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+                if (historyList.isNotEmpty()) {
+                    historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+                    recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+                    clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -264,6 +266,7 @@ class SearchActivity : AppCompatActivity() {
     private fun searchAction() {
         historyHintText.isVisible = false
         clearHistoryButton.isVisible = false
+
 
         imdbService.search(inputText.text.toString())
             .enqueue(object : Callback<TracksResponse> {
