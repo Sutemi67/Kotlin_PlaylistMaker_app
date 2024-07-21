@@ -170,13 +170,13 @@ class SearchActivity : AppCompatActivity() {
         historyHintText.isVisible = historyList.isEmpty() == false
 
 
-        trackListAdapter.saveClick = object : TrackAdapter.SaveTrackInHistory {
+        trackListAdapter.saveClickListener = object : TrackAdapter.SaveTrackInHistoryListener {
             override fun saveTrackInHistory() {
                 Log.d("SaveTag", "Saving....")
                 addHistory(preferencesForTrackHistory, savingsClass.historyList)
             }
         }
-        trackListAdapter.savingLogic = object : TrackAdapter.SavingLogic {
+        trackListAdapter.addingInHistoryLogicListener = object : TrackAdapter.AddInHistoryLogicListener {
 
             @SuppressLint("NotifyDataSetChanged")
             override fun savingLogic(position: Int) {
