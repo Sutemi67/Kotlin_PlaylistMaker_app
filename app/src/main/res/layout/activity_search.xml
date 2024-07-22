@@ -9,28 +9,16 @@
     tools:context=".activities.SearchActivity">
 
     <Toolbar
+        android:id="@+id/backIcon_search_screen2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
+        android:layout_margin="4dp"
         android:gravity="center_vertical"
-        android:padding="4dp">
+        android:navigationIcon="@drawable/ic_back_arrow"
+        android:titleTextAppearance="@style/HeaderTextStyle"
+        android:title="@string/search_activity">
 
-        <ImageView
-            android:id="@+id/backIcon_search_screen"
-            style="@style/icons_main"
-            android:layout_width="@dimen/button_backTo_size"
-            android:layout_height="@dimen/button_backTo_size"
-            android:contentDescription="@string/description_search_icon"
-            android:padding="@dimen/button_backTo_padding"
-            android:src="@drawable/ic_back_arrow" />
-
-        <TextView
-            style="@style/HeaderTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:text="@string/search_activity" />
     </Toolbar>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -113,7 +101,7 @@
         android:orientation="vertical"
         android:paddingTop="102dp"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -139,11 +127,40 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_list"
+    <LinearLayout
+        android:id="@+id/history_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/track_list_item_layout" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_hint_before_typing"
+            style="@style/history_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:text="@string/your_search"
+            android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/track_list_item_layout"
+            tools:visibility="gone" />
+
+        <Button
+            android:id="@+id/clearHistoryButton"
+            style="@style/clearHistoryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="@string/history_clean_button" />
+
+    </LinearLayout>
 </LinearLayout>

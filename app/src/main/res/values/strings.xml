@@ -22,4 +22,6 @@
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="connection_problem">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте ваше подключение к интернету</string>
     <string name="reload">Обновить</string>
+    <string name="history_clean_button">Очистить историю</string>
+    <string name="your_search">Вы искали:</string>
 </resources>

@@ -27,4 +27,5 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .placeholder(R.drawable.img_placeholder)
             .into(trackImage)
     }
+
 }
