@@ -267,7 +267,6 @@ class SearchActivity : AppCompatActivity() {
         historyHintText.isVisible = false
         clearHistoryButton.isVisible = false
 
-
         imdbService.search(inputText.text.toString())
             .enqueue(object : Callback<TracksResponse> {
                 @SuppressLint("NotifyDataSetChanged")
