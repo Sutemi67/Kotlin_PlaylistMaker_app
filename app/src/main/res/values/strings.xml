@@ -27,9 +27,9 @@
     <string name="like">like</string>
     <string name="play">play\n</string>
     <string name="add_to_favourites">add to favourites</string>
-    <string name="duration">track duration</string>
-    <string name="album_name">album name</string>
-    <string name="year">year</string>
-    <string name="genre">genre</string>
-    <string name="country">country</string>
+    <string name="duration">Длительность</string>
+    <string name="album_name">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
 </resources>
