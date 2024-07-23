@@ -24,4 +24,12 @@
     <string name="reload">Обновить</string>
     <string name="history_clean_button">Очистить историю</string>
     <string name="your_search">Вы искали:</string>
+    <string name="like">like</string>
+    <string name="play">play\n</string>
+    <string name="add_to_favourites">add to favourites</string>
+    <string name="duration">track duration</string>
+    <string name="album_name">album name</string>
+    <string name="year">year</string>
+    <string name="genre">genre</string>
+    <string name="country">country</string>
 </resources>
