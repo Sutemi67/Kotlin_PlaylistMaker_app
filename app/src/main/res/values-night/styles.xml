@@ -116,4 +116,11 @@
         <item name="android:textColor">@color/YP_black</item>
     </style>
 
+    <style name="playbutton">
+        <item name="android:tint">@color/YP_white</item>
+    </style>
+
+    <style name="sidebutton">
+        <item name="android:tint">@color/YP_white</item>
+    </style>
 </resources>

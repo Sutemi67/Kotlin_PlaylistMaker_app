@@ -32,5 +32,7 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
-    <item name="audioplayer_color_1" type="color">#25FFFFFF</item>
+    <style name="playbutton">
+        <item name="android:tint">@color/YP_black</item>
+    </style>
 </resources>

@@ -11,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -29,7 +31,8 @@ class PlayerActivity : AppCompatActivity() {
 
         val artistName: TextView = findViewById(R.id.ArtistName)
         val trackName: TextView = findViewById(R.id.TrackName)
-        val duration: TextView = findViewById(R.id.time)
+        val time: TextView = findViewById(R.id.time)
+        val duration: TextView = findViewById(R.id.duration)
         val collectionName: TextView = findViewById(R.id.album)
         val cover: ImageView = findViewById(R.id.cover)
         val country: TextView = findViewById(R.id.country)
@@ -38,18 +41,23 @@ class PlayerActivity : AppCompatActivity() {
 
         artistName.text = intent.getStringExtra("artist")
         trackName.text = intent.getStringExtra("trackName")
-        duration.text = intent.getStringExtra("trackTimeMillis")
         collectionName.text = intent.getStringExtra("collectionName")
         country.text = intent.getStringExtra("country")
         primaryGenreName.text = intent.getStringExtra("primaryGenreName")
 
-        val releaseDate = intent.getStringExtra("releaseDate").toString()
-        val upToNCharacters: String = releaseDate.substring(0, 3)
-        releaseYear.text = upToNCharacters
+        releaseYear.text = intent.getStringExtra("releaseDate")?.substring(0, 4) ?: "-"
+
+        val getDuration = intent.getIntExtra("trackTimeMillis", 0)
+        time.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
+        duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
+
+        fun coverResolutionAmplifier(): String? {
+            return intent.getStringExtra("artworkUrl100")?.replaceAfterLast('/', "512x512bb.jpg")
+        }
 
 
         Glide.with(this@PlayerActivity)
-            .load(intent.getStringExtra("artworkUrl100"))
+            .load(coverResolutionAmplifier())
             .centerCrop()
             .transform(RoundedCorners(2))
             .placeholder(R.drawable.img_placeholder)
