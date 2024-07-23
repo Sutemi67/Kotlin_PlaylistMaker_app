@@ -24,6 +24,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
@@ -50,6 +52,7 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
+
 
     private lateinit var recycler: RecyclerView
     private var trackList = ArrayList<Track>()
@@ -260,9 +263,19 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
             }
+
         trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
-            override fun openPlayerActivity() {
-                startActivity(Intent(this@SearchActivity, PlayerActivity::class.java))
+            override fun openPlayerActivity(track:Track) {
+                val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+                intent.putExtra("trackName",track.trackName)
+                intent.putExtra("artist",track.artistName)
+                intent.putExtra("trackTimeMillis",track.trackTime)
+                intent.putExtra("artworkUrl100",track.artworkUrl100)
+                intent.putExtra("collectionName",track.collectionName)
+                intent.putExtra("country",track.country)
+                intent.putExtra("primaryGenreName",track.primaryGenreName)
+                intent.putExtra("releaseDate",track.releaseDate)
+                startActivity(intent)
             }
         }
     }

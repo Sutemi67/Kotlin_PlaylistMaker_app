@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:id="@+id/activity_player"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/audioplayer_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -89,9 +89,9 @@
             android:background="@color/Transparent"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:layout_constraintEnd_toStartOf="@+id/from_right_16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/from_left_16dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_back_arrow" />
 
@@ -192,7 +192,7 @@
             tools:text="3:21" />
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/album"
             style="@style/audioplayer_changing_track_data"
             android:layout_width="0dp"
             android:layout_height="32dp"
@@ -204,7 +204,7 @@
             tools:text="Meteora" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/releaseDate"
             style="@style/audioplayer_changing_track_data"
             android:layout_width="0dp"
             android:layout_height="32dp"
@@ -216,7 +216,7 @@
             tools:text="1992" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/primaryGenreName"
             style="@style/audioplayer_changing_track_data"
             android:layout_width="0dp"
             android:layout_height="32dp"
@@ -228,7 +228,7 @@
             tools:text="Rap" />
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/country"
             style="@style/audioplayer_changing_track_data"
             android:layout_width="0dp"
             android:layout_height="32dp"
