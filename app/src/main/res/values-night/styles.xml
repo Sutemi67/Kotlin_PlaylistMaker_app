@@ -115,4 +115,5 @@
         <item name="android:textFontWeight">500</item>
         <item name="android:textColor">@color/YP_black</item>
     </style>
+
 </resources>

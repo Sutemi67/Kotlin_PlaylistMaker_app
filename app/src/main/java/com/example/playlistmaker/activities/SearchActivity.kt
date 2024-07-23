@@ -2,6 +2,7 @@ package com.example.playlistmaker.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -176,31 +177,73 @@ class SearchActivity : AppCompatActivity() {
                 addHistory(preferencesForTrackHistory, savingsClass.historyList)
             }
         }
-        trackListAdapter.addingInHistoryLogicListener = object : TrackAdapter.AddInHistoryLogicListener {
+        trackListAdapter.addingInHistoryLogicListener =
+            object : TrackAdapter.AddInHistoryLogicListener {
 
-            @SuppressLint("NotifyDataSetChanged")
-            override fun savingLogic(position: Int) {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun savingLogic(position: Int) {
 
-                if (savingsClass.historyList.size < 10) {
-                    if (savingsClass.historyList.isNotEmpty()) {
+                    if (savingsClass.historyList.size < 10) {
+                        if (savingsClass.historyList.isNotEmpty()) {
+                            for (i in 0..<savingsClass.historyList.size) {
+                                if (trackListAdapter.tracks[position].trackId == savingsClass.historyList[i].trackId) {
+
+                                    trackListAdapter.tracks.add(
+                                        0,
+                                        trackListAdapter.tracks[position]
+                                    )
+                                    if (trackListAdapter.tracks.size < 11) {
+                                        trackListAdapter.notifyItemInserted(0)
+                                    }
+//                                trackListAdapter.notifyItemInserted(0)
+                                    Log.d(
+                                        "Adding",
+                                        "добавили трек с позиции $position"
+                                    )
+                                    trackListAdapter.tracks.removeAt(position + 1)
+                                    if (trackListAdapter.tracks.size < 11) {
+                                        trackListAdapter.notifyDataSetChanged()
+                                    }
+//                                trackListAdapter.notifyDataSetChanged()
+
+                                    Log.d(
+                                        "Adding",
+                                        "Удален трек с индексом $position"
+                                    )
+                                    return
+                                }
+                            }
+                        }
+                        Log.d(
+                            "Adding",
+                            "Дошли до добавления трека, размер массива истории ${savingsClass.historyList.size}, треклиста ${trackListAdapter.tracks.size}"
+                        )
+                        savingsClass.historyList.add(0, trackListAdapter.tracks[position])
+                        if (trackListAdapter.tracks.size < 11) {
+                            trackListAdapter.notifyItemInserted(0)
+                        }
+//                    trackListAdapter.notifyItemInserted(0)
+                        Log.d(
+                            "Adding",
+                            "Меньше 10 треков список, добавлен трек позиции $position без повторений, размер массива истории ${historyList.size}"
+                        )
+                    } else {
                         for (i in 0..<savingsClass.historyList.size) {
                             if (trackListAdapter.tracks[position].trackId == savingsClass.historyList[i].trackId) {
-
                                 trackListAdapter.tracks.add(0, trackListAdapter.tracks[position])
                                 if (trackListAdapter.tracks.size < 11) {
                                     trackListAdapter.notifyItemInserted(0)
                                 }
-//                                trackListAdapter.notifyItemInserted(0)
+//                            trackListAdapter.notifyItemInserted(0)
                                 Log.d(
                                     "Adding",
                                     "добавили трек с позиции $position"
                                 )
+
                                 trackListAdapter.tracks.removeAt(position + 1)
                                 if (trackListAdapter.tracks.size < 11) {
                                     trackListAdapter.notifyDataSetChanged()
                                 }
-//                                trackListAdapter.notifyDataSetChanged()
-
                                 Log.d(
                                     "Adding",
                                     "Удален трек с индексом $position"
@@ -208,51 +251,18 @@ class SearchActivity : AppCompatActivity() {
                                 return
                             }
                         }
-                    }
-                    Log.d(
-                        "Adding",
-                        "Дошли до добавления трека, размер массива истории ${savingsClass.historyList.size}, треклиста ${trackListAdapter.tracks.size}"
-                    )
-                    savingsClass.historyList.add(0, trackListAdapter.tracks[position])
-                    if (trackListAdapter.tracks.size < 11) {
-                        trackListAdapter.notifyItemInserted(0)
-                    }
-//                    trackListAdapter.notifyItemInserted(0)
-                    Log.d(
-                        "Adding",
-                        "Меньше 10 треков список, добавлен трек позиции $position без повторений, размер массива истории ${historyList.size}"
-                    )
-                } else {
-                    for (i in 0..<savingsClass.historyList.size) {
-                        if (trackListAdapter.tracks[position].trackId == savingsClass.historyList[i].trackId) {
-                            trackListAdapter.tracks.add(0, trackListAdapter.tracks[position])
-                            if (trackListAdapter.tracks.size < 11) {
-                                trackListAdapter.notifyItemInserted(0)
-                            }
-//                            trackListAdapter.notifyItemInserted(0)
-                            Log.d(
-                                "Adding",
-                                "добавили трек с позиции $position"
-                            )
-
-                            trackListAdapter.tracks.removeAt(position + 1)
-                            if (trackListAdapter.tracks.size < 11) {
-                                trackListAdapter.notifyDataSetChanged()
-                            }
-                            Log.d(
-                                "Adding",
-                                "Удален трек с индексом $position"
-                            )
-                            return
+                        savingsClass.historyList.removeAt(9)
+                        savingsClass.historyList.add(0, trackListAdapter.tracks[position])
+                        if (trackListAdapter.tracks.size < 11) {
+                            trackListAdapter.notifyItemInserted(0)
                         }
+                        Log.d("Adding", "добавлен вместо 10 трека")
                     }
-                    savingsClass.historyList.removeAt(9)
-                    savingsClass.historyList.add(0, trackListAdapter.tracks[position])
-                    if (trackListAdapter.tracks.size < 11) {
-                        trackListAdapter.notifyItemInserted(0)
-                    }
-                    Log.d("Adding", "добавлен вместо 10 трека")
                 }
+            }
+        trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
+            override fun openPlayerActivity() {
+                startActivity(Intent(this@SearchActivity, PlayerActivity::class.java))
             }
         }
     }
