@@ -51,7 +51,6 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
 
-
     private lateinit var recycler: RecyclerView
     private var trackList = ArrayList<Track>()
     private var historyList = ArrayList<Track>()
@@ -196,7 +195,6 @@ class SearchActivity : AppCompatActivity() {
                                     if (trackListAdapter.tracks.size < 11) {
                                         trackListAdapter.notifyItemInserted(0)
                                     }
-//                                trackListAdapter.notifyItemInserted(0)
                                     Log.d(
                                         "Adding",
                                         "добавили трек с позиции $position"
@@ -205,7 +203,6 @@ class SearchActivity : AppCompatActivity() {
                                     if (trackListAdapter.tracks.size < 11) {
                                         trackListAdapter.notifyDataSetChanged()
                                     }
-//                                trackListAdapter.notifyDataSetChanged()
 
                                     Log.d(
                                         "Adding",
@@ -223,7 +220,6 @@ class SearchActivity : AppCompatActivity() {
                         if (trackListAdapter.tracks.size < 11) {
                             trackListAdapter.notifyItemInserted(0)
                         }
-//                    trackListAdapter.notifyItemInserted(0)
                         Log.d(
                             "Adding",
                             "Меньше 10 треков список, добавлен трек позиции $position без повторений, размер массива истории ${historyList.size}"
@@ -235,7 +231,6 @@ class SearchActivity : AppCompatActivity() {
                                 if (trackListAdapter.tracks.size < 11) {
                                     trackListAdapter.notifyItemInserted(0)
                                 }
-//                            trackListAdapter.notifyItemInserted(0)
                                 Log.d(
                                     "Adding",
                                     "добавили трек с позиции $position"
@@ -267,7 +262,6 @@ class SearchActivity : AppCompatActivity() {
                 val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
                 intent.putExtra("trackName", track.trackName)
                 intent.putExtra("artist", track.artistName)
-//                intent.putExtra("trackTimeMillis",track.trackTime)
                 intent.putExtra("artworkUrl100", track.artworkUrl100)
                 intent.putExtra("collectionName", track.collectionName)
                 intent.putExtra("country", track.country)

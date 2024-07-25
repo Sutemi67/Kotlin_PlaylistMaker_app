@@ -2,7 +2,7 @@
 <resources>
 
     <style name="BG_color">
-        <item name="android:background">@color/YP_black</item>
+        <item name="android:backgroundTint">@color/YP_black</item>
     </style>
 
     <style name="BG_icons">
@@ -30,6 +30,7 @@
         <item name="android:textColor">@color/YP_white</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textFontWeight">500</item>
+        <item name="android:backgroundTint">@color/YP_black</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 

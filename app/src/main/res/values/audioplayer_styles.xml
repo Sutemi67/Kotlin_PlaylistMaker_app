@@ -4,7 +4,6 @@
     <style name="audioplayer_track_artist">
         <item name="android:textColor">@color/YP_black</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:backgroundTint">@color/YP_black</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
@@ -19,7 +18,6 @@
     <style name="audioplayer_static_menu">
         <item name="android:textColor">@color/YP_light_gray_text</item>
         <item name="android:textSize">13sp</item>
-        <item name="android:backgroundTint">@color/YP_black</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
@@ -27,7 +25,6 @@
     <style name="audioplayer_changing_track_data">
         <item name="android:textColor">@color/YP_black</item>
         <item name="android:textSize">13sp</item>
-        <item name="android:backgroundTint">@color/YP_black</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
