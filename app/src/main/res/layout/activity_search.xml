@@ -80,14 +80,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/nothing_found"
+            android:contentDescription="@string/search_nothing_found"
             android:src="@drawable/img_nothing_found_light" />
 
         <TextView
             style="@style/errorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nothing_found" />
+            android:text="@string/search_nothing_found" />
 
     </LinearLayout>
 
@@ -107,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/nothing_found"
+            android:contentDescription="@string/search_nothing_found"
             android:src="@drawable/img_connection_problem" />
 
         <TextView
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/connection_problem" />
+            android:text="@string/search_connection_problem" />
 
         <Button
             android:id="@+id/reload_button"
@@ -123,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/reload" />
+            android:text="@string/search_reload" />
 
     </LinearLayout>
 
@@ -140,7 +140,7 @@
             android:layout_width="wrap_content"
             android:layout_height="52dp"
             android:layout_gravity="center"
-            android:text="@string/your_search"
+            android:text="@string/search_your_search"
             android:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -160,7 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
-            android:text="@string/history_clean_button" />
+            android:text="@string/search_history_clean_button" />
 
     </LinearLayout>
 </LinearLayout>

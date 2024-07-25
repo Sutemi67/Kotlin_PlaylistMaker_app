@@ -12,7 +12,6 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var addingInHistoryLogicListener: AddInHistoryLogicListener? = null
     var openPlayerActivity: OpenPlayerActivity? = null
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.track_list_item_layout, parent, false)
@@ -29,7 +28,6 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun getItemCount(): Int = tracks.size
-
 
     interface SaveTrackInHistoryListener {
         fun saveTrackInHistory()

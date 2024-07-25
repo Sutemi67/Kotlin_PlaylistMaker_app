@@ -16,7 +16,6 @@ import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,17 +26,17 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
+        findViewById<Toolbar>(R.id.player_toolbar).setNavigationOnClickListener { finish() }
 
         val artistName: TextView = findViewById(R.id.ArtistName)
         val trackName: TextView = findViewById(R.id.TrackName)
         val time: TextView = findViewById(R.id.time)
-        val duration: TextView = findViewById(R.id.duration)
-        val collectionName: TextView = findViewById(R.id.album)
-        val cover: ImageView = findViewById(R.id.cover)
-        val country: TextView = findViewById(R.id.country)
-        val primaryGenreName: TextView = findViewById(R.id.primaryGenreName)
-        val releaseYear: TextView = findViewById(R.id.releaseDate)
+        val duration: TextView = findViewById(R.id.player_duration)
+        val collectionName: TextView = findViewById(R.id.player_album)
+        val cover: ImageView = findViewById(R.id.player_cover)
+        val country: TextView = findViewById(R.id.player_country)
+        val primaryGenreName: TextView = findViewById(R.id.player_primaryGenre)
+        val releaseYear: TextView = findViewById(R.id.player_releaseDate)
 
         artistName.text = intent.getStringExtra("artist")
         trackName.text = intent.getStringExtra("trackName")
