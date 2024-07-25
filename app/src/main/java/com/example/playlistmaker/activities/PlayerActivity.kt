@@ -10,9 +10,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.ARTIST
+import com.example.playlistmaker.ARTWORK_URL
+import com.example.playlistmaker.COLLECTION_NAME
+import com.example.playlistmaker.COUNTRY
+import com.example.playlistmaker.GENRE
 import com.example.playlistmaker.R
+import com.example.playlistmaker.RELEASE_DATE
+import com.example.playlistmaker.TRACK_NAME
+import com.example.playlistmaker.TRACK_TIME_IN_MILLIS
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -38,20 +47,20 @@ class PlayerActivity : AppCompatActivity() {
         val primaryGenreName: TextView = findViewById(R.id.player_primaryGenre)
         val releaseYear: TextView = findViewById(R.id.player_releaseDate)
 
-        artistName.text = intent.getStringExtra("artist")
-        trackName.text = intent.getStringExtra("trackName")
-        collectionName.text = intent.getStringExtra("collectionName")
-        country.text = intent.getStringExtra("country")
-        primaryGenreName.text = intent.getStringExtra("primaryGenreName")
+        artistName.text = intent.getStringExtra(ARTIST)
+        trackName.text = intent.getStringExtra(TRACK_NAME)
+        collectionName.text = intent.getStringExtra(COLLECTION_NAME)
+        country.text = intent.getStringExtra(COUNTRY)
+        primaryGenreName.text = intent.getStringExtra(GENRE)
 
-        releaseYear.text = intent.getStringExtra("releaseDate")?.substring(0, 4) ?: "-"
+        releaseYear.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
 
-        val getDuration = intent.getIntExtra("trackTimeMillis", 0)
+        val getDuration = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0)
         time.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
         duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
 
         fun coverResolutionAmplifier(): String? {
-            return intent.getStringExtra("artworkUrl100")?.replaceAfterLast('/', "512x512bb.jpg")
+            return intent.getStringExtra(ARTWORK_URL)?.replaceAfterLast('/', "512x512bb.jpg")
         }
 
 

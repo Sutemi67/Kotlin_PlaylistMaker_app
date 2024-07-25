@@ -24,7 +24,16 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.ARTIST
+import com.example.playlistmaker.ARTWORK_URL
+import com.example.playlistmaker.COLLECTION_NAME
+import com.example.playlistmaker.COUNTRY
+import com.example.playlistmaker.GENRE
+import com.example.playlistmaker.HISTORY_KEY
 import com.example.playlistmaker.R
+import com.example.playlistmaker.RELEASE_DATE
+import com.example.playlistmaker.TRACK_NAME
+import com.example.playlistmaker.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.recyclerView.Track
 import com.example.playlistmaker.recyclerView.TrackAdapter
 import com.example.playlistmaker.retrofit.ITunesApi
@@ -37,7 +46,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val HISTORY_KEY = "history_key"
+
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -260,14 +269,14 @@ class SearchActivity : AppCompatActivity() {
         trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
                 val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
-                intent.putExtra("trackName", track.trackName)
-                intent.putExtra("artist", track.artistName)
-                intent.putExtra("artworkUrl100", track.artworkUrl100)
-                intent.putExtra("collectionName", track.collectionName)
-                intent.putExtra("country", track.country)
-                intent.putExtra("primaryGenreName", track.primaryGenreName)
-                intent.putExtra("releaseDate", track.releaseDate)
-                intent.putExtra("trackTimeMillis", track.trackTime)
+                intent.putExtra(TRACK_NAME, track.trackName)
+                intent.putExtra(ARTIST, track.artistName)
+                intent.putExtra(ARTWORK_URL, track.artworkUrl100)
+                intent.putExtra(COLLECTION_NAME, track.collectionName)
+                intent.putExtra(COUNTRY, track.country)
+                intent.putExtra(GENRE, track.primaryGenreName)
+                intent.putExtra(RELEASE_DATE, track.releaseDate)
+                intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
                 startActivity(intent)
             }
         }
