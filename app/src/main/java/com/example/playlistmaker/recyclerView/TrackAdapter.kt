@@ -7,8 +7,10 @@ import com.example.playlistmaker.R
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var tracks = ArrayList<Track>()
+
     var saveClickListener: SaveTrackInHistoryListener? = null
     var addingInHistoryLogicListener: AddInHistoryLogicListener? = null
+    var openPlayerActivity: OpenPlayerActivity? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -19,6 +21,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
+            openPlayerActivity?.openPlayerActivity(tracks[position])
             addingInHistoryLogicListener?.savingLogic(position)
             saveClickListener?.saveTrackInHistory()
         }
@@ -33,4 +36,9 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     interface AddInHistoryLogicListener {
         fun savingLogic(position: Int)
     }
+
+    interface OpenPlayerActivity {
+        fun openPlayerActivity(track: Track)
+    }
+
 }

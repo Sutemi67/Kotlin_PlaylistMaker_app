@@ -7,6 +7,7 @@
     style="@style/BG_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/YP_blue"
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
@@ -15,15 +16,18 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:layout_marginStart="@dimen/margin_mainScreen_common_left"
+        android:background="@color/YP_blue"
         android:gravity="center_vertical"
         android:text="@string/main_header"
         android:textColor="@color/YP_white" />
 
     <LinearLayout
+        style="@style/BG_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/YP_blue"
         android:orientation="vertical">
 
         <Button

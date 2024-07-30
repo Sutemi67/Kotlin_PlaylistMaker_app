@@ -19,9 +19,17 @@
     <string name="email_support_message_sender">"sutemi67@gmail.com"</string>
     <string name="album_cover">album_cover</string>
     <string name="play_track_image">play_track_image</string>
-    <string name="nothing_found">Ничего не нашлось</string>
-    <string name="connection_problem">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте ваше подключение к интернету</string>
-    <string name="reload">Обновить</string>
-    <string name="history_clean_button">Очистить историю</string>
-    <string name="your_search">Вы искали:</string>
+    <string name="search_nothing_found">Ничего не нашлось</string>
+    <string name="search_connection_problem">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте ваше подключение к интернету</string>
+    <string name="search_reload">Обновить</string>
+    <string name="search_history_clean_button">Очистить историю</string>
+    <string name="search_your_search">Вы искали:</string>
+    <string name="player_like">like</string>
+    <string name="player_play">play\n</string>
+    <string name="player_add_to_favourites">add to favourites</string>
+    <string name="player_duration">Длительность</string>
+    <string name="player_album_name">Альбом</string>
+    <string name="player_year">Год</string>
+    <string name="player_genre">Жанр</string>
+    <string name="player_country">Страна</string>
 </resources>

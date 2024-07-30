@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="audioplayer_track_artist">
+        <item name="android:textColor">@color/YP_white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:backgroundTint">@color/YP_black</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="audioplayer_track_name">
+        <item name="android:textColor">@color/YP_white</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="audioplayer_changing_track_data">
+        <item name="android:textColor">@color/YP_white</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:backgroundTint">@color/YP_black</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+</resources>

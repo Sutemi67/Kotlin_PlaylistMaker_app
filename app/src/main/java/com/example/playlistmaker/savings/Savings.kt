@@ -1,7 +1,7 @@
 package com.example.playlistmaker.savings
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.activities.HISTORY_KEY
+import com.example.playlistmaker.HISTORY_KEY
 import com.example.playlistmaker.activities.SettingsActivity.Companion.IS_NIGHT
 import com.example.playlistmaker.recyclerView.Track
 import com.google.gson.Gson

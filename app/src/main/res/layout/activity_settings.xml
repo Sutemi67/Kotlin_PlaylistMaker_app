@@ -20,16 +20,17 @@
             style="@style/BG_icons"
             android:layout_width="@dimen/iconSize_topScreen"
             android:layout_height="@dimen/iconSize_topScreen"
-            android:backgroundTint="@color/YP_black"
+            android:backgroundTint="@color/Transparent"
             android:contentDescription="@string/back_arrow_icon"
             android:src="@drawable/ic_back_arrow" />
 
         <TextView
+            style="@style/HeaderTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/HeaderTextStyle"
             android:layout_marginStart="16dp"
-            android:text="@string/main_settings"/>
+            android:backgroundTint="@color/YP_white"
+            android:text="@string/main_settings" />
     </LinearLayout>
 
     <Switch
@@ -41,22 +42,22 @@
 
     <TextView
         android:id="@+id/button_share"
-        android:layout_width="match_parent"
         style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
         android:text="@string/settings_share"
         app:drawableEndCompat="@drawable/ic_share" />
 
     <TextView
         android:id="@+id/button_support"
-        android:layout_width="match_parent"
         style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
         android:text="@string/settings_support"
         app:drawableEndCompat="@drawable/ic_support" />
 
     <TextView
         android:id="@+id/button_agreement"
-        android:layout_width="match_parent"
         style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
         android:text="@string/settings_agreement"
         app:drawableEndCompat="@drawable/ic_next" />
 
