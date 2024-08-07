@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -99,6 +100,7 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
         val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
+        val progressBarLayout = findViewById<FrameLayout>(R.id.progress_bar_layout)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
 
@@ -158,7 +160,7 @@ class SearchActivity : AppCompatActivity() {
                     recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                     clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                     mainThreadHandler?.postDelayed(
-                        searchActionTask(progressBar), SEARCH_REFRESH_RATE
+                        searchActionTask(progressBarLayout), SEARCH_REFRESH_RATE
                     )
                 }
             }
@@ -332,7 +334,7 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
-    private fun searchActionTask(progressBar: ProgressBar): Runnable {
+    private fun searchActionTask(progressBar: FrameLayout): Runnable {
         return Runnable {
             historyHintText.isVisible = false
             clearHistoryButton.isVisible = false
