@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.ARTIST
 import com.example.playlistmaker.ARTWORK_URL
+import com.example.playlistmaker.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.COLLECTION_NAME
 import com.example.playlistmaker.COUNTRY
 import com.example.playlistmaker.GENRE
@@ -65,6 +66,7 @@ class SearchActivity : AppCompatActivity() {
     private val imdbService = retrofit.create(ITunesApi::class.java)
 
     private var mainThreadHandler: Handler? = null
+    private var isClickAllowed = true
 
     private lateinit var recycler: RecyclerView
     private var trackList = ArrayList<Track>()
@@ -281,16 +283,20 @@ class SearchActivity : AppCompatActivity() {
 
         trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
-                val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
-                intent.putExtra(TRACK_NAME, track.trackName)
-                intent.putExtra(ARTIST, track.artistName)
-                intent.putExtra(ARTWORK_URL, track.artworkUrl100)
-                intent.putExtra(COLLECTION_NAME, track.collectionName)
-                intent.putExtra(COUNTRY, track.country)
-                intent.putExtra(GENRE, track.primaryGenreName)
-                intent.putExtra(RELEASE_DATE, track.releaseDate)
-                intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
-                startActivity(intent)
+                if (isClickAllowed) {
+                    isClickAllowed = false
+                    mainThreadHandler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+                    val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+                    intent.putExtra(TRACK_NAME, track.trackName)
+                    intent.putExtra(ARTIST, track.artistName)
+                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
+                    intent.putExtra(COLLECTION_NAME, track.collectionName)
+                    intent.putExtra(COUNTRY, track.country)
+                    intent.putExtra(GENRE, track.primaryGenreName)
+                    intent.putExtra(RELEASE_DATE, track.releaseDate)
+                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
+                    startActivity(intent)
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 const val HISTORY_KEY = "history_key"
+const val CLICK_DEBOUNCE_DELAY = 1000L
 
 const val TRACK_NAME = "trackName"
 const val ARTWORK_URL = "artworkUrl100"
