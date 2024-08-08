@@ -1,5 +1,6 @@
 package com.example.playlistmaker.activities
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,6 +16,7 @@ import com.example.playlistmaker.ARTWORK_URL
 import com.example.playlistmaker.COLLECTION_NAME
 import com.example.playlistmaker.COUNTRY
 import com.example.playlistmaker.GENRE
+import com.example.playlistmaker.PREVIEW_URL
 import com.example.playlistmaker.R
 import com.example.playlistmaker.RELEASE_DATE
 import com.example.playlistmaker.TRACK_NAME
@@ -24,6 +26,18 @@ import java.util.Locale
 
 
 class PlayerActivity : AppCompatActivity() {
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+    }
+
+    private var playerState = STATE_DEFAULT
+
+    private val mediaPlayer = MediaPlayer()
+    private lateinit var playButton: ImageView
+    private lateinit var previewUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +51,7 @@ class PlayerActivity : AppCompatActivity() {
 
         findViewById<Toolbar>(R.id.player_toolbar).setNavigationOnClickListener { finish() }
 
+        playButton = findViewById(R.id.player_play_button)
         val artistName: TextView = findViewById(R.id.ArtistName)
         val trackName: TextView = findViewById(R.id.TrackName)
         val time: TextView = findViewById(R.id.time)
@@ -52,6 +67,7 @@ class PlayerActivity : AppCompatActivity() {
         collectionName.text = intent.getStringExtra(COLLECTION_NAME)
         country.text = intent.getStringExtra(COUNTRY)
         primaryGenreName.text = intent.getStringExtra(GENRE)
+        previewUrl = intent.getStringExtra(PREVIEW_URL).toString()
 
         releaseYear.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
 
@@ -70,6 +86,56 @@ class PlayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(2))
             .placeholder(R.drawable.img_placeholder)
             .into(cover)
+
+        preparePlayer()
+        playButton.setOnClickListener {
+            playbackControl()
+        }
     }
 
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
+        playerState = STATE_PLAYING
+
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playButton.setImageResource(R.drawable.audioplayer_button_play_light)
+        playerState = STATE_PAUSED
+    }
 }

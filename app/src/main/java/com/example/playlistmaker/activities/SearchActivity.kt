@@ -35,6 +35,7 @@ import com.example.playlistmaker.COLLECTION_NAME
 import com.example.playlistmaker.COUNTRY
 import com.example.playlistmaker.GENRE
 import com.example.playlistmaker.HISTORY_KEY
+import com.example.playlistmaker.PREVIEW_URL
 import com.example.playlistmaker.R
 import com.example.playlistmaker.RELEASE_DATE
 import com.example.playlistmaker.TRACK_NAME
@@ -161,10 +162,11 @@ class SearchActivity : AppCompatActivity() {
                     historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                     recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                     clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
-                    mainThreadHandler?.postDelayed(
-                        searchActionTask(progressBarLayout), SEARCH_REFRESH_RATE
-                    )
+
                 }
+                mainThreadHandler?.postDelayed(
+                    searchActionTask(progressBarLayout), SEARCH_REFRESH_RATE
+                )
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -295,6 +297,7 @@ class SearchActivity : AppCompatActivity() {
                     intent.putExtra(GENRE, track.primaryGenreName)
                     intent.putExtra(RELEASE_DATE, track.releaseDate)
                     intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
+                    intent.putExtra(PREVIEW_URL, track.previewUrl)
                     startActivity(intent)
                 }
             }
