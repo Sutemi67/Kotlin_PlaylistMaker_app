@@ -105,7 +105,7 @@ class PlayerActivity : AppCompatActivity() {
                 e.printStackTrace()
                 Toast.makeText(
                     this@PlayerActivity,
-                    "Ошибка загрузки аудиофайла",
+                    R.string.player_error_loading_preview,
                     Toast.LENGTH_SHORT
                 ).show()
             }
