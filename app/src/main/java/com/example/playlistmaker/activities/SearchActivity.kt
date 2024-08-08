@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,8 +15,10 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
@@ -26,10 +30,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.ARTIST
 import com.example.playlistmaker.ARTWORK_URL
+import com.example.playlistmaker.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.COLLECTION_NAME
 import com.example.playlistmaker.COUNTRY
 import com.example.playlistmaker.GENRE
 import com.example.playlistmaker.HISTORY_KEY
+import com.example.playlistmaker.PREVIEW_URL
 import com.example.playlistmaker.R
 import com.example.playlistmaker.RELEASE_DATE
 import com.example.playlistmaker.TRACK_NAME
@@ -47,11 +53,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-
 class SearchActivity : AppCompatActivity() {
     companion object {
         const val ITUNES_URL = "https://itunes.apple.com"
         const val INPUT_TEXT_KEY = "inputText"
+        const val SEARCH_REFRESH_RATE = 2000L
     }
 
     private val retrofit = Retrofit.Builder()
@@ -59,6 +65,9 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val imdbService = retrofit.create(ITunesApi::class.java)
+
+    private var mainThreadHandler: Handler? = null
+    private var isClickAllowed = true
 
     private lateinit var recycler: RecyclerView
     private var trackList = ArrayList<Track>()
@@ -93,12 +102,16 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
+        val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
+        val progressBarLayout = findViewById<FrameLayout>(R.id.progress_bar_layout)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
+
 
         val preferencesForTrackHistory = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
         val savingsClass = Savings()
 
+        mainThreadHandler = Handler(Looper.getMainLooper())
 
         if (savedInstanceState != null) inputText.setText(restoredText)
 
@@ -149,7 +162,11 @@ class SearchActivity : AppCompatActivity() {
                     historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                     recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
                     clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+
                 }
+                mainThreadHandler?.postDelayed(
+                    searchActionTask(progressBarLayout), SEARCH_REFRESH_RATE
+                )
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -268,16 +285,21 @@ class SearchActivity : AppCompatActivity() {
 
         trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
-                val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
-                intent.putExtra(TRACK_NAME, track.trackName)
-                intent.putExtra(ARTIST, track.artistName)
-                intent.putExtra(ARTWORK_URL, track.artworkUrl100)
-                intent.putExtra(COLLECTION_NAME, track.collectionName)
-                intent.putExtra(COUNTRY, track.country)
-                intent.putExtra(GENRE, track.primaryGenreName)
-                intent.putExtra(RELEASE_DATE, track.releaseDate)
-                intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
-                startActivity(intent)
+                if (isClickAllowed) {
+                    isClickAllowed = false
+                    mainThreadHandler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+                    val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+                    intent.putExtra(TRACK_NAME, track.trackName)
+                    intent.putExtra(ARTIST, track.artistName)
+                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
+                    intent.putExtra(COLLECTION_NAME, track.collectionName)
+                    intent.putExtra(COUNTRY, track.country)
+                    intent.putExtra(GENRE, track.primaryGenreName)
+                    intent.putExtra(RELEASE_DATE, track.releaseDate)
+                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
+                    intent.putExtra(PREVIEW_URL, track.previewUrl)
+                    startActivity(intent)
+                }
             }
         }
     }
@@ -320,6 +342,47 @@ class SearchActivity : AppCompatActivity() {
                 }
             })
     }
+
+    private fun searchActionTask(progressBar: FrameLayout): Runnable {
+        return Runnable {
+            historyHintText.isVisible = false
+            clearHistoryButton.isVisible = false
+            progressBar.isVisible = true
+
+            imdbService.search(inputText.text.toString())
+                .enqueue(object : Callback<TracksResponse> {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onResponse(
+                        p0: Call<TracksResponse>,
+                        response: Response<TracksResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            showOnlyList()
+                            trackList.clear()
+                            trackListAdapter.tracks = trackList
+                            progressBar.isVisible = false
+                            val resultsResponse = response.body()?.results
+                            if (resultsResponse?.isNotEmpty() == true) {
+                                trackList.addAll(resultsResponse)
+                                trackListAdapter.notifyDataSetChanged()
+                            } else {
+                                showOnlyNothingFoundError()
+                                progressBar.isVisible = false
+                            }
+                        } else {
+                            showOnlyConnectionError()
+                            progressBar.isVisible = false
+                        }
+                    }
+
+                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
+                        showOnlyConnectionError()
+                        progressBar.isVisible = false
+                    }
+                })
+        }
+    }
+
 
     private fun showOnlyNothingFoundError() {
         nothingImage.visibility = View.VISIBLE

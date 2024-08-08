@@ -129,7 +129,7 @@
             tools:text="The Beatles" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/current_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -147,7 +147,7 @@
             android:gravity="center_vertical"
             android:text="@string/player_duration"
             app:layout_constraintStart_toStartOf="@+id/from_left_16dp"
-            app:layout_constraintTop_toBottomOf="@+id/time" />
+            app:layout_constraintTop_toBottomOf="@+id/current_time" />
 
         <TextView
             android:id="@+id/textView3"

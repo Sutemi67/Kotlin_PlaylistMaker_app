@@ -32,4 +32,5 @@
     <string name="player_year">Год</string>
     <string name="player_genre">Жанр</string>
     <string name="player_country">Страна</string>
+    <string name="player_error_loading_preview">Ошибка загрузки аудиофайла</string>
 </resources>
