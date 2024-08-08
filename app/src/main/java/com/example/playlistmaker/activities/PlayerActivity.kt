@@ -2,8 +2,11 @@ package com.example.playlistmaker.activities
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -21,23 +24,20 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.RELEASE_DATE
 import com.example.playlistmaker.TRACK_NAME
 import com.example.playlistmaker.TRACK_TIME_IN_MILLIS
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
 class PlayerActivity : AppCompatActivity() {
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-    }
 
-    private var playerState = STATE_DEFAULT
+    private var timePlaying = 0L
+    private var mediaPlayer: MediaPlayer? = null
+    private var playerHandler: Handler? = null
 
-    private val mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
+    private lateinit var currentTime: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +51,12 @@ class PlayerActivity : AppCompatActivity() {
 
         findViewById<Toolbar>(R.id.player_toolbar).setNavigationOnClickListener { finish() }
 
+        playerHandler = Handler(Looper.getMainLooper())
         playButton = findViewById(R.id.player_play_button)
+        currentTime = findViewById(R.id.current_time)
+
         val artistName: TextView = findViewById(R.id.ArtistName)
         val trackName: TextView = findViewById(R.id.TrackName)
-        val time: TextView = findViewById(R.id.time)
         val duration: TextView = findViewById(R.id.player_duration)
         val collectionName: TextView = findViewById(R.id.player_album)
         val cover: ImageView = findViewById(R.id.player_cover)
@@ -72,7 +74,7 @@ class PlayerActivity : AppCompatActivity() {
         releaseYear.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
 
         val getDuration = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0)
-        time.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
+        currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
         duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
 
         fun coverResolutionAmplifier(): String? {
@@ -87,9 +89,36 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.img_placeholder)
             .into(cover)
 
-        preparePlayer()
+        mediaPlayer = MediaPlayer().apply {
+            try {
+                setDataSource(previewUrl)
+                prepareAsync()
+                setOnCompletionListener {
+                    mediaPlayer?.seekTo(0)
+                    playButton.setImageResource(R.drawable.audioplayer_button_play_light)
+                    playerHandler?.removeCallbacks(timeCounter())
+                    timePlaying = 0L
+                    currentTime.text =
+                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                Toast.makeText(
+                    this@PlayerActivity,
+                    "Ошибка загрузки аудиофайла",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
         playButton.setOnClickListener {
-            playbackControl()
+            mediaPlayer?.let {
+                if (it.isPlaying) {
+                    pausePlayer()
+                } else {
+                    startPlayer()
+                }
+            }
         }
     }
 
@@ -100,42 +129,32 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
-    }
-
-    private fun playbackControl() {
-        when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-    }
-
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-        }
+        mediaPlayer?.release()
+        mediaPlayer = null
+        playerHandler?.removeCallbacks(timeCounter())
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        mediaPlayer?.start()
         playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
-        playerState = STATE_PLAYING
-
+        playerHandler?.post(timeCounter())
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        mediaPlayer?.pause()
         playButton.setImageResource(R.drawable.audioplayer_button_play_light)
-        playerState = STATE_PAUSED
+        playerHandler?.removeCallbacks(timeCounter())
+    }
+
+    private fun timeCounter(): Runnable {
+        return Runnable {
+            mediaPlayer?.let {
+                timePlaying = it.currentPosition.toLong()
+                currentTime.text =
+                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
+                playerHandler?.postDelayed(timeCounter(), 1000L)
+            }
+        }
     }
 }
+
