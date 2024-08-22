@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.ui.player
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -14,16 +14,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.ARTIST
-import com.example.playlistmaker.ARTWORK_URL
-import com.example.playlistmaker.COLLECTION_NAME
-import com.example.playlistmaker.COUNTRY
-import com.example.playlistmaker.GENRE
-import com.example.playlistmaker.PREVIEW_URL
+import com.example.playlistmaker.common.ARTIST
+import com.example.playlistmaker.common.ARTWORK_URL
+import com.example.playlistmaker.common.COLLECTION_NAME
+import com.example.playlistmaker.common.COUNTRY
+import com.example.playlistmaker.common.GENRE
+import com.example.playlistmaker.common.PREVIEW_URL
 import com.example.playlistmaker.R
-import com.example.playlistmaker.RELEASE_DATE
-import com.example.playlistmaker.TRACK_NAME
-import com.example.playlistmaker.TRACK_TIME_IN_MILLIS
+import com.example.playlistmaker.common.RELEASE_DATE
+import com.example.playlistmaker.common.TRACK_NAME
+import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
