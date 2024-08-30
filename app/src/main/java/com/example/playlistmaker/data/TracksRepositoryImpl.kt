@@ -2,10 +2,10 @@ package com.example.playlistmaker.data
 
 import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.data.dto.TracksSearchRequest
-import com.example.playlistmaker.domain.api.TracksRepository
+import com.example.playlistmaker.domain.TracksRepositoryInterface
 import com.example.playlistmaker.domain.models.Track
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepositoryInterface {
 
     override fun searchTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))

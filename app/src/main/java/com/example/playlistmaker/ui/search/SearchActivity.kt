@@ -28,6 +28,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
 import com.example.playlistmaker.common.ARTIST
 import com.example.playlistmaker.common.ARTWORK_URL
 import com.example.playlistmaker.common.CLICK_DEBOUNCE_DELAY
@@ -36,19 +38,15 @@ import com.example.playlistmaker.common.COUNTRY
 import com.example.playlistmaker.common.GENRE
 import com.example.playlistmaker.common.HISTORY_KEY
 import com.example.playlistmaker.common.PREVIEW_URL
-import com.example.playlistmaker.R
 import com.example.playlistmaker.common.RELEASE_DATE
 import com.example.playlistmaker.common.TRACK_NAME
 import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.data.Savings
 import com.example.playlistmaker.data.network.ITunesApi
-import com.example.playlistmaker.data.dto.TracksResponse
-import com.example.playlistmaker.Savings
+import com.example.playlistmaker.domain.api.TracksInteractorInterface
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -82,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var connectionProblemError: LinearLayout
     lateinit var historyHintText: TextView
     lateinit var clearHistoryButton: Button
-
+    private lateinit var searchTracksUseCase: TracksInteractorInterface
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,6 +108,7 @@ class SearchActivity : AppCompatActivity() {
 
         val preferencesForTrackHistory = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
         val savingsClass = Savings()
+        searchTracksUseCase = Creator.provideTracksInteractorImpl()
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
@@ -314,33 +313,48 @@ class SearchActivity : AppCompatActivity() {
         historyHintText.isVisible = false
         clearHistoryButton.isVisible = false
 
-        imdbService.search(inputText.text.toString())
-            .enqueue(object : Callback<TracksResponse> {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onResponse(
-                    p0: Call<TracksResponse>,
-                    response: Response<TracksResponse>
-                ) {
-                    if (response.isSuccessful) {
+        searchTracksUseCase.doRequest(inputText.text.toString(), object : TracksInteractorInterface.TracksConsumer {
+                override fun consume(findTracks: List<Track>) {
+                    if (findTracks.isEmpty()) {
+                        showOnlyNothingFoundError()
+                    } else {
                         showOnlyList()
                         trackList.clear()
                         trackListAdapter.tracks = trackList
-                        val resultsResponse = response.body()?.results
-                        if (resultsResponse?.isNotEmpty() == true) {
-                            trackList.addAll(resultsResponse)
-                            trackListAdapter.notifyDataSetChanged()
-                        } else {
-                            showOnlyNothingFoundError()
-                        }
-                    } else {
-                        showOnlyConnectionError()
+                        trackList.addAll(findTracks)
+                        trackListAdapter.notifyDataSetChanged()
                     }
                 }
-
-                override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-                    showOnlyConnectionError()
-                }
             })
+
+//        imdbService.search(inputText.text.toString())
+//            .enqueue(
+//                object : Callback<TracksResponse> {
+//                    @SuppressLint("NotifyDataSetChanged")
+//                    override fun onResponse(
+//                        p0: Call<TracksResponse>,
+//                        response: Response<TracksResponse>
+//                    ) {
+//                        if (response.isSuccessful) {
+//                            showOnlyList()
+//                            trackList.clear()
+//                            trackListAdapter.tracks = trackList
+//                            val resultsResponse = response.body()?.results
+//                            if (resultsResponse?.isNotEmpty() == true) {
+//                                trackList.addAll(resultsResponse)
+//                                trackListAdapter.notifyDataSetChanged()
+//                            } else {
+//                                showOnlyNothingFoundError()
+//                            }
+//                        } else {
+//                            showOnlyConnectionError()
+//                        }
+//                    }
+//
+//                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
+//                        showOnlyConnectionError()
+//                    }
+//                })
     }
 
     private fun searchActionTask(progressBar: FrameLayout): Runnable {
@@ -349,37 +363,37 @@ class SearchActivity : AppCompatActivity() {
             clearHistoryButton.isVisible = false
             progressBar.isVisible = true
 
-            imdbService.search(inputText.text.toString())
-                .enqueue(object : Callback<TracksResponse> {
-                    @SuppressLint("NotifyDataSetChanged")
-                    override fun onResponse(
-                        p0: Call<TracksResponse>,
-                        response: Response<TracksResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            showOnlyList()
-                            trackList.clear()
-                            trackListAdapter.tracks = trackList
-                            progressBar.isVisible = false
-                            val resultsResponse = response.body()?.results
-                            if (resultsResponse?.isNotEmpty() == true) {
-                                trackList.addAll(resultsResponse)
-                                trackListAdapter.notifyDataSetChanged()
-                            } else {
-                                showOnlyNothingFoundError()
-                                progressBar.isVisible = false
-                            }
-                        } else {
-                            showOnlyConnectionError()
-                            progressBar.isVisible = false
-                        }
-                    }
-
-                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-                        showOnlyConnectionError()
-                        progressBar.isVisible = false
-                    }
-                })
+//            imdbService.search(inputText.text.toString())
+//                .enqueue(object : Callback<TracksResponse> {
+//                    @SuppressLint("NotifyDataSetChanged")
+//                    override fun onResponse(
+//                        p0: Call<TracksResponse>,
+//                        response: Response<TracksResponse>
+//                    ) {
+//                        if (response.isSuccessful) {
+//                            showOnlyList()
+//                            trackList.clear()
+//                            trackListAdapter.tracks = trackList
+//                            progressBar.isVisible = false
+//                            val resultsResponse = response.body()?.results
+//                            if (resultsResponse?.isNotEmpty() == true) {
+//                                trackList.addAll(resultsResponse)
+//                                trackListAdapter.notifyDataSetChanged()
+//                            } else {
+//                                showOnlyNothingFoundError()
+//                                progressBar.isVisible = false
+//                            }
+//                        } else {
+//                            showOnlyConnectionError()
+//                            progressBar.isVisible = false
+//                        }
+//                    }
+//
+//                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
+//                        showOnlyConnectionError()
+//                        progressBar.isVisible = false
+//                    }
+//                })
         }
     }
 
