@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker.data.sharedPrefs
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.common.HISTORY_KEY
@@ -7,7 +7,7 @@ import com.example.playlistmaker.presentation.settings.SettingsActivity.Companio
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class Savings {
+class UserSharedPreferences {
 
     var historyList = ArrayList<Track>()
 
