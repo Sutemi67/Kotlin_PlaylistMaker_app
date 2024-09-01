@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.presentation.search
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -42,10 +42,10 @@ import com.example.playlistmaker.common.RELEASE_DATE
 import com.example.playlistmaker.common.TRACK_NAME
 import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.data.Savings
-import com.example.playlistmaker.data.network.ITunesApi
-import com.example.playlistmaker.domain.api.TracksInteractorInterface
+import com.example.playlistmaker.data.ITunesApi
+import com.example.playlistmaker.domain.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -80,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var connectionProblemError: LinearLayout
     lateinit var historyHintText: TextView
     lateinit var clearHistoryButton: Button
-    private lateinit var searchTracksUseCase: TracksInteractorInterface
+    private lateinit var searchTracksUseCase: TracksInteractor
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -313,7 +313,7 @@ class SearchActivity : AppCompatActivity() {
         historyHintText.isVisible = false
         clearHistoryButton.isVisible = false
 
-        searchTracksUseCase.doRequest(inputText.text.toString(), object : TracksInteractorInterface.TracksConsumer {
+        searchTracksUseCase.doRequest(inputText.text.toString(), object : TracksInteractor.TracksConsumer {
                 override fun consume(findTracks: List<Track>) {
                     if (findTracks.isEmpty()) {
                         showOnlyNothingFoundError()

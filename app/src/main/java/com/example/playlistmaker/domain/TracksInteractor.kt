@@ -1,8 +1,8 @@
-package com.example.playlistmaker.domain.api
+package com.example.playlistmaker.domain
 
 import com.example.playlistmaker.domain.models.Track
 
-interface TracksInteractorInterface {
+interface TracksInteractor {
     fun doRequest(expression: String, consumer: TracksConsumer)
 
     interface TracksConsumer {

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.main
+package com.example.playlistmaker.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,11 +9,11 @@ import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.settings.SettingsActivity.Companion.IS_NIGHT
+import com.example.playlistmaker.presentation.settings.SettingsActivity.Companion.IS_NIGHT
 import com.example.playlistmaker.data.Savings
-import com.example.playlistmaker.ui.media.MediaActivity
-import com.example.playlistmaker.ui.search.SearchActivity
-import com.example.playlistmaker.ui.settings.SettingsActivity
+import com.example.playlistmaker.presentation.media.MediaActivity
+import com.example.playlistmaker.presentation.search.SearchActivity
+import com.example.playlistmaker.presentation.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
