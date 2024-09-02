@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.search
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -93,11 +94,10 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
 
-
         val preferencesForTrackHistory = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
         val sharedPreferences = UserSharedPreferences()
-        searchTracksUseCase = Creator.provideTracksInteractorImpl()
 
+        searchTracksUseCase = Creator.provideTracksInteractorImpl()
         mainThreadHandler = Handler(Looper.getMainLooper())
 
         if (savedInstanceState != null) inputText.setText(restoredText)
@@ -123,7 +123,7 @@ class SearchActivity : AppCompatActivity() {
             sharedPreferences.historyList.clear()
             trackListAdapter.tracks = sharedPreferences.historyList
             trackListAdapter.notifyDataSetChanged()
-            addHistory(preferencesForTrackHistory, sharedPreferences.historyList)
+            sharedPreferences.addHistory(preferencesForTrackHistory, sharedPreferences.historyList)
             clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
             historyHintText.isVisible = historyList.isEmpty() == false
         }
@@ -167,7 +167,7 @@ class SearchActivity : AppCompatActivity() {
     private fun init(
         searchTextWatcher: TextWatcher,
         sharedPreferences: UserSharedPreferences,
-        preferencesForTrackHistory: android.content.SharedPreferences
+        preferencesForTrackHistory: SharedPreferences
     ) {
         inputText.addTextChangedListener(searchTextWatcher)
         inputText.setOnFocusChangeListener { _, hasFocus ->
@@ -187,7 +187,7 @@ class SearchActivity : AppCompatActivity() {
         trackListAdapter.saveClickListener = object : TrackAdapter.SaveTrackInHistoryListener {
             override fun saveTrackInHistory() {
                 Log.d("SaveTag", "Saving....")
-                addHistory(preferencesForTrackHistory, sharedPreferences.historyList)
+                sharedPreferences.addHistory(preferencesForTrackHistory, sharedPreferences.historyList)
             }
         }
         trackListAdapter.addingInHistoryLogicListener =
@@ -289,14 +289,6 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    fun addHistory(
-        preferencesForTrackHistory: android.content.SharedPreferences,
-        history: ArrayList<Track>
-    ) {
-        val json = Gson().toJson(history.toTypedArray())
-        preferencesForTrackHistory.edit().putString(HISTORY_KEY, json).apply()
     }
 
     private fun searchAction(): Runnable {

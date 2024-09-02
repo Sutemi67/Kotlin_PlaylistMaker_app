@@ -3,12 +3,11 @@ package com.example.playlistmaker.data.sharedPrefs
 import android.content.SharedPreferences
 import com.example.playlistmaker.common.HISTORY_KEY
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.settings.SettingsActivity.Companion.IS_NIGHT
+import com.example.playlistmaker.presentation.settings.SettingsActivity.Companion.IS_NIGHT_SP_KEY
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class UserSharedPreferences {
-
     var historyList = ArrayList<Track>()
 
     fun getHistory(spH: SharedPreferences): ArrayList<Track> {
@@ -18,6 +17,13 @@ class UserSharedPreferences {
         return Gson().fromJson(json, itemType)
     }
 
-    fun getIsNight(spNT: SharedPreferences) = spNT.getInt(IS_NIGHT, 1)
+    fun addHistory(
+        preferencesForTrackHistory: SharedPreferences,
+        history: ArrayList<Track>
+    ) {
+        val json = Gson().toJson(history.toTypedArray())
+        preferencesForTrackHistory.edit().putString(HISTORY_KEY, json).apply()
+    }
 
+    fun getIsNight(prefs: SharedPreferences) = prefs.getInt(IS_NIGHT_SP_KEY, 1)
 }
