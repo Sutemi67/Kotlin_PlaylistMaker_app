@@ -48,7 +48,6 @@ import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
     companion object {
-        const val ITUNES_URL = "https://itunes.apple.com"
         const val INPUT_TEXT_KEY = "inputText"
         const val SEARCH_REFRESH_RATE = 2000L
     }
@@ -67,6 +66,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var inputText: EditText
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
+    private lateinit var progressBar: FrameLayout
     lateinit var historyHintText: TextView
     lateinit var clearHistoryButton: Button
     private lateinit var searchTracksUseCase: TracksInteractor
@@ -89,7 +89,7 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = findViewById(R.id.connectionProblem)
         val clearButton = findViewById<ImageView>(R.id.search_clear_button)
         val reloadButton = findViewById<Button>(R.id.reload_button)
-        val progressBarLayout = findViewById<FrameLayout>(R.id.progress_bar_layout)
+        progressBar = findViewById(R.id.progress_bar_layout)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
 
@@ -106,7 +106,9 @@ class SearchActivity : AppCompatActivity() {
             inputText.text.clear()
             trackListAdapter.tracks = sharedPreferences.getHistory(preferencesForTrackHistory)
             trackListAdapter.notifyDataSetChanged()
-            showOnlyList()
+            nothingImage.visibility = View.GONE
+            connectionProblemError.visibility = View.GONE
+            recycler.visibility = View.VISIBLE
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(
@@ -144,6 +146,7 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     clearButton.visibility = View.VISIBLE
                     restoredText = inputText.text.toString()
+                    mainThreadHandler?.postDelayed(searchAction(), SEARCH_REFRESH_RATE)
                 }
                 if (historyList.isNotEmpty()) {
                     historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
@@ -151,9 +154,6 @@ class SearchActivity : AppCompatActivity() {
                     clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
 
                 }
-                mainThreadHandler?.postDelayed(
-                    searchActionTask(progressBarLayout), SEARCH_REFRESH_RATE
-                )
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -291,7 +291,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-
     fun addHistory(
         preferencesForTrackHistory: android.content.SharedPreferences,
         history: ArrayList<Track>
@@ -304,120 +303,45 @@ class SearchActivity : AppCompatActivity() {
         return Runnable {
             historyHintText.isVisible = false
             clearHistoryButton.isVisible = false
+            progressBar.isVisible = true
 
             searchTracksUseCase.doRequest(
                 inputText.text.toString(),
                 object : TracksInteractor.TracksConsumer {
                     override fun consume(findTracks: List<Track>) {
                         if (findTracks.isEmpty()) {
-                            mainThreadHandler?.post(nothingFoundRunnable)
-//                            showOnlyNothingFoundError()
+                            mainThreadHandler?.post(nothingFoundUiElements())
                         } else {
-//                            showOnlyList()
-                            mainThreadHandler?.post(onlyListRunnable)
-                            mainThreadHandler?.post(updateTrackList(findTracks))
+                            mainThreadHandler?.post(successListUiElements(findTracks))
                         }
                     }
                 })
         }
-//        imdbService.search(inputText.text.toString())
-//            .enqueue(
-//                object : Callback<TracksResponse> {
-//                    @SuppressLint("NotifyDataSetChanged")
-//                    override fun onResponse(
-//                        p0: Call<TracksResponse>,
-//                        response: Response<TracksResponse>
-//                    ) {
-//                        if (response.isSuccessful) {
-//                            showOnlyList()
-//                            trackList.clear()
-//                            trackListAdapter.tracks = trackList
-//                            val resultsResponse = response.body()?.results
-//                            if (resultsResponse?.isNotEmpty() == true) {
-//                                trackList.addAll(resultsResponse)
-//                                trackListAdapter.notifyDataSetChanged()
-//                            } else {
-//                                showOnlyNothingFoundError()
-//                            }
-//                        } else {
-//                            showOnlyConnectionError()
-//                        }
-//                    }
-//
-//                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-//                        showOnlyConnectionError()
-//                    }
-//                })
     }
 
-    private fun updateTrackList(findTracks: List<Track>): Runnable {
-        return Runnable {
-            trackList.clear()
-            trackListAdapter.tracks = trackList
-            trackList.addAll(findTracks)
-            trackListAdapter.notifyDataSetChanged()
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun successListUiElements(findTracks: List<Track>) = Runnable {
+        progressBar.isVisible = false
+        nothingImage.visibility = View.GONE
+        connectionProblemError.visibility = View.GONE
+        recycler.visibility = View.VISIBLE
+        trackList.clear()
+        trackListAdapter.tracks = trackList
+        trackList.addAll(findTracks)
+        trackListAdapter.notifyDataSetChanged()
     }
 
-    private fun searchActionTask(progressBar: FrameLayout): Runnable {
-        return Runnable {
-            historyHintText.isVisible = false
-            clearHistoryButton.isVisible = false
-            progressBar.isVisible = true
-
-//            imdbService.search(inputText.text.toString())
-//                .enqueue(object : Callback<TracksResponse> {
-//                    @SuppressLint("NotifyDataSetChanged")
-//                    override fun onResponse(
-//                        p0: Call<TracksResponse>,
-//                        response: Response<TracksResponse>
-//                    ) {
-//                        if (response.isSuccessful) {
-//                            showOnlyList()
-//                            trackList.clear()
-//                            trackListAdapter.tracks = trackList
-//                            progressBar.isVisible = false
-//                            val resultsResponse = response.body()?.results
-//                            if (resultsResponse?.isNotEmpty() == true) {
-//                                trackList.addAll(resultsResponse)
-//                                trackListAdapter.notifyDataSetChanged()
-//                            } else {
-//                                showOnlyNothingFoundError()
-//                                progressBar.isVisible = false
-//                            }
-//                        } else {
-//                            showOnlyConnectionError()
-//                            progressBar.isVisible = false
-//                        }
-//                    }
-//
-//                    override fun onFailure(p0: Call<TracksResponse>, p1: Throwable) {
-//                        showOnlyConnectionError()
-//                        progressBar.isVisible = false
-//                    }
-//                })
-        }
-    }
-
-    private val nothingFoundRunnable = Runnable { showOnlyNothingFoundError() }
-    private val onlyListRunnable = Runnable { showOnlyList() }
-
-    private fun showOnlyNothingFoundError() {
+    private fun nothingFoundUiElements() = Runnable {
+        progressBar.isVisible = false
         nothingImage.visibility = View.VISIBLE
         connectionProblemError.visibility = View.GONE
         recycler.visibility = View.GONE
     }
 
-    private fun showOnlyConnectionError() {
+    private val connectionErrorUiElements = Runnable {
         nothingImage.visibility = View.GONE
         connectionProblemError.visibility = View.VISIBLE
         recycler.visibility = View.GONE
-    }
-
-    private fun showOnlyList() {
-        nothingImage.visibility = View.GONE
-        connectionProblemError.visibility = View.GONE
-        recycler.visibility = View.VISIBLE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -429,5 +353,4 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         restoredText = savedInstanceState.getString(INPUT_TEXT_KEY).toString()
     }
-
 }
