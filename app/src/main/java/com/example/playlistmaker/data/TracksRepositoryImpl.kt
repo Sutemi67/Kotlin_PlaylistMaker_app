@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data
 
+import com.example.playlistmaker.data.api.NetworkClient
 import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.data.dto.TracksSearchRequest
 import com.example.playlistmaker.domain.TracksRepository
@@ -9,6 +10,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
 
     override fun refillTrackList(expression: String): List<Track> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
+
         return if (response.resultCode == 200) {
             (response as TracksResponse).results.map {
                 Track(

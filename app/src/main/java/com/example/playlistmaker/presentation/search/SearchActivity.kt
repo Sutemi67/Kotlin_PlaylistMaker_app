@@ -40,11 +40,11 @@ import com.example.playlistmaker.common.PREVIEW_URL
 import com.example.playlistmaker.common.RELEASE_DATE
 import com.example.playlistmaker.common.TRACK_NAME
 import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
+import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.sharedPrefs.UserSharedPreferences
 import com.example.playlistmaker.domain.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.player.PlayerActivity
-import com.google.gson.Gson
 
 
 class SearchActivity : AppCompatActivity() {
@@ -187,7 +187,10 @@ class SearchActivity : AppCompatActivity() {
         trackListAdapter.saveClickListener = object : TrackAdapter.SaveTrackInHistoryListener {
             override fun saveTrackInHistory() {
                 Log.d("SaveTag", "Saving....")
-                sharedPreferences.addHistory(preferencesForTrackHistory, sharedPreferences.historyList)
+                sharedPreferences.addHistory(
+                    preferencesForTrackHistory,
+                    sharedPreferences.historyList
+                )
             }
         }
         trackListAdapter.addingInHistoryLogicListener =
@@ -302,6 +305,10 @@ class SearchActivity : AppCompatActivity() {
                 object : TracksInteractor.TracksConsumer {
                     override fun consume(findTracks: List<Track>) {
                         if (findTracks.isEmpty()) {
+                            if (Response().resultCode == 400) {
+                                mainThreadHandler?.post(connectionErrorUiElements())
+                                return
+                            }
                             mainThreadHandler?.post(nothingFoundUiElements())
                         } else {
                             mainThreadHandler?.post(successListUiElements(findTracks))
@@ -330,7 +337,8 @@ class SearchActivity : AppCompatActivity() {
         recycler.visibility = View.GONE
     }
 
-    private val connectionErrorUiElements = Runnable {
+    private fun connectionErrorUiElements() = Runnable {
+        progressBar.isVisible = false
         nothingImage.visibility = View.GONE
         connectionProblemError.visibility = View.VISIBLE
         recycler.visibility = View.GONE

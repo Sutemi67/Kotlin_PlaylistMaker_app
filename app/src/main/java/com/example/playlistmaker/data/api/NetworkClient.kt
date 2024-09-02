@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker.data.api
 
 import com.example.playlistmaker.data.dto.Response
 
