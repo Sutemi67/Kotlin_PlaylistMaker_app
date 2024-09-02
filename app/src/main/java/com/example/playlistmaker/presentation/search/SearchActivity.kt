@@ -17,7 +17,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
@@ -311,13 +310,12 @@ class SearchActivity : AppCompatActivity() {
                 object : TracksInteractor.TracksConsumer {
                     override fun consume(findTracks: List<Track>) {
                         if (findTracks.isEmpty()) {
-                            showOnlyNothingFoundError()
+                            mainThreadHandler?.post(nothingFoundRunnable)
+//                            showOnlyNothingFoundError()
                         } else {
-                            showOnlyList()
-                            trackList.clear()
-                            trackListAdapter.tracks = trackList
-                            trackList.addAll(findTracks)
-                            trackListAdapter.notifyDataSetChanged()
+//                            showOnlyList()
+                            mainThreadHandler?.post(onlyListRunnable)
+                            mainThreadHandler?.post(updateTrackList(findTracks))
                         }
                     }
                 })
@@ -351,6 +349,16 @@ class SearchActivity : AppCompatActivity() {
 //                    }
 //                })
     }
+
+    private fun updateTrackList(findTracks: List<Track>): Runnable {
+        return Runnable {
+            trackList.clear()
+            trackListAdapter.tracks = trackList
+            trackList.addAll(findTracks)
+            trackListAdapter.notifyDataSetChanged()
+        }
+    }
+
     private fun searchActionTask(progressBar: FrameLayout): Runnable {
         return Runnable {
             historyHintText.isVisible = false
@@ -391,6 +399,8 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private val nothingFoundRunnable = Runnable { showOnlyNothingFoundError() }
+    private val onlyListRunnable = Runnable { showOnlyList() }
 
     private fun showOnlyNothingFoundError() {
         nothingImage.visibility = View.VISIBLE
