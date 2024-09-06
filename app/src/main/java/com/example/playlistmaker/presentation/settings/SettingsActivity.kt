@@ -12,17 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.IS_CHECKED_SP_KEY
+import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
+import com.example.playlistmaker.common.LIGHT_SP_VALUE
+import com.example.playlistmaker.common.NIGHT_SP_VALUE
 
 class SettingsActivity : AppCompatActivity() {
-    companion object {
-        const val IS_CHECKED_SP_KEY = "is_checked"
-        const val IS_NIGHT_SP_KEY = "is_night"
-        const val NIGHT_SP_VALUE = 2
-        const val LIGHT_SP_VALUE = 1
-    }
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,12 +76,22 @@ class SettingsActivity : AppCompatActivity() {
         nightThemeSwitcher.setOnClickListener {
             if (nightThemeSwitcher.isChecked) {
                 setDefaultNightMode(MODE_NIGHT_YES)
-                checkSharedPrefs.edit().putBoolean(IS_CHECKED_SP_KEY, nightThemeSwitcher.isChecked).apply()
-                nightModeSharedPrefs.edit().putInt(IS_NIGHT_SP_KEY, NIGHT_SP_VALUE).apply()
+                checkSharedPrefs.edit {
+                    putBoolean(
+                        IS_CHECKED_SP_KEY,
+                        nightThemeSwitcher.isChecked
+                    )
+                }
+                nightModeSharedPrefs.edit { putInt(IS_NIGHT_SP_KEY, NIGHT_SP_VALUE) }
             } else {
                 setDefaultNightMode(MODE_NIGHT_NO)
-                checkSharedPrefs.edit().putBoolean(IS_CHECKED_SP_KEY, nightThemeSwitcher.isChecked).apply()
-                nightModeSharedPrefs.edit().putInt(IS_NIGHT_SP_KEY, LIGHT_SP_VALUE).apply()
+                checkSharedPrefs.edit {
+                    putBoolean(
+                        IS_CHECKED_SP_KEY,
+                        nightThemeSwitcher.isChecked
+                    )
+                }
+                nightModeSharedPrefs.edit { putInt(IS_NIGHT_SP_KEY, LIGHT_SP_VALUE) }
             }
         }
     }

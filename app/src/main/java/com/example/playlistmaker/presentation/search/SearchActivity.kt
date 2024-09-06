@@ -36,8 +36,10 @@ import com.example.playlistmaker.common.COLLECTION_NAME
 import com.example.playlistmaker.common.COUNTRY
 import com.example.playlistmaker.common.GENRE
 import com.example.playlistmaker.common.HISTORY_KEY
+import com.example.playlistmaker.common.INPUT_TEXT_KEY
 import com.example.playlistmaker.common.PREVIEW_URL
 import com.example.playlistmaker.common.RELEASE_DATE
+import com.example.playlistmaker.common.SEARCH_REFRESH_RATE
 import com.example.playlistmaker.common.TRACK_NAME
 import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.data.dto.Response
@@ -48,10 +50,6 @@ import com.example.playlistmaker.presentation.player.PlayerActivity
 
 
 class SearchActivity : AppCompatActivity() {
-    companion object {
-        const val INPUT_TEXT_KEY = "inputText"
-        const val SEARCH_REFRESH_RATE = 2000L
-    }
 
     private var mainThreadHandler: Handler? = null
     private var isClickAllowed = true
@@ -94,10 +92,10 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         historyHintText = findViewById(R.id.text_hint_before_typing)
 
-        val preferencesForTrackHistory = getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
-        val sharedPreferences = UserSharedPreferences()
-
+        val preferencesForTrackHistory = Creator.getPrefs(HISTORY_KEY, applicationContext)
+        val sharedPreferences = Creator.provideSharedPrefs()
         searchTracksUseCase = Creator.provideTracksInteractorImpl()
+
         mainThreadHandler = Handler(Looper.getMainLooper())
 
         if (savedInstanceState != null) inputText.setText(restoredText)

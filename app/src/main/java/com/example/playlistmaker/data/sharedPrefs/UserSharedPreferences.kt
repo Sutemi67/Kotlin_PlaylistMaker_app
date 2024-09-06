@@ -2,8 +2,8 @@ package com.example.playlistmaker.data.sharedPrefs
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.common.HISTORY_KEY
+import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.settings.SettingsActivity.Companion.IS_NIGHT_SP_KEY
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
