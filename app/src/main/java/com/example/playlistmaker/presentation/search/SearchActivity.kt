@@ -303,16 +303,13 @@ class SearchActivity : AppCompatActivity() {
                 object : TracksInteractor.TracksConsumer {
                     override fun consume(findTracks: List<Track>) {
                         if (findTracks.isEmpty()) {
-                            if (Response().resultCode == 400) {
-                                mainThreadHandler?.post(connectionErrorUiElements())
-                                return
-                            }
                             mainThreadHandler?.post(nothingFoundUiElements())
                         } else {
                             mainThreadHandler?.post(successListUiElements(findTracks))
                         }
                     }
-                })
+                }
+            )
         }
     }
 

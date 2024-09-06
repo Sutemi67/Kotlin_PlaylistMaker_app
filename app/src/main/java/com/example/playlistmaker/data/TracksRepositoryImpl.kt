@@ -9,8 +9,7 @@ import com.example.playlistmaker.domain.models.Track
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
     override fun refillTrackList(expression: String): List<Track> {
-        val response = networkClient.doRequest(TracksSearchRequest(expression))
-
+        val response = networkClient.doRequestApi(TracksSearchRequest(expression))
         return if (response.resultCode == 200) {
             (response as TracksResponse).results.map {
                 Track(
