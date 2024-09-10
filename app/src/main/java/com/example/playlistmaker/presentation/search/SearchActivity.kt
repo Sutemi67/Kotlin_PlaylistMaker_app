@@ -42,7 +42,6 @@ import com.example.playlistmaker.common.RELEASE_DATE
 import com.example.playlistmaker.common.SEARCH_REFRESH_RATE
 import com.example.playlistmaker.common.TRACK_NAME
 import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
-import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.sharedPrefs.UserSharedPreferences
 import com.example.playlistmaker.domain.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
@@ -301,17 +300,26 @@ class SearchActivity : AppCompatActivity() {
             searchTracksUseCase.doRequest(
                 inputText.text.toString(),
                 object : TracksInteractor.TracksConsumer {
-                    override fun consume(findTracks: List<Track>) {
-                        if (findTracks.isEmpty()) {
-                            mainThreadHandler?.post(nothingFoundUiElements())
-                        } else {
-                            mainThreadHandler?.post(successListUiElements(findTracks))
+                    override fun consume(findTracks: List<Track>, response: Int) {
+                        mainThreadHandler?.post {
+                            if (findTracks.isEmpty()) {
+                                if (response == 400) {
+                                    mainThreadHandler?.post(connectionErrorUiElements())
+                                    Log.e("resultCode", "$response")
+                                    return@post
+                                }
+                                mainThreadHandler?.post(nothingFoundUiElements())
+                                Log.e("resultCode", "$response")
+                            } else {
+                                mainThreadHandler?.post(successListUiElements(findTracks))
+                                Log.e("resultCode", "$response")
+                            }
                         }
                     }
-                }
-            )
+                })
         }
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun successListUiElements(findTracks: List<Track>) = Runnable {

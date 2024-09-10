@@ -6,6 +6,6 @@ interface TracksInteractor {
     fun doRequest(expression: String, consumer: TracksConsumer)
 
     interface TracksConsumer {
-        fun consume(findTracks: List<Track>)
+        fun consume(findTracks: List<Track>, response: Int)
     }
 }

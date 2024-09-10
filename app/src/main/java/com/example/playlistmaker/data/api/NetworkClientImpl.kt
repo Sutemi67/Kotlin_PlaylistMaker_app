@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.api
 
+import android.util.Log
 import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.TracksSearchRequest
 import retrofit2.Retrofit
@@ -16,12 +17,16 @@ class NetworkClientImpl : NetworkClient {
     private val itunesService = retrofit.create(ITunesApi::class.java)
 
     override fun doRequestApi(dto: Any): Response {
-        if (dto is TracksSearchRequest) {
-            val resp = itunesService.search(dto.expression).execute()
-            val body = resp.body() ?: Response(resp.code())
-            return body
-        } else {
-            return Response(400)
+        return try {
+            if (dto is TracksSearchRequest) {
+                val response = itunesService.search(dto.expression).execute()
+                response.body()?.apply { resultCode = response.code() } ?: Response(response.code())
+            } else {
+                return Response(404)
+            }
+        } catch (e: Exception) {
+            Log.e("NO_INTERNET", "NO INTERNET EXCEPTION")
+            Response(400)
         }
     }
 }
