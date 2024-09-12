@@ -11,14 +11,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
-import com.example.playlistmaker.data.sharedPrefs.UserSharedPreferences
 import com.example.playlistmaker.presentation.media.MediaActivity
 import com.example.playlistmaker.presentation.search.SearchActivity
 import com.example.playlistmaker.presentation.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
-
-    private val sharedPreferences = Creator.provideSharedPrefs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +26,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val sharedPreferences = Creator.provideSharedPrefs(applicationContext)
+
         val spNT = Creator.getPrefs(IS_NIGHT_SP_KEY, applicationContext)
         setDefaultNightMode(sharedPreferences.getIsNight(spNT))
 

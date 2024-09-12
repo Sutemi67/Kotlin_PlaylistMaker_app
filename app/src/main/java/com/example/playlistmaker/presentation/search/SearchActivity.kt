@@ -3,7 +3,6 @@ package com.example.playlistmaker.presentation.search
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,12 +13,9 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -35,7 +31,6 @@ import com.example.playlistmaker.common.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.common.COLLECTION_NAME
 import com.example.playlistmaker.common.COUNTRY
 import com.example.playlistmaker.common.GENRE
-import com.example.playlistmaker.common.HISTORY_KEY
 import com.example.playlistmaker.common.INPUT_TEXT_KEY
 import com.example.playlistmaker.common.PREVIEW_URL
 import com.example.playlistmaker.common.RELEASE_DATE
@@ -43,6 +38,7 @@ import com.example.playlistmaker.common.SEARCH_REFRESH_RATE
 import com.example.playlistmaker.common.TRACK_NAME
 import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.data.sharedPrefs.UserSharedPreferences
+import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.player.PlayerActivity
@@ -52,20 +48,21 @@ class SearchActivity : AppCompatActivity() {
 
     private var mainThreadHandler: Handler? = null
     private var isClickAllowed = true
-
     private lateinit var recycler: RecyclerView
-    private var trackList = ArrayList<Track>()
-    private var historyList = ArrayList<Track>()
+    private lateinit var binding: ActivitySearchBinding
 
-    var trackListAdapter = TrackAdapter()
+
+//    private var historyList : List<Track>() = mutableListOf()
+
+    var trackListAdapter = Creator.provideAdapter()
+//    private lateinit var trackList: List<Track>
 
     private var restoredText = ""
 
-    private lateinit var inputText: EditText
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
     private lateinit var progressBar: FrameLayout
-    lateinit var historyHintText: TextView
+
     lateinit var clearHistoryButton: Button
     private lateinit var searchTracksUseCase: TracksInteractor
 
@@ -73,15 +70,15 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_search)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        findViewById<Toolbar>(R.id.backIcon_search_screen2).setNavigationOnClickListener { finish() }
-        inputText = findViewById(R.id.search_input_text)
+        binding.backIconSearchScreen2.setNavigationOnClickListener { finish() }
         recycler = findViewById(R.id.search_list)
         nothingImage = findViewById(R.id.nothingFound)
         connectionProblemError = findViewById(R.id.connectionProblem)
@@ -89,20 +86,17 @@ class SearchActivity : AppCompatActivity() {
         val reloadButton = findViewById<Button>(R.id.reload_button)
         progressBar = findViewById(R.id.progress_bar_layout)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
-        historyHintText = findViewById(R.id.text_hint_before_typing)
-
-        val preferencesForTrackHistory = Creator.getPrefs(HISTORY_KEY, applicationContext)
-        val sharedPreferences = Creator.provideSharedPrefs()
+        val context: Context = applicationContext
+        val sharedPreferences = Creator.provideSharedPrefs(context)
         searchTracksUseCase = Creator.provideTracksInteractorImpl()
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
-        if (savedInstanceState != null) inputText.setText(restoredText)
+        if (savedInstanceState != null) binding.searchInputText.setText(restoredText)
 
         clearButton.setOnClickListener {
-            inputText.text.clear()
-            trackListAdapter.tracks = sharedPreferences.getHistory(preferencesForTrackHistory)
-            trackListAdapter.notifyDataSetChanged()
+            binding.searchInputText.text.clear()
+            trackListAdapter.submitList(sharedPreferences.getTracksHistory())
             nothingImage.visibility = View.GONE
             connectionProblemError.visibility = View.GONE
             recycler.visibility = View.VISIBLE
@@ -112,20 +106,20 @@ class SearchActivity : AppCompatActivity() {
                 findViewById<View>(android.R.id.content).windowToken,
                 0
             )
-            clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
-            historyHintText.isVisible = historyList.isEmpty() == false
+            clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
+            binding.textHintBeforeTyping.isVisible =
+                sharedPreferences.getTracksHistory().isEmpty() == false
         }
-        reloadButton.setOnClickListener { searchAction() }
+        reloadButton.setOnClickListener { mainThreadHandler?.post(searchAction()) }
         clearHistoryButton.setOnClickListener {
-            sharedPreferences.historyList.clear()
-            trackListAdapter.tracks = sharedPreferences.historyList
-            trackListAdapter.notifyDataSetChanged()
-            sharedPreferences.addHistory(preferencesForTrackHistory, sharedPreferences.historyList)
-            clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
-            historyHintText.isVisible = historyList.isEmpty() == false
+            sharedPreferences.clearHistory()
+            trackListAdapter.submitList(sharedPreferences.getTracksHistory())
+            sharedPreferences.addListInHistory()
+            clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
+            binding.textHintBeforeTyping.isVisible =
+                sharedPreferences.getTracksHistory().isEmpty() == false
         }
-
-        inputText.setOnEditorActionListener { _, actionId, _ ->
+        binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 mainThreadHandler?.post(searchAction())
             }
@@ -142,13 +136,15 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.INVISIBLE
                 } else {
                     clearButton.visibility = View.VISIBLE
-                    restoredText = inputText.text.toString()
+                    restoredText = binding.searchInputText.text.toString()
                     mainThreadHandler?.postDelayed(searchAction(), SEARCH_REFRESH_RATE)
                 }
-                if (historyList.isNotEmpty()) {
-                    historyHintText.isVisible = inputText.hasFocus() && s?.isEmpty() == true
-                    recycler.isVisible = inputText.hasFocus() && s?.isEmpty() == true
-                    clearHistoryButton.isVisible = inputText.hasFocus() && s?.isEmpty() == true
+                if (sharedPreferences.getTracksHistory().isNotEmpty()) {
+                    binding.textHintBeforeTyping.isVisible =
+                        binding.searchInputText.hasFocus() && s?.isEmpty() == true
+                    recycler.isVisible = binding.searchInputText.hasFocus() && s?.isEmpty() == true
+                    clearHistoryButton.isVisible =
+                        binding.searchInputText.hasFocus() && s?.isEmpty() == true
 
                 }
             }
@@ -158,36 +154,34 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        init(searchTextWatcher, sharedPreferences, preferencesForTrackHistory)
+        init(searchTextWatcher, sharedPreferences)
     }
 
     private fun init(
         searchTextWatcher: TextWatcher,
-        sharedPreferences: UserSharedPreferences,
-        preferencesForTrackHistory: SharedPreferences
+        sharedPreferences: UserSharedPreferences
     ) {
-        inputText.addTextChangedListener(searchTextWatcher)
-        inputText.setOnFocusChangeListener { _, hasFocus ->
-            historyHintText.isVisible =
-                hasFocus && inputText.text.isEmpty() && historyList.isEmpty() == false
+        binding.searchInputText.addTextChangedListener(searchTextWatcher)
+        binding.searchInputText.setOnFocusChangeListener { _, hasFocus ->
+            binding.textHintBeforeTyping.isVisible =
+                hasFocus && binding.searchInputText.text.isEmpty() && sharedPreferences.getTracksHistory()
+                    .isEmpty() == false
         }
         recycler.layoutManager = LinearLayoutManager(this)
 
-        sharedPreferences.historyList = sharedPreferences.getHistory(preferencesForTrackHistory)
-        historyList = sharedPreferences.historyList
-        trackListAdapter.tracks = historyList
+//        historyList = sharedPreferences.getHistory(HISTORY_KEY)
+//        trackListAdapter.tracks = historyList
+        trackListAdapter.submitList(sharedPreferences.getTracksHistory())
         recycler.adapter = trackListAdapter
-        clearHistoryButton.isVisible = trackListAdapter.tracks.isEmpty() == false
-        historyHintText.isVisible = historyList.isEmpty() == false
+        clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
+        binding.textHintBeforeTyping.isVisible =
+            sharedPreferences.getTracksHistory().isEmpty() == false
 
 
         trackListAdapter.saveClickListener = object : TrackAdapter.SaveTrackInHistoryListener {
-            override fun saveTrackInHistory() {
+            override fun saveTrackInHistory(track: Track) {
                 Log.d("SaveTag", "Saving....")
-                sharedPreferences.addHistory(
-                    preferencesForTrackHistory,
-                    sharedPreferences.historyList
-                )
+                sharedPreferences.addTrackInHistory(track)
             }
         }
         trackListAdapter.addingInHistoryLogicListener =
@@ -196,77 +190,91 @@ class SearchActivity : AppCompatActivity() {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun savingLogic(position: Int) {
 
-                    if (sharedPreferences.historyList.size < 10) {
-                        if (sharedPreferences.historyList.isNotEmpty()) {
-                            for (i in 0..<sharedPreferences.historyList.size) {
-                                if (trackListAdapter.tracks[position].trackId == sharedPreferences.historyList[i].trackId) {
-
-                                    trackListAdapter.tracks.add(
-                                        0,
-                                        trackListAdapter.tracks[position]
-                                    )
-                                    if (trackListAdapter.tracks.size < 11) {
-                                        trackListAdapter.notifyItemInserted(0)
-                                    }
-                                    Log.d(
-                                        "Adding",
-                                        "добавили трек с позиции $position"
-                                    )
-                                    trackListAdapter.tracks.removeAt(position + 1)
-                                    if (trackListAdapter.tracks.size < 11) {
-                                        trackListAdapter.notifyDataSetChanged()
-                                    }
-
-                                    Log.d(
-                                        "Adding",
-                                        "Удален трек с индексом $position"
-                                    )
-                                    return
-                                }
-                            }
-                        }
-                        Log.d(
-                            "Adding",
-                            "Дошли до добавления трека, размер массива истории ${sharedPreferences.historyList.size}, треклиста ${trackListAdapter.tracks.size}"
-                        )
-                        sharedPreferences.historyList.add(0, trackListAdapter.tracks[position])
-                        if (trackListAdapter.tracks.size < 11) {
-                            trackListAdapter.notifyItemInserted(0)
-                        }
-                        Log.d(
-                            "Adding",
-                            "Меньше 10 треков список, добавлен трек позиции $position без повторений, размер массива истории ${historyList.size}"
-                        )
-                    } else {
-                        for (i in 0..<sharedPreferences.historyList.size) {
-                            if (trackListAdapter.tracks[position].trackId == sharedPreferences.historyList[i].trackId) {
-                                trackListAdapter.tracks.add(0, trackListAdapter.tracks[position])
-                                if (trackListAdapter.tracks.size < 11) {
-                                    trackListAdapter.notifyItemInserted(0)
-                                }
-                                Log.d(
-                                    "Adding",
-                                    "добавили трек с позиции $position"
-                                )
-
-                                trackListAdapter.tracks.removeAt(position + 1)
-                                if (trackListAdapter.tracks.size < 11) {
-                                    trackListAdapter.notifyDataSetChanged()
-                                }
-                                Log.d(
-                                    "Adding",
-                                    "Удален трек с индексом $position"
-                                )
-                                return
-                            }
-                        }
-                        sharedPreferences.historyList.removeAt(9)
-                        sharedPreferences.historyList.add(0, trackListAdapter.tracks[position])
-                        if (trackListAdapter.tracks.size < 11) {
-                            trackListAdapter.notifyItemInserted(0)
-                        }
-                        Log.d("Adding", "добавлен вместо 10 трека")
-                    }
+//                    if (sharedPreferences.getTracksHistory().size < 10) {
+//                        if (sharedPreferences.getTracksHistory().isNotEmpty()) {
+//                            sharedPreferences.addTrackInHistory(trackListAdapter.getTrackList()[position])
+//                            for (i in 0..<sharedPreferences.getTracksHistory().size) {
+//                                if (trackList[position].trackId == sharedPreferences.historyList[i].trackId) {
+//                                    (trackList as ArrayList<Track>).add(
+//                                        0,
+//                                        trackList[position]
+//                                    )
+////                                    if (trackListAdapter.tracks.size < 11) {
+//                                    if (trackList.size < 11) {
+//                                        trackListAdapter.notifyItemInserted(0)
+//                                    }
+//                                    Log.d(
+//                                        "Adding",
+//                                        "добавили трек с позиции $position"
+//                                    )
+////                                    (trackListAdapter.tracks as ArrayList<Track>).removeAt(position + 1)
+//                                    (trackList as ArrayList<Track>).removeAt(position + 1)
+////                                    if (trackListAdapter.tracks.size < 11) {
+//                                    if (trackList.size < 11) {
+//                                        trackListAdapter.notifyDataSetChanged()
+//                                    }
+//
+//                                    Log.d(
+//                                        "Adding",
+//                                        "Удален трек с индексом $position"
+//                                    )
+//                                    return
+//                                }
+//                            }
+//                        }
+//                        Log.d(
+//                            "Adding",
+//                            "Дошли до добавления трека, размер массива истории}"
+//                        )
+//                        sharedPreferences.historyList.add(0, trackList[position])
+//                        if (trackList.size < 11) {
+//                            trackListAdapter.notifyItemInserted(0)
+//                        }
+//                        Log.d(
+//                            "Adding",
+//                            "Меньше 10 треков список, добавлен трек позиции $position без повторений, размер массива истории ${historyList.size}"
+//                        )
+//                    } else {
+//                        for (i in 0..<sharedPreferences.historyList.size) {
+////                            if (trackListAdapter.tracks[position].trackId == sharedPreferences.historyList[i].trackId) {
+//                            if (trackList[position].trackId == sharedPreferences.historyList[i].trackId) {
+////                                (trackListAdapter.tracks as ArrayList<Track>).add(
+//                                (trackList as ArrayList<Track>).add(
+//                                    0,
+////                                    trackListAdapter.tracks[position]
+//                                    trackList[position]
+//                                )
+////                                if (trackListAdapter.tracks.size < 11) {
+//                                if (trackList.size < 11) {
+//                                    trackListAdapter.notifyItemInserted(0)
+//                                }
+//                                Log.d(
+//                                    "Adding",
+//                                    "добавили трек с позиции $position"
+//                                )
+//
+////                                (trackListAdapter.tracks as ArrayList<Track>).removeAt(position + 1)
+//                                (trackList as ArrayList<Track>).removeAt(position + 1)
+////                                if (trackListAdapter.tracks.size < 11) {
+//                                if (trackList.size < 11) {
+//                                    trackListAdapter.notifyDataSetChanged()
+//                                }
+//                                Log.d(
+//                                    "Adding",
+//                                    "Удален трек с индексом $position"
+//                                )
+//                                return
+//                            }
+//                        }
+//                        sharedPreferences.historyList.removeAt(9)
+////                        sharedPreferences.historyList.add(0, trackListAdapter.tracks[position])
+//                        sharedPreferences.historyList.add(0, trackList[position])
+////                        if (trackListAdapter.tracks.size < 11) {
+//                        if (trackList.size < 11) {
+//                            trackListAdapter.notifyItemInserted(0)
+//                        }
+//                        Log.d("Adding", "добавлен вместо 10 трека")
+                    sharedPreferences.addTrackInHistory(trackListAdapter.getTrackList()[position])
                 }
             }
 
@@ -293,12 +301,12 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchAction(): Runnable {
         return Runnable {
-            historyHintText.isVisible = false
+            binding.textHintBeforeTyping.isVisible = false
             clearHistoryButton.isVisible = false
             progressBar.isVisible = true
 
             searchTracksUseCase.doRequest(
-                inputText.text.toString(),
+                binding.searchInputText.text.toString(),
                 object : TracksInteractor.TracksConsumer {
                     override fun consume(findTracks: List<Track>, response: Int) {
                         mainThreadHandler?.post {
@@ -312,7 +320,7 @@ class SearchActivity : AppCompatActivity() {
                                 Log.e("resultCode", "$response")
                             } else {
                                 mainThreadHandler?.post(successListUiElements(findTracks))
-                                Log.e("resultCode", "$response")
+                                Log.e("resultCode", "$response, $findTracks")
                             }
                         }
                     }
@@ -323,14 +331,12 @@ class SearchActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun successListUiElements(findTracks: List<Track>) = Runnable {
-        progressBar.isVisible = false
+        trackListAdapter.addTracksInList(findTracks)
+        trackListAdapter.submitList(findTracks)
+        progressBar.visibility = View.GONE
         nothingImage.visibility = View.GONE
         connectionProblemError.visibility = View.GONE
         recycler.visibility = View.VISIBLE
-        trackList.clear()
-        trackListAdapter.tracks = trackList
-        trackList.addAll(findTracks)
-        trackListAdapter.notifyDataSetChanged()
     }
 
     private fun nothingFoundUiElements() = Runnable {

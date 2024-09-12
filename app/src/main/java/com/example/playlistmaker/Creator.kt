@@ -10,6 +10,7 @@ import com.example.playlistmaker.data.sharedPrefs.UserSharedPreferences
 import com.example.playlistmaker.domain.TracksInteractor
 import com.example.playlistmaker.domain.TracksInteractorImpl
 import com.example.playlistmaker.domain.TracksRepository
+import com.example.playlistmaker.presentation.search.TrackAdapter
 
 object Creator {
     private fun getTracksRepository(): TracksRepository {
@@ -20,12 +21,18 @@ object Creator {
         return NetworkClientImpl()
     }
 
+//    private fun initApplication(application: Application) {}
+
     fun provideTracksInteractorImpl(): TracksInteractor {
         return TracksInteractorImpl(getTracksRepository())
     }
 
-    fun provideSharedPrefs(): UserSharedPreferences {
-        return UserSharedPreferences()
+    fun provideAdapter(): TrackAdapter {
+        return TrackAdapter()
+    }
+
+    fun provideSharedPrefs(context: Context): UserSharedPreferences {
+        return UserSharedPreferences(context)
     }
 
     fun getPrefs(key: String, context: Context): SharedPreferences {

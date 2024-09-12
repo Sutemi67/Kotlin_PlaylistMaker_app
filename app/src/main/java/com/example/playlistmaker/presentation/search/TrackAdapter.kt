@@ -2,12 +2,12 @@ package com.example.playlistmaker.presentation.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 
-class TrackAdapter() : RecyclerView.Adapter<TrackViewHolder>() {
-    var tracks = ArrayList<Track>()
+class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()) {
+    private var trackList: List<Track> = mutableListOf()
 
     var saveClickListener: SaveTrackInHistoryListener? = null
     var addingInHistoryLogicListener: AddInHistoryLogicListener? = null
@@ -20,18 +20,26 @@ class TrackAdapter() : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
+        holder.bind(trackList[position])
         holder.itemView.setOnClickListener {
-            openPlayerActivity?.openPlayerActivity(tracks[position])
+            openPlayerActivity?.openPlayerActivity(trackList[position])
             addingInHistoryLogicListener?.savingLogic(position)
-            saveClickListener?.saveTrackInHistory()
+            saveClickListener?.saveTrackInHistory(trackList[position])
         }
     }
 
-    override fun getItemCount(): Int = tracks.size
+    override fun getItemCount(): Int = trackList.size
+
+    fun addTracksInList(tracks: List<Track>) {
+        trackList = tracks
+    }
+
+    fun getTrackList(): List<Track> {
+        return trackList
+    }
 
     interface SaveTrackInHistoryListener {
-        fun saveTrackInHistory()
+        fun saveTrackInHistory(track: Track)
     }
 
     interface AddInHistoryLogicListener {

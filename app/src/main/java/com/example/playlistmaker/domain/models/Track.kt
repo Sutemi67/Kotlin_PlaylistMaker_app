@@ -13,13 +13,13 @@ import com.google.gson.annotations.SerializedName
 
 data class Track(
     val trackId: Int,
-    @SerializedName(PREVIEW_URL) val previewUrl: String,
+    @SerializedName(PREVIEW_URL) val previewUrl: String?,
     @SerializedName(TRACK_NAME) val trackName: String,
     @SerializedName(ARTIST) val artistName: String,
     @SerializedName(TRACK_TIME_IN_MILLIS) val trackTime: Int,
-    @SerializedName(ARTWORK_URL) val artworkUrl100: String,
+    @SerializedName(ARTWORK_URL) val artworkUrl100: String?,
     @SerializedName(COUNTRY) val country: String,
     @SerializedName(COLLECTION_NAME) val collectionName: String,
     @SerializedName(GENRE) val primaryGenreName: String,
-    @SerializedName(RELEASE_DATE) val releaseDate: String,
+    @SerializedName(RELEASE_DATE) val releaseDate: String?,
 )
