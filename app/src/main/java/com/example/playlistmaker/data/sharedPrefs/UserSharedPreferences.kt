@@ -38,10 +38,10 @@ class UserSharedPreferences(private val context: Context) {
                 historyList.toMutableList().add(0, track)
             }
         }
-        addListInHistory()
+        saveHistory()
     }
 
-    fun addListInHistory() {
+    private fun saveHistory() {
         val prefs = getPrefs(key = HISTORY_KEY, context)
         val json = Gson().toJson(historyList.toTypedArray())
         prefs.edit().putString(HISTORY_KEY, json).apply()
@@ -49,7 +49,7 @@ class UserSharedPreferences(private val context: Context) {
 
     fun clearHistory() {
         historyList = emptyList()
-        addListInHistory()
+        saveHistory()
     }
 
     fun getIsNight(prefs: SharedPreferences) = prefs.getInt(IS_NIGHT_SP_KEY, 1)

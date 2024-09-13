@@ -32,6 +32,7 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
 
     fun addTracksInList(tracks: List<Track>) {
         trackList = tracks
+        submitList(tracks)
     }
 
     fun getTrackList(): List<Track> {
