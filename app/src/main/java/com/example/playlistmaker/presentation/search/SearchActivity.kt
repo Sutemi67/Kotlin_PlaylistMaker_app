@@ -319,7 +319,8 @@ class SearchActivity : AppCompatActivity() {
                                 mainThreadHandler?.post(nothingFoundUiElements())
                                 Log.e("resultCode", "$response")
                             } else {
-                                mainThreadHandler?.post(successListUiElements(findTracks))
+                                trackListAdapter.addTracksInList(findTracks)
+                                mainThreadHandler?.post(successListUiElements())
                                 Log.e("resultCode", "$response, $findTracks")
                             }
                         }
@@ -328,10 +329,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun successListUiElements(findTracks: List<Track>) = Runnable {
-//        trackListAdapter.submitList(findTracks)
-        trackListAdapter.addTracksInList(findTracks)
+    private fun successListUiElements() = Runnable {
         progressBar.visibility = View.GONE
         nothingImage.visibility = View.GONE
         connectionProblemError.visibility = View.GONE
