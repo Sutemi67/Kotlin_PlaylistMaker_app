@@ -9,8 +9,6 @@ import com.example.playlistmaker.domain.models.Track
 class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()) {
     private var trackList: List<Track> = mutableListOf()
 
-    var saveClickListener: SaveTrackInHistoryListener? = null
-    var addingInHistoryLogicListener: AddInHistoryLogicListener? = null
     var openPlayerActivity: OpenPlayerActivity? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -23,8 +21,6 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
         holder.bind(trackList[position])
         holder.itemView.setOnClickListener {
             openPlayerActivity?.openPlayerActivity(trackList[position])
-            addingInHistoryLogicListener?.savingLogic(position)
-            saveClickListener?.saveTrackInHistory(trackList[position])
         }
     }
 
@@ -39,13 +35,6 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
         return trackList
     }
 
-    interface SaveTrackInHistoryListener {
-        fun saveTrackInHistory(track: Track)
-    }
-
-    interface AddInHistoryLogicListener {
-        fun savingLogic(position: Int)
-    }
 
     interface OpenPlayerActivity {
         fun openPlayerActivity(track: Track)

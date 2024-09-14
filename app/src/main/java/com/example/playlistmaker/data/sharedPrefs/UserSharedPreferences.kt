@@ -3,6 +3,7 @@ package com.example.playlistmaker.data.sharedPrefs
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.playlistmaker.common.HISTORY_KEY
 import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
 import com.example.playlistmaker.domain.models.Track
@@ -17,7 +18,7 @@ class UserSharedPreferences(private val context: Context) {
         return sharedPrefs
     }
 
-    fun getTracksHistory(): List<Track> {
+    fun getHistory(): List<Track> {
         val itemType = object : TypeToken<List<Track>>() {}.type
         val spH = getPrefs(key = HISTORY_KEY, context)
         val json = spH.getString(HISTORY_KEY, null)
@@ -29,13 +30,15 @@ class UserSharedPreferences(private val context: Context) {
         if (historyList.contains(track)) {
             historyList.toMutableList().remove(track)
             historyList.toMutableList().add(0, track)
+            Log.e("saving", "track replaced")
         } else {
             if (historyList.size < 10) {
                 historyList.toMutableList().add(0, track)
-            }
-            else{
+                Log.e("saving", "track added")
+            } else {
                 historyList.toMutableList().removeAt(9)
                 historyList.toMutableList().add(0, track)
+                Log.e("saving", "track add on 0 place, list is full")
             }
         }
         saveHistory()

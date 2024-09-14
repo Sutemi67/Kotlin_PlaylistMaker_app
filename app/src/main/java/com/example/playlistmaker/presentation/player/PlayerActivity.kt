@@ -32,9 +32,8 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
 
     private var timePlaying = 0L
-    private var mediaPlayer: MediaPlayer? = null
     private var playerHandler: Handler? = null
-
+    private val mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
@@ -89,12 +88,12 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.img_placeholder)
             .into(cover)
 
-        mediaPlayer = MediaPlayer().apply {
+        mediaPlayer.apply {
             try {
                 setDataSource(previewUrl)
                 prepareAsync()
                 setOnCompletionListener {
-                    mediaPlayer?.seekTo(0)
+                    mediaPlayer.seekTo(0)
                     playButton.setImageResource(R.drawable.audioplayer_button_play_light)
                     playerHandler?.removeCallbacks(timeCounter())
                     timePlaying = 0L
@@ -112,7 +111,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         playButton.setOnClickListener {
-            mediaPlayer?.let {
+            mediaPlayer.let {
                 if (it.isPlaying) {
                     pausePlayer()
                 } else {
@@ -129,26 +128,25 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaPlayer.release()
         playerHandler?.removeCallbacks(timeCounter())
     }
 
     private fun startPlayer() {
-        mediaPlayer?.start()
+        mediaPlayer.start()
         playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
         playerHandler?.post(timeCounter())
     }
 
     private fun pausePlayer() {
-        mediaPlayer?.pause()
+        if (mediaPlayer.isPlaying) mediaPlayer.pause()
         playButton.setImageResource(R.drawable.audioplayer_button_play_light)
         playerHandler?.removeCallbacks(timeCounter())
     }
 
     private fun timeCounter(): Runnable {
         return Runnable {
-            mediaPlayer?.let {
+            mediaPlayer.let {
                 timePlaying = it.currentPosition.toLong()
                 currentTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
