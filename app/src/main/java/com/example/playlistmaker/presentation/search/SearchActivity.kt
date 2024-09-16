@@ -51,11 +51,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private lateinit var binding: ActivitySearchBinding
 
-
-//    private var historyList : List<Track>() = mutableListOf()
-
     var trackListAdapter = Creator.provideAdapter()
-//    private lateinit var trackList: List<Track>
 
     private var restoredText = ""
 
@@ -116,10 +112,8 @@ class SearchActivity : AppCompatActivity() {
             sharedPreferences.clearHistory()
             trackListAdapter.addTracksInList(emptyList())
             clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
-            binding.textHintBeforeTyping.isVisible =
-                sharedPreferences.getHistory().isEmpty() == true
             binding.historyLayout.isVisible = true
-            binding.textHintBeforeTyping.isVisible = true
+            binding.textHintBeforeTyping.isVisible = false
         }
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -132,7 +126,6 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     clearButton.isVisible = false
@@ -143,15 +136,14 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (sharedPreferences.getHistory().isNotEmpty()) {
                     binding.textHintBeforeTyping.isVisible =
-                        binding.searchInputText.hasFocus() && s?.isEmpty() == false
+                        binding.searchInputText.hasFocus() && s?.isEmpty() == true
                     binding.historyLayout.isVisible =
-                        binding.searchInputText.hasFocus() && s?.isEmpty() == false
+                        binding.searchInputText.hasFocus() && s?.isEmpty() == true
                     clearHistoryButton.isVisible =
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
 
                 }
             }
-
             override fun afterTextChanged(s: Editable?) {
                 //
             }
@@ -169,10 +161,10 @@ class SearchActivity : AppCompatActivity() {
         binding.textHintBeforeTyping.isVisible = true
         recycler.adapter = trackListAdapter
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
-        binding.searchInputText.setOnFocusChangeListener { _, hasFocus ->
-            binding.textHintBeforeTyping.isVisible =
-                hasFocus && binding.searchInputText.text.isEmpty() == false
-        }
+//        binding.searchInputText.setOnFocusChangeListener { _, hasFocus ->
+//            binding.historyLayout.isVisible =
+//                hasFocus && binding.searchInputText.text.isEmpty() == false
+//        }
         recycler.layoutManager = LinearLayoutManager(this)
 
         clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
@@ -235,7 +227,7 @@ class SearchActivity : AppCompatActivity() {
         progressBar.isVisible = false
         nothingImage.isVisible = false
         connectionProblemError.isVisible = false
-        recycler.isVisible = true
+        binding.historyLayout.isVisible = true
     }
 
     private fun nothingFoundUiElements() = Runnable {

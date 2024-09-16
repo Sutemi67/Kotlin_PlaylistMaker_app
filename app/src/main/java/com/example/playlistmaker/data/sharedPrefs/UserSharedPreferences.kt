@@ -11,7 +11,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class UserSharedPreferences(private val context: Context) {
-    private var historyList: List<Track> = mutableListOf()
+    private var historyList: MutableList<Track> = mutableListOf()
+
 
     private fun getPrefs(key: String, context: Context): SharedPreferences {
         val sharedPrefs = context.getSharedPreferences(key, MODE_PRIVATE)
@@ -21,23 +22,23 @@ class UserSharedPreferences(private val context: Context) {
     fun getHistory(): List<Track> {
         val itemType = object : TypeToken<List<Track>>() {}.type
         val spH = getPrefs(key = HISTORY_KEY, context)
-        val json = spH.getString(HISTORY_KEY, null)
-            ?: return mutableListOf()
+        val json = spH.getString(HISTORY_KEY, null) ?: return mutableListOf()
         return Gson().fromJson(json, itemType)
     }
 
     fun addTrackInHistory(track: Track) {
+        historyList = getHistory().toMutableList()
         if (historyList.contains(track)) {
-            historyList.toMutableList().remove(track)
-            historyList.toMutableList().add(0, track)
+            historyList.remove(track)
+            historyList.add(0, track)
             Log.e("saving", "track replaced")
         } else {
             if (historyList.size < 10) {
-                historyList.toMutableList().add(0, track)
+                historyList.add(0, track)
                 Log.e("saving", "track added")
             } else {
-                historyList.toMutableList().removeAt(9)
-                historyList.toMutableList().add(0, track)
+                historyList.removeAt(9)
+                historyList.add(0, track)
                 Log.e("saving", "track add on 0 place, list is full")
             }
         }
@@ -51,7 +52,7 @@ class UserSharedPreferences(private val context: Context) {
     }
 
     fun clearHistory() {
-        historyList = emptyList()
+        historyList.clear()
         saveHistory()
     }
 

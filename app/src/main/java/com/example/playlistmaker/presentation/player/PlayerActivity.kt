@@ -93,7 +93,7 @@ class PlayerActivity : AppCompatActivity() {
                 setDataSource(previewUrl)
                 prepareAsync()
                 setOnCompletionListener {
-                    mediaPlayer.seekTo(0)
+//                    mediaPlayer.seekTo(0)
                     playButton.setImageResource(R.drawable.audioplayer_button_play_light)
                     playerHandler?.removeCallbacks(timeCounter())
                     timePlaying = 0L
