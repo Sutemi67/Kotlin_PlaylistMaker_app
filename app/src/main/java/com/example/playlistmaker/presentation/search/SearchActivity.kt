@@ -195,6 +195,7 @@ class SearchActivity : AppCompatActivity() {
                     intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
                     intent.putExtra(PREVIEW_URL, track.previewUrl)
                     startActivity(intent)
+                    trackListAdapter.setData(sharedPreferences.getHistory())
                 }
             }
         }
