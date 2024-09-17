@@ -13,7 +13,6 @@ import com.google.gson.reflect.TypeToken
 class UserSharedPreferences(private val context: Context) {
     private var historyList: MutableList<Track> = mutableListOf()
 
-
     private fun getPrefs(key: String, context: Context): SharedPreferences {
         val sharedPrefs = context.getSharedPreferences(key, MODE_PRIVATE)
         return sharedPrefs
@@ -45,7 +44,7 @@ class UserSharedPreferences(private val context: Context) {
         saveHistory()
     }
 
-    private fun saveHistory() {
+     private fun saveHistory() {
         val prefs = getPrefs(key = HISTORY_KEY, context)
         val json = Gson().toJson(historyList.toTypedArray())
         prefs.edit().putString(HISTORY_KEY, json).apply()
