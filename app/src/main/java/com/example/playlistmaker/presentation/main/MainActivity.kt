@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,14 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.MyApplication
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.activities.SettingsActivity.Companion.IS_NIGHT
-import com.example.playlistmaker.savings.Savings
+import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
+import com.example.playlistmaker.presentation.media.MediaActivity
+import com.example.playlistmaker.presentation.search.SearchActivity
+import com.example.playlistmaker.presentation.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
-
-    private val savings = Savings()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +26,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val spNT = getSharedPreferences(IS_NIGHT, MODE_PRIVATE)
-        setDefaultNightMode(savings.getIsNight(spNT))
+        val sharedPreferences = Creator.provideSharedPrefs(applicationContext)
+
+        val spNT = Creator.getPrefs(IS_NIGHT_SP_KEY, applicationContext)
+        setDefaultNightMode(sharedPreferences.getIsNight(spNT))
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         buttonSearch.setOnClickListener {

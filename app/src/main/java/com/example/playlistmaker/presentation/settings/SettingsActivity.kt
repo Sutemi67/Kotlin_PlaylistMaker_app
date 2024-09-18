@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.presentation.settings
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -12,17 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.IS_CHECKED_SP_KEY
+import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
+import com.example.playlistmaker.common.LIGHT_SP_VALUE
+import com.example.playlistmaker.common.NIGHT_SP_VALUE
 
 class SettingsActivity : AppCompatActivity() {
-    companion object {
-        const val IS_CHECKED = "is_checked"
-        const val IS_NIGHT = "is_night"
-        const val NIGHT_VALUE = 2
-        const val LIGHT_VALUE = 1
-    }
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +35,9 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-
         val backButton = findViewById<ImageView>(R.id.back_button)
-        backButton.setOnClickListener {
-            finish()
-        }
+        backButton.setOnClickListener { finish() }
+
         val agreementButton = findViewById<TextView>(R.id.button_agreement)
         agreementButton.setOnClickListener {
             val url = Uri.parse(this.getString(R.string.link_public_offer))
@@ -60,8 +57,8 @@ class SettingsActivity : AppCompatActivity() {
             )
             supportMessage.putExtra(Intent.EXTRA_TEXT, this.getString(R.string.support_message))
             startActivity(supportMessage)
-
         }
+
         val shareButton = findViewById<TextView>(R.id.button_share)
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
@@ -70,23 +67,31 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-        val spCH = getSharedPreferences(IS_CHECKED, MODE_PRIVATE)
-        val spNT = getSharedPreferences(IS_NIGHT, MODE_PRIVATE)
+        val checkSharedPrefs = getSharedPreferences(IS_CHECKED_SP_KEY, MODE_PRIVATE)
+        val nightModeSharedPrefs = getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
 
         val nightThemeSwitcher = findViewById<Switch>(R.id.nightThemeSwitch)
-        nightThemeSwitcher.isChecked = spCH.getBoolean(IS_CHECKED, false)
+        nightThemeSwitcher.isChecked = checkSharedPrefs.getBoolean(IS_CHECKED_SP_KEY, false)
 
         nightThemeSwitcher.setOnClickListener {
             if (nightThemeSwitcher.isChecked) {
                 setDefaultNightMode(MODE_NIGHT_YES)
-                spCH.edit().putBoolean(IS_CHECKED, nightThemeSwitcher.isChecked).apply()
-                spNT.edit().putInt(IS_NIGHT, NIGHT_VALUE).apply()
-
+                checkSharedPrefs.edit {
+                    putBoolean(
+                        IS_CHECKED_SP_KEY,
+                        nightThemeSwitcher.isChecked
+                    )
+                }
+                nightModeSharedPrefs.edit { putInt(IS_NIGHT_SP_KEY, NIGHT_SP_VALUE) }
             } else {
                 setDefaultNightMode(MODE_NIGHT_NO)
-                spCH.edit().putBoolean(IS_CHECKED, nightThemeSwitcher.isChecked).apply()
-                spNT.edit().putInt(IS_NIGHT, LIGHT_VALUE).apply()
+                checkSharedPrefs.edit {
+                    putBoolean(
+                        IS_CHECKED_SP_KEY,
+                        nightThemeSwitcher.isChecked
+                    )
+                }
+                nightModeSharedPrefs.edit { putInt(IS_NIGHT_SP_KEY, LIGHT_SP_VALUE) }
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.presentation.player
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -14,16 +14,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.ARTIST
-import com.example.playlistmaker.ARTWORK_URL
-import com.example.playlistmaker.COLLECTION_NAME
-import com.example.playlistmaker.COUNTRY
-import com.example.playlistmaker.GENRE
-import com.example.playlistmaker.PREVIEW_URL
+import com.example.playlistmaker.common.ARTIST
+import com.example.playlistmaker.common.ARTWORK_URL
+import com.example.playlistmaker.common.COLLECTION_NAME
+import com.example.playlistmaker.common.COUNTRY
+import com.example.playlistmaker.common.GENRE
+import com.example.playlistmaker.common.PREVIEW_URL
 import com.example.playlistmaker.R
-import com.example.playlistmaker.RELEASE_DATE
-import com.example.playlistmaker.TRACK_NAME
-import com.example.playlistmaker.TRACK_TIME_IN_MILLIS
+import com.example.playlistmaker.common.RELEASE_DATE
+import com.example.playlistmaker.common.TRACK_NAME
+import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -32,9 +32,8 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
 
     private var timePlaying = 0L
-    private var mediaPlayer: MediaPlayer? = null
     private var playerHandler: Handler? = null
-
+    private val mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
@@ -89,12 +88,12 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.img_placeholder)
             .into(cover)
 
-        mediaPlayer = MediaPlayer().apply {
+        mediaPlayer.apply {
             try {
                 setDataSource(previewUrl)
                 prepareAsync()
                 setOnCompletionListener {
-                    mediaPlayer?.seekTo(0)
+//                    mediaPlayer.seekTo(0)
                     playButton.setImageResource(R.drawable.audioplayer_button_play_light)
                     playerHandler?.removeCallbacks(timeCounter())
                     timePlaying = 0L
@@ -112,7 +111,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         playButton.setOnClickListener {
-            mediaPlayer?.let {
+            mediaPlayer.let {
                 if (it.isPlaying) {
                     pausePlayer()
                 } else {
@@ -129,26 +128,25 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaPlayer.release()
         playerHandler?.removeCallbacks(timeCounter())
     }
 
     private fun startPlayer() {
-        mediaPlayer?.start()
+        mediaPlayer.start()
         playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
         playerHandler?.post(timeCounter())
     }
 
     private fun pausePlayer() {
-        mediaPlayer?.pause()
+        if (mediaPlayer.isPlaying) mediaPlayer.pause()
         playButton.setImageResource(R.drawable.audioplayer_button_play_light)
         playerHandler?.removeCallbacks(timeCounter())
     }
 
     private fun timeCounter(): Runnable {
         return Runnable {
-            mediaPlayer?.let {
+            mediaPlayer.let {
                 timePlaying = it.currentPosition.toLong()
                 currentTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
