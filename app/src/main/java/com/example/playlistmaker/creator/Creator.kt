@@ -21,8 +21,6 @@ object Creator {
         return NetworkClientImpl()
     }
 
-//    private fun initApplication(application: Application) {}
-
     fun provideTracksInteractorImpl(): TracksInteractor {
         return TracksInteractorImpl(getTracksRepository())
     }

@@ -9,5 +9,4 @@ import org.koin.dsl.module
 val dataModule = module{
     single<NetworkClient> { NetworkClientImpl() }
     single<TracksRepository> { TracksRepositoryImpl(get()) }
-
 }
