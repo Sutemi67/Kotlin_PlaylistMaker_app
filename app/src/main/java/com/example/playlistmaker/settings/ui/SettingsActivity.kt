@@ -39,6 +39,7 @@ class SettingsActivity : AppCompatActivity() {
         val nightThemeSwitcher = binding.nightThemeSwitch
 
         binding.backButton.setOnClickListener { finish() }
+
         binding.buttonAgreement.setOnClickListener {
             val url = Uri.parse(this.getString(R.string.link_public_offer))
             startActivity(Intent(Intent.ACTION_VIEW, url))
