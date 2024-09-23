@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.util.Log
-import com.example.playlistmaker.common.HISTORY_KEY
-import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
+import com.example.playlistmaker.app.HISTORY_KEY
+import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

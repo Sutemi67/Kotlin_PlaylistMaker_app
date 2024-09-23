@@ -1,4 +1,4 @@
-package com.example.playlistmaker.common
+package com.example.playlistmaker.app
 
 const val HISTORY_KEY = "history_key"
 const val CLICK_DEBOUNCE_DELAY = 1000L

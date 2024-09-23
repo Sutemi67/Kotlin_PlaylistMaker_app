@@ -13,6 +13,7 @@ constraintlayout = "2.1.4"
 retrofit = "2.11.0"
 converterGson = "2.11.0"
 gson = "2.11.0"
+koinAndroid = "4.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,6 +29,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
 
 
 [plugins]

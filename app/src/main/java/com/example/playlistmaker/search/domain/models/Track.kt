@@ -1,14 +1,14 @@
 package com.example.playlistmaker.search.domain.models
 
-import com.example.playlistmaker.common.ARTIST
-import com.example.playlistmaker.common.ARTWORK_URL
-import com.example.playlistmaker.common.COLLECTION_NAME
-import com.example.playlistmaker.common.COUNTRY
-import com.example.playlistmaker.common.GENRE
-import com.example.playlistmaker.common.PREVIEW_URL
-import com.example.playlistmaker.common.RELEASE_DATE
-import com.example.playlistmaker.common.TRACK_NAME
-import com.example.playlistmaker.common.TRACK_TIME_IN_MILLIS
+import com.example.playlistmaker.app.ARTIST
+import com.example.playlistmaker.app.ARTWORK_URL
+import com.example.playlistmaker.app.COLLECTION_NAME
+import com.example.playlistmaker.app.COUNTRY
+import com.example.playlistmaker.app.GENRE
+import com.example.playlistmaker.app.PREVIEW_URL
+import com.example.playlistmaker.app.RELEASE_DATE
+import com.example.playlistmaker.app.TRACK_NAME
+import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.google.gson.annotations.SerializedName
 
 data class Track(

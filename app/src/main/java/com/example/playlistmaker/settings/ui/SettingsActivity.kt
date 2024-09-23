@@ -16,10 +16,10 @@ import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
-import com.example.playlistmaker.common.IS_CHECKED_SP_KEY
-import com.example.playlistmaker.common.IS_NIGHT_SP_KEY
-import com.example.playlistmaker.common.LIGHT_SP_VALUE
-import com.example.playlistmaker.common.NIGHT_SP_VALUE
+import com.example.playlistmaker.app.IS_CHECKED_SP_KEY
+import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
+import com.example.playlistmaker.app.LIGHT_SP_VALUE
+import com.example.playlistmaker.app.NIGHT_SP_VALUE
 
 class SettingsActivity : AppCompatActivity() {
 
