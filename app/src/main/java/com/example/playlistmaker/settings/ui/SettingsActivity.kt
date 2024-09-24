@@ -41,11 +41,12 @@ class SettingsActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener { finish() }
 
         binding.buttonAgreement.setOnClickListener {
-            val url = Uri.parse(this.getString(R.string.link_public_offer))
-            startActivity(Intent(Intent.ACTION_VIEW, url))
+//            val url = Uri.parse(this.getString(R.string.link_public_offer))
+//            startActivity(Intent(Intent.ACTION_VIEW, url))
+            vm.onAgreementClick()
         }
         binding.buttonSupport.setOnClickListener {
-            vm.onSupportClick()
+            vm.onLinkClick()
         }
 
         binding.buttonShare.setOnClickListener {

@@ -209,7 +209,7 @@ class SearchActivity : AppCompatActivity() {
             clearHistoryButton.isVisible = false
             progressBar.isVisible = true
 
-            searchTracksUseCase.doRequest(
+            searchTracksUseCase.searchActivitySearchAction(
                 binding.searchInputText.text.toString(),
                 object : TracksInteractor.TracksConsumer {
                     override fun consume(findTracks: List<Track>, response: Int) {
