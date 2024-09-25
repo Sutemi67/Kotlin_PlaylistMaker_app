@@ -1,23 +1,20 @@
 package com.example.playlistmaker.settings.ui
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.search.domain.TracksInteractor
+import com.example.playlistmaker.settings.domain.SettingsInteractorInterface
 
 class SettingsViewModel(
-    private val interactor: TracksInteractor,
-    private val context: Context
+    private val interactor: SettingsInteractorInterface
 ) : ViewModel() {
-
     fun onShareClick() {
-        interactor.settingsActivityShareAction(context)
+        interactor.settingsActivityShareAction()
     }
 
     fun onLinkClick() {
-        interactor.settingsActivityOpenLinkAction(context)
+        interactor.settingsActivityOpenLinkAction()
     }
 
     fun onAgreementClick() {
-        interactor.settingsActivityAgreementAction(context)
+        interactor.settingsActivityAgreementAction()
     }
 }

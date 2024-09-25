@@ -1,9 +1,12 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.search.domain.TracksInteractor
-import com.example.playlistmaker.search.domain.TracksInteractorImpl
+import com.example.playlistmaker.search.domain.SearchInteractor
+import com.example.playlistmaker.search.domain.SearchInteractorInterface
+import com.example.playlistmaker.settings.domain.SettingsInteractor
+import com.example.playlistmaker.settings.domain.SettingsInteractorInterface
 import org.koin.dsl.module
 
 val domainModule = module {
-    single<TracksInteractor> { TracksInteractorImpl(get()) }
+    single<SearchInteractorInterface> { SearchInteractor(get()) }
+    single<SettingsInteractorInterface> { SettingsInteractor(get()) }
 }

@@ -4,12 +4,12 @@ import com.example.playlistmaker.search.data.api.NetworkClient
 import com.example.playlistmaker.search.data.dto.TrackListAndResponse
 import com.example.playlistmaker.search.data.dto.TracksResponse
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
-import com.example.playlistmaker.search.domain.TracksRepository
+import com.example.playlistmaker.search.domain.TracksRepositoryInterface
 import com.example.playlistmaker.search.domain.models.Track
 
-class TracksRepositoryImpl(
+class TracksRepository(
     private val networkClient: NetworkClient
-) : TracksRepository {
+) : TracksRepositoryInterface {
 
     override fun refillTrackList(expression: String): TrackListAndResponse {
         val response = networkClient.doRequestApi(TracksSearchRequest(expression))

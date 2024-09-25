@@ -39,7 +39,7 @@ import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.search.data.sharedPrefs.UserSharedPreferences
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.TracksInteractor
+import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.data.TrackAdapter
@@ -63,7 +63,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var progressBar: FrameLayout
 
     lateinit var clearHistoryButton: Button
-    private lateinit var searchTracksUseCase: TracksInteractor
+    private lateinit var searchTracksUseCase: SearchInteractorInterface
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,7 +211,7 @@ class SearchActivity : AppCompatActivity() {
 
             searchTracksUseCase.searchActivitySearchAction(
                 binding.searchInputText.text.toString(),
-                object : TracksInteractor.TracksConsumer {
+                object : SearchInteractorInterface.TracksConsumer {
                     override fun consume(findTracks: List<Track>, response: Int) {
                         mainThreadHandler?.post {
                             if (findTracks.isEmpty()) {

@@ -1,8 +1,6 @@
 package com.example.playlistmaker.settings.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +10,6 @@ import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.R
 import com.example.playlistmaker.app.IS_CHECKED_SP_KEY
 import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
 import com.example.playlistmaker.app.LIGHT_SP_VALUE
@@ -41,8 +38,6 @@ class SettingsActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener { finish() }
 
         binding.buttonAgreement.setOnClickListener {
-//            val url = Uri.parse(this.getString(R.string.link_public_offer))
-//            startActivity(Intent(Intent.ACTION_VIEW, url))
             vm.onAgreementClick()
         }
         binding.buttonSupport.setOnClickListener {
