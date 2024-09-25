@@ -23,7 +23,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.ARTIST
 import com.example.playlistmaker.app.ARTWORK_URL
@@ -37,15 +36,17 @@ import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.SEARCH_REFRESH_RATE
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
-import com.example.playlistmaker.search.data.sharedPrefs.UserSharedPreferences
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.SearchInteractorInterface
-import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.data.TrackAdapter
+import com.example.playlistmaker.search.domain.SearchInteractorInterface
+import com.example.playlistmaker.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
+
+    private val vm by viewModel<SearchViewModel>()
 
     private var mainThreadHandler: Handler? = null
     private var isClickAllowed = true
@@ -54,7 +55,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private lateinit var binding: ActivitySearchBinding
 
-    var trackListAdapter = Creator.provideAdapter()
+    var trackListAdapter = TrackAdapter()
 
     private var restoredText = ""
 
@@ -63,7 +64,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var progressBar: FrameLayout
 
     lateinit var clearHistoryButton: Button
-    private lateinit var searchTracksUseCase: SearchInteractorInterface
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,16 +86,13 @@ class SearchActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progress_bar_layout)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
 
-        val sharedPreferences = Creator.provideSharedPrefs(this)
-        searchTracksUseCase = Creator.provideTracksInteractorImpl()
-
         mainThreadHandler = Handler(Looper.getMainLooper())
 
         if (savedInstanceState != null) binding.searchInputText.setText(restoredText)
 
         clearButton.setOnClickListener {
             binding.searchInputText.text.clear()
-            trackListAdapter.setData(sharedPreferences.getHistory())
+            trackListAdapter.setData(vm.getHistory())
             nothingImage.isVisible = false
             connectionProblemError.isVisible = false
             recycler.isVisible = true
@@ -109,11 +106,11 @@ class SearchActivity : AppCompatActivity() {
             )
             clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
             binding.textHintBeforeTyping.isVisible =
-                sharedPreferences.getHistory().isEmpty() == false
+                vm.getHistory().isEmpty() == false
         }
         reloadButton.setOnClickListener { mainThreadHandler?.post(searchAction()) }
         clearHistoryButton.setOnClickListener {
-            sharedPreferences.clearHistory()
+            vm.clearHistory()
             trackListAdapter.setData(emptyList())
             clearHistoryButton.isVisible = false
             binding.historyLayout.isVisible = true
@@ -146,14 +143,13 @@ class SearchActivity : AppCompatActivity() {
                         )
                     }
                 }
-                if (sharedPreferences.getHistory().isNotEmpty()) {
+                if (vm.getHistory().isNotEmpty()) {
                     binding.textHintBeforeTyping.isVisible =
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
                     binding.historyLayout.isVisible =
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
                     clearHistoryButton.isVisible =
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
-
                 }
             }
 
@@ -161,29 +157,27 @@ class SearchActivity : AppCompatActivity() {
                 //
             }
         }
-        init(searchTextWatcher, sharedPreferences)
+        init(searchTextWatcher)
     }
 
     private fun init(
         searchTextWatcher: TextWatcher,
-        sharedPreferences: UserSharedPreferences
     ) {
-        trackListAdapter.setData(sharedPreferences.getHistory())
+        trackListAdapter.setData(vm.getHistory())
         recycler.isVisible = true
         binding.historyLayout.isVisible = true
         binding.textHintBeforeTyping.isVisible = true
         recycler.adapter = trackListAdapter
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
         recycler.layoutManager = LinearLayoutManager(this)
-
         clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
         binding.textHintBeforeTyping.isVisible =
-            sharedPreferences.getHistory().isEmpty() == false
+            vm.getHistory().isEmpty() == false
 
         trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
                 if (isClickAllowed) {
-                    sharedPreferences.addTrackInHistory(track)
+                    vm.addTrackInHistory(track)
                     isClickAllowed = false
                     mainThreadHandler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
                     val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
@@ -197,7 +191,7 @@ class SearchActivity : AppCompatActivity() {
                     intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
                     intent.putExtra(PREVIEW_URL, track.previewUrl)
                     startActivity(intent)
-                    trackListAdapter.setData(sharedPreferences.getHistory())
+                    trackListAdapter.setData(vm.getHistory())
                 }
             }
         }
@@ -209,7 +203,7 @@ class SearchActivity : AppCompatActivity() {
             clearHistoryButton.isVisible = false
             progressBar.isVisible = true
 
-            searchTracksUseCase.searchActivitySearchAction(
+            vm.searchAction(
                 binding.searchInputText.text.toString(),
                 object : SearchInteractorInterface.TracksConsumer {
                     override fun consume(findTracks: List<Track>, response: Int) {

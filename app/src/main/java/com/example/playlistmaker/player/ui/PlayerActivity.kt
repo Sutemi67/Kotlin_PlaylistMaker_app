@@ -9,21 +9,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.example.playlistmaker.app.ARTIST
 import com.example.playlistmaker.app.ARTWORK_URL
 import com.example.playlistmaker.app.COLLECTION_NAME
 import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
 import com.example.playlistmaker.app.PREVIEW_URL
-import com.example.playlistmaker.R
 import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
+import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -37,63 +37,53 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
+    private lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_player)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_player)) { v, insets ->
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        findViewById<Toolbar>(R.id.player_toolbar).setNavigationOnClickListener { finish() }
+        binding.playerToolbar.setNavigationOnClickListener { finish() }
 
         playerHandler = Handler(Looper.getMainLooper())
-        playButton = findViewById(R.id.player_play_button)
-        currentTime = findViewById(R.id.current_time)
+        playButton = binding.playerPlayButton
+        currentTime = binding.currentTime
 
-        val artistName: TextView = findViewById(R.id.ArtistName)
-        val trackName: TextView = findViewById(R.id.TrackName)
-        val duration: TextView = findViewById(R.id.player_duration)
-        val collectionName: TextView = findViewById(R.id.player_album)
-        val cover: ImageView = findViewById(R.id.player_cover)
-        val country: TextView = findViewById(R.id.player_country)
-        val primaryGenreName: TextView = findViewById(R.id.player_primaryGenre)
-        val releaseYear: TextView = findViewById(R.id.player_releaseDate)
-
-        artistName.text = intent.getStringExtra(ARTIST)
-        trackName.text = intent.getStringExtra(TRACK_NAME)
-        collectionName.text = intent.getStringExtra(COLLECTION_NAME)
-        country.text = intent.getStringExtra(COUNTRY)
-        primaryGenreName.text = intent.getStringExtra(GENRE)
+        binding.ArtistName.text = intent.getStringExtra(ARTIST)
+        binding.TrackName.text = intent.getStringExtra(TRACK_NAME)
+        binding.collectionName.text = intent.getStringExtra(COLLECTION_NAME)
+        binding.playerCountry.text = intent.getStringExtra(COUNTRY)
+        binding.playerPrimaryGenre.text = intent.getStringExtra(GENRE)
+        binding.releaseDate.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
         previewUrl = intent.getStringExtra(PREVIEW_URL).toString()
-
-        releaseYear.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
-
         val getDuration = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0)
+
         currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
-        duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
+        binding.playerDuration.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
 
         fun coverResolutionAmplifier(): String? {
             return intent.getStringExtra(ARTWORK_URL)?.replaceAfterLast('/', "512x512bb.jpg")
         }
-
 
         Glide.with(this@PlayerActivity)
             .load(coverResolutionAmplifier())
             .centerCrop()
             .transform(RoundedCorners(2))
             .placeholder(R.drawable.img_placeholder)
-            .into(cover)
+            .into(binding.playerCover)
 
         mediaPlayer.apply {
             try {
                 setDataSource(previewUrl)
                 prepareAsync()
                 setOnCompletionListener {
-//                    mediaPlayer.seekTo(0)
                     playButton.setImageResource(R.drawable.audioplayer_button_play_light)
                     playerHandler?.removeCallbacks(timeCounter())
                     timePlaying = 0L

@@ -203,7 +203,7 @@
             tools:text="3:21" />
 
         <TextView
-            android:id="@+id/player_album"
+            android:id="@+id/collection_name"
             style="@style/audioplayer_changing_track_data"
             android:layout_width="0dp"
             android:layout_height="32dp"
@@ -216,7 +216,7 @@
             tools:text="Meteora" />
 
         <TextView
-            android:id="@+id/player_releaseDate"
+            android:id="@+id/release_date"
             style="@style/audioplayer_changing_track_data"
             android:layout_width="0dp"
             android:layout_height="32dp"
