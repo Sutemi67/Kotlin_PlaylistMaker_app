@@ -5,5 +5,4 @@ interface SettingsRepositoryInterface {
     fun agreementAction()
     fun shareAction()
     fun themeChangeAction(): Boolean
-//    fun getNightThemeSwitcher(): Boolean
 }
