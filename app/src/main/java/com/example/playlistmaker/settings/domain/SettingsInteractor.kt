@@ -8,15 +8,19 @@ class SettingsInteractor(
 
     private val executor = Executors.newCachedThreadPool()
 
-    override fun settingsActivityOpenLinkAction() {
-        executor.execute { repository.settingsActivityOpenLinkAction() }
+    override fun openLinkAction() {
+        executor.execute { repository.openLinkAction() }
     }
 
-    override fun settingsActivityAgreementAction() {
-        executor.execute { repository.settingsActivityAgreementAction() }
+    override fun agreementAction() {
+        executor.execute { repository.agreementAction() }
     }
 
-    override fun settingsActivityShareAction() {
-        executor.execute { repository.settingsActivityShareAction() }
+    override fun shareAction() {
+        executor.execute { repository.shareAction() }
+    }
+
+    override fun themeChangeAction(): Boolean {
+        return repository.themeChangeAction()
     }
 }

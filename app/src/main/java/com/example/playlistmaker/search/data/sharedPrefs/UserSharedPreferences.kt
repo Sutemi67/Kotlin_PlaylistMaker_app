@@ -55,5 +55,5 @@ class UserSharedPreferences(private val context: Context) {
         saveHistory()
     }
 
-    fun getIsNight(prefs: SharedPreferences) = prefs.getInt(IS_NIGHT_SP_KEY, 1)
+    fun getIsNight(prefs: SharedPreferences) = prefs.getBoolean(IS_NIGHT_SP_KEY, false)
 }

@@ -1,7 +1,8 @@
 package com.example.playlistmaker.settings.domain
 
 interface SettingsInteractorInterface {
-    fun settingsActivityOpenLinkAction()
-    fun settingsActivityAgreementAction()
-    fun settingsActivityShareAction()
+    fun openLinkAction()
+    fun agreementAction()
+    fun shareAction()
+    fun themeChangeAction():Boolean
 }
