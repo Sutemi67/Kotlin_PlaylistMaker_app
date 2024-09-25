@@ -4,11 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.SettingsInteractorInterface
 
+//вьюмодель ничего не должна возвращать!
+
 class SettingsViewModel(
     private val interactor: SettingsInteractorInterface
 ) : ViewModel() {
 
-    //вьюмодель ничего не должна возвращать!
     var isChecked: MutableLiveData<Boolean> = MutableLiveData()
 
     fun onShareClick() {
