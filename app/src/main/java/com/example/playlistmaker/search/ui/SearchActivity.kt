@@ -45,25 +45,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
-
-    private val vm by viewModel<SearchViewModel>()
-
-    private var mainThreadHandler: Handler? = null
-    private var isClickAllowed = true
-    private var isSearchAllowed = true
-
-    private lateinit var recycler: RecyclerView
-    private lateinit var binding: ActivitySearchBinding
-
-    var trackListAdapter = TrackAdapter()
-
-    private var restoredText = ""
-
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
     private lateinit var progressBar: FrameLayout
+    private lateinit var clearHistoryButton: Button
+    private lateinit var recycler: RecyclerView
+    private lateinit var binding: ActivitySearchBinding
+    private lateinit var clearButton: ImageView
+    private lateinit var reloadButton: Button
 
-    lateinit var clearHistoryButton: Button
+    private val vm by viewModel<SearchViewModel>()
+    private var mainThreadHandler: Handler? = null
+    private var isClickAllowed = true
+    private var isSearchAllowed = true
+    private var restoredText = ""
+    private var trackListAdapter = TrackAdapter()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,16 +72,14 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        clearButton = binding.searchClearButton
+        reloadButton = binding.reloadButton
         binding.backIconSearchScreen2.setNavigationOnClickListener { finish() }
-        recycler = findViewById(R.id.search_list)
-        nothingImage = findViewById(R.id.nothingFound)
-        connectionProblemError = findViewById(R.id.connectionProblem)
-        val clearButton = findViewById<ImageView>(R.id.search_clear_button)
-        val reloadButton = findViewById<Button>(R.id.reload_button)
-        progressBar = findViewById(R.id.progress_bar_layout)
-        clearHistoryButton = findViewById(R.id.clearHistoryButton)
-
+        recycler = binding.searchList
+        nothingImage = binding.nothingFound
+        connectionProblemError = binding.connectionProblem
+        progressBar = binding.progressBarLayout
+        clearHistoryButton = binding.clearHistoryButton
         mainThreadHandler = Handler(Looper.getMainLooper())
 
         if (savedInstanceState != null) binding.searchInputText.setText(restoredText)
@@ -157,12 +151,7 @@ class SearchActivity : AppCompatActivity() {
                 //
             }
         }
-        init(searchTextWatcher)
-    }
-
-    private fun init(
-        searchTextWatcher: TextWatcher,
-    ) {
+//        init(searchTextWatcher)
         trackListAdapter.setData(vm.getHistory())
         recycler.isVisible = true
         binding.historyLayout.isVisible = true
@@ -171,8 +160,7 @@ class SearchActivity : AppCompatActivity() {
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
         recycler.layoutManager = LinearLayoutManager(this)
         clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
-        binding.textHintBeforeTyping.isVisible =
-            vm.getHistory().isEmpty() == false
+        binding.textHintBeforeTyping.isVisible = vm.getHistory().isEmpty() == false
 
         trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
@@ -196,6 +184,42 @@ class SearchActivity : AppCompatActivity() {
             }
         }
     }
+
+//    private fun init(
+//        searchTextWatcher: TextWatcher,
+//    ) {
+//        trackListAdapter.setData(vm.getHistory())
+//        recycler.isVisible = true
+//        binding.historyLayout.isVisible = true
+//        binding.textHintBeforeTyping.isVisible = true
+//        recycler.adapter = trackListAdapter
+//        binding.searchInputText.addTextChangedListener(searchTextWatcher)
+//        recycler.layoutManager = LinearLayoutManager(this)
+//        clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
+//        binding.textHintBeforeTyping.isVisible = vm.getHistory().isEmpty() == false
+//
+//        trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
+//            override fun openPlayerActivity(track: Track) {
+//                if (isClickAllowed) {
+//                    vm.addTrackInHistory(track)
+//                    isClickAllowed = false
+//                    mainThreadHandler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+//                    val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+//                    intent.putExtra(TRACK_NAME, track.trackName)
+//                    intent.putExtra(ARTIST, track.artistName)
+//                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
+//                    intent.putExtra(COLLECTION_NAME, track.collectionName)
+//                    intent.putExtra(COUNTRY, track.country)
+//                    intent.putExtra(GENRE, track.primaryGenreName)
+//                    intent.putExtra(RELEASE_DATE, track.releaseDate)
+//                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
+//                    intent.putExtra(PREVIEW_URL, track.previewUrl)
+//                    startActivity(intent)
+//                    trackListAdapter.setData(vm.getHistory())
+//                }
+//            }
+//        }
+//    }
 
     private fun searchAction(): Runnable {
         return Runnable {
@@ -247,6 +271,7 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError.isVisible = true
         recycler.isVisible = false
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

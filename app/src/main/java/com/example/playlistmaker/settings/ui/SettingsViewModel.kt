@@ -1,5 +1,6 @@
 package com.example.playlistmaker.settings.ui
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.SettingsInteractorInterface
@@ -10,7 +11,8 @@ class SettingsViewModel(
     private val interactor: SettingsInteractorInterface
 ) : ViewModel() {
 
-    var isChecked: MutableLiveData<Boolean> = MutableLiveData()
+    private var _isChecked: MutableLiveData<Boolean> = MutableLiveData()
+    val isChecked: LiveData<Boolean> = _isChecked
 
     fun onShareClick() {
         interactor.shareAction()
@@ -25,6 +27,6 @@ class SettingsViewModel(
     }
 
     fun onThemeCheckerClick() {
-        isChecked.value = interactor.themeChangeAction()
+        _isChecked.value = interactor.themeChangeAction()
     }
 }
