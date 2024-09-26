@@ -22,4 +22,5 @@ class SearchViewModel(
     fun searchAction(expression: String, consumer: SearchInteractorInterface.TracksConsumer) {
         interactor.searchAction(expression, consumer)
     }
+
 }
