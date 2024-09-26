@@ -30,14 +30,14 @@ import java.util.Locale
 
 
 class PlayerActivity : AppCompatActivity() {
-
-    private var timePlaying = 0L
-    private var playerHandler: Handler? = null
-    private val mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var binding: ActivityPlayerBinding
+    private var timePlaying = 0L
+    private var playerHandler: Handler? = null
+    private val mediaPlayer = MediaPlayer()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

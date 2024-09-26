@@ -134,6 +134,7 @@ class SearchActivity : AppCompatActivity() {
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {}
         }
         trackListAdapter.setData(vm.getHistory())
@@ -158,7 +159,8 @@ class SearchActivity : AppCompatActivity() {
                     intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
                     intent.putExtra(PREVIEW_URL, track.previewUrl)
                     startActivity(intent)
-                    trackListAdapter.setData(vm.getHistory())
+//                    опционально - история треков после финиша плеера
+//                    trackListAdapter.setData(vm.getHistory())
                 }
             }
         }
@@ -174,13 +176,13 @@ class SearchActivity : AppCompatActivity() {
                         mainThreadHandler?.post {
                             if (findTracks.isEmpty()) {
                                 if (response == 400) {
-                                    vm.setUIState(2)
+                                    vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
                                     return@post
                                 }
-                                vm.setUIState(1)
+                                vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
                             } else {
                                 trackListAdapter.setData(findTracks)
-                                vm.setUIState(0)
+                                vm.setUIState(SEARCH_UI_STATE_FILLED)
                             }
                         }
                     }
@@ -199,14 +201,15 @@ class SearchActivity : AppCompatActivity() {
                 progressBar.isVisible = false
                 nothingImage.isVisible = false
                 connectionProblemError.isVisible = true
-                recycler.isVisible = false
+                binding.historyLayout.isVisible = false
             }
 
             SEARCH_UI_STATE_NOTHINGFOUND -> {
                 progressBar.isVisible = false
                 nothingImage.isVisible = true
                 connectionProblemError.isVisible = false
-                recycler.isVisible = false
+                binding.historyLayout.isVisible = false
+
             }
 
             SEARCH_UI_STATE_FILLED -> {
@@ -214,12 +217,16 @@ class SearchActivity : AppCompatActivity() {
                 nothingImage.isVisible = false
                 connectionProblemError.isVisible = false
                 binding.historyLayout.isVisible = true
+                binding.textHintBeforeTyping.isVisible = false
+                binding.clearHistoryButton.isVisible = false
+
             }
 
             SEARCH_UI_STATE_PROGRESS -> {
-                binding.textHintBeforeTyping.isVisible = false
-                clearHistoryButton.isVisible = false
                 progressBar.isVisible = true
+                nothingImage.isVisible = false
+                connectionProblemError.isVisible = false
+                binding.historyLayout.isVisible = false
             }
         }
     }

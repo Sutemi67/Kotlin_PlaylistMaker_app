@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
+import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
 
@@ -39,9 +40,10 @@ class SearchViewModel(
 
     fun setUIState(state: Int) {
         when (state) {
-            0 -> _uiState.postValue(SEARCH_UI_STATE_FILLED)
-            1 -> _uiState.postValue(SEARCH_UI_STATE_NOTHINGFOUND)
-            2 -> _uiState.postValue(SEARCH_UI_STATE_NOCONNECTION)
+            SEARCH_UI_STATE_FILLED -> _uiState.postValue(SEARCH_UI_STATE_FILLED)
+            SEARCH_UI_STATE_NOTHINGFOUND -> _uiState.postValue(SEARCH_UI_STATE_NOTHINGFOUND)
+            SEARCH_UI_STATE_NOCONNECTION -> _uiState.postValue(SEARCH_UI_STATE_NOCONNECTION)
+            SEARCH_UI_STATE_PROGRESS -> _uiState.postValue(SEARCH_UI_STATE_PROGRESS)
         }
     }
 }
