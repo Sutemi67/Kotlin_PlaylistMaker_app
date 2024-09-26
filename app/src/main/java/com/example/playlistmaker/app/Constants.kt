@@ -13,10 +13,11 @@ const val COLLECTION_NAME = "collectionName"
 const val GENRE = "primaryGenreName"
 const val RELEASE_DATE = "releaseDate"
 
-const val IS_CHECKED_SP_KEY = "is_checked"
 const val IS_NIGHT_SP_KEY = "is_night"
-const val NIGHT_SP_VALUE = 2
-const val LIGHT_SP_VALUE = 1
 
-const val INPUT_TEXT_KEY = "inputText"
 const val SEARCH_REFRESH_RATE = 2000L
+
+const val SEARCH_UI_STATE_NOTHINGFOUND = 0
+const val SEARCH_UI_STATE_NOCONNECTION = 1
+const val SEARCH_UI_STATE_FILLED = 2
+const val SEARCH_UI_STATE_PROGRESS = 3

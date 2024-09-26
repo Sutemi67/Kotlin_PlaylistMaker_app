@@ -8,7 +8,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -30,10 +29,13 @@ import com.example.playlistmaker.app.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.app.COLLECTION_NAME
 import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
-import com.example.playlistmaker.app.INPUT_TEXT_KEY
 import com.example.playlistmaker.app.PREVIEW_URL
 import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.SEARCH_REFRESH_RATE
+import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
+import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
+import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
+import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -58,7 +60,6 @@ class SearchActivity : AppCompatActivity() {
     private var mainThreadHandler: Handler? = null
     private var isClickAllowed = true
     private var isSearchAllowed = true
-    private var restoredText = ""
     private var trackListAdapter = TrackAdapter()
 
     @SuppressLint("NotifyDataSetChanged")
@@ -82,33 +83,28 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = binding.clearHistoryButton
         mainThreadHandler = Handler(Looper.getMainLooper())
 
-        if (savedInstanceState != null) binding.searchInputText.setText(restoredText)
+        vm.historyState.observe(this) { isEmpty ->
+            historyListManagement(isEmpty)
+        }
+        vm.uiState.observe(this) { state ->
+            uiManagement(state)
+        }
 
         clearButton.setOnClickListener {
             binding.searchInputText.text.clear()
             trackListAdapter.setData(vm.getHistory())
-            nothingImage.isVisible = false
-            connectionProblemError.isVisible = false
-            recycler.isVisible = true
-            binding.historyLayout.isVisible = true
-            binding.clearHistoryButton.isVisible = false
+            uiManagement(SEARCH_UI_STATE_FILLED)
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(
                 findViewById<View>(android.R.id.content).windowToken,
                 0
             )
-            clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
-            binding.textHintBeforeTyping.isVisible =
-                vm.getHistory().isEmpty() == false
         }
         reloadButton.setOnClickListener { mainThreadHandler?.post(searchAction()) }
         clearHistoryButton.setOnClickListener {
             vm.clearHistory()
             trackListAdapter.setData(emptyList())
-            clearHistoryButton.isVisible = false
-            binding.historyLayout.isVisible = true
-            binding.textHintBeforeTyping.isVisible = false
         }
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -118,16 +114,12 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val searchTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     clearButton.isVisible = false
                 } else {
                     clearButton.isVisible = true
-                    restoredText = binding.searchInputText.text.toString()
                     if (isSearchAllowed) {
                         isSearchAllowed = false
                         mainThreadHandler?.postDelayed(searchAction(), SEARCH_REFRESH_RATE)
@@ -138,29 +130,16 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
                 if (vm.getHistory().isNotEmpty()) {
-                    binding.textHintBeforeTyping.isVisible =
-                        binding.searchInputText.hasFocus() && s?.isEmpty() == true
                     binding.historyLayout.isVisible =
-                        binding.searchInputText.hasFocus() && s?.isEmpty() == true
-                    clearHistoryButton.isVisible =
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
                 }
             }
-
-            override fun afterTextChanged(s: Editable?) {
-                //
-            }
+            override fun afterTextChanged(s: Editable?) {}
         }
-//        init(searchTextWatcher)
         trackListAdapter.setData(vm.getHistory())
-        recycler.isVisible = true
-        binding.historyLayout.isVisible = true
-        binding.textHintBeforeTyping.isVisible = true
         recycler.adapter = trackListAdapter
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
         recycler.layoutManager = LinearLayoutManager(this)
-        clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
-        binding.textHintBeforeTyping.isVisible = vm.getHistory().isEmpty() == false
 
         trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
@@ -185,48 +164,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-//    private fun init(
-//        searchTextWatcher: TextWatcher,
-//    ) {
-//        trackListAdapter.setData(vm.getHistory())
-//        recycler.isVisible = true
-//        binding.historyLayout.isVisible = true
-//        binding.textHintBeforeTyping.isVisible = true
-//        recycler.adapter = trackListAdapter
-//        binding.searchInputText.addTextChangedListener(searchTextWatcher)
-//        recycler.layoutManager = LinearLayoutManager(this)
-//        clearHistoryButton.isVisible = trackListAdapter.getTrackList().isEmpty() == false
-//        binding.textHintBeforeTyping.isVisible = vm.getHistory().isEmpty() == false
-//
-//        trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
-//            override fun openPlayerActivity(track: Track) {
-//                if (isClickAllowed) {
-//                    vm.addTrackInHistory(track)
-//                    isClickAllowed = false
-//                    mainThreadHandler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-//                    val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
-//                    intent.putExtra(TRACK_NAME, track.trackName)
-//                    intent.putExtra(ARTIST, track.artistName)
-//                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
-//                    intent.putExtra(COLLECTION_NAME, track.collectionName)
-//                    intent.putExtra(COUNTRY, track.country)
-//                    intent.putExtra(GENRE, track.primaryGenreName)
-//                    intent.putExtra(RELEASE_DATE, track.releaseDate)
-//                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
-//                    intent.putExtra(PREVIEW_URL, track.previewUrl)
-//                    startActivity(intent)
-//                    trackListAdapter.setData(vm.getHistory())
-//                }
-//            }
-//        }
-//    }
-
     private fun searchAction(): Runnable {
         return Runnable {
-            binding.textHintBeforeTyping.isVisible = false
-            clearHistoryButton.isVisible = false
-            progressBar.isVisible = true
-
+            uiManagement(SEARCH_UI_STATE_PROGRESS)
             vm.searchAction(
                 binding.searchInputText.text.toString(),
                 object : SearchInteractorInterface.TracksConsumer {
@@ -234,16 +174,13 @@ class SearchActivity : AppCompatActivity() {
                         mainThreadHandler?.post {
                             if (findTracks.isEmpty()) {
                                 if (response == 400) {
-                                    mainThreadHandler?.post(connectionErrorUiElements())
-                                    Log.e("resultCode", "$response")
+                                    vm.setUIState(2)
                                     return@post
                                 }
-                                mainThreadHandler?.post(nothingFoundUiElements())
-                                Log.e("resultCode", "$response")
+                                vm.setUIState(1)
                             } else {
                                 trackListAdapter.setData(findTracks)
-                                mainThreadHandler?.post(successListUiElements())
-                                Log.e("resultCode", "$response, $findTracks")
+                                vm.setUIState(0)
                             }
                         }
                     }
@@ -251,35 +188,39 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun successListUiElements() = Runnable {
-        progressBar.isVisible = false
-        nothingImage.isVisible = false
-        connectionProblemError.isVisible = false
-        binding.historyLayout.isVisible = true
+    private fun historyListManagement(isEmpty: Boolean) {
+        clearHistoryButton.isVisible = !isEmpty
+        binding.textHintBeforeTyping.isVisible = !isEmpty
     }
 
-    private fun nothingFoundUiElements() = Runnable {
-        progressBar.isVisible = false
-        nothingImage.isVisible = true
-        connectionProblemError.isVisible = false
-        recycler.isVisible = false
-    }
+    private fun uiManagement(state: Int) {
+        when (state) {
+            SEARCH_UI_STATE_NOCONNECTION -> {
+                progressBar.isVisible = false
+                nothingImage.isVisible = false
+                connectionProblemError.isVisible = true
+                recycler.isVisible = false
+            }
 
-    private fun connectionErrorUiElements() = Runnable {
-        progressBar.isVisible = false
-        nothingImage.isVisible = false
-        connectionProblemError.isVisible = true
-        recycler.isVisible = false
-    }
+            SEARCH_UI_STATE_NOTHINGFOUND -> {
+                progressBar.isVisible = false
+                nothingImage.isVisible = true
+                connectionProblemError.isVisible = false
+                recycler.isVisible = false
+            }
 
+            SEARCH_UI_STATE_FILLED -> {
+                progressBar.isVisible = false
+                nothingImage.isVisible = false
+                connectionProblemError.isVisible = false
+                binding.historyLayout.isVisible = true
+            }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(INPUT_TEXT_KEY, restoredText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        restoredText = savedInstanceState.getString(INPUT_TEXT_KEY).toString()
+            SEARCH_UI_STATE_PROGRESS -> {
+                binding.textHintBeforeTyping.isVisible = false
+                clearHistoryButton.isVisible = false
+                progressBar.isVisible = true
+            }
+        }
     }
 }
