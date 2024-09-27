@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val pref = getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
-        when (pref.getBoolean(IS_NIGHT_SP_KEY, false)) {
+        val nightThemeSharedPref = getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
+        when (nightThemeSharedPref.getBoolean(IS_NIGHT_SP_KEY, false)) {
             true -> {
                 setDefaultNightMode(MODE_NIGHT_YES)
             }
