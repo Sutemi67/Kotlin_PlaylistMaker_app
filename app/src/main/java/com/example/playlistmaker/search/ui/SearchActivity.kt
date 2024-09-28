@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -40,10 +41,12 @@ import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.search.data.SearchRepository
 import com.example.playlistmaker.search.data.TrackAdapter
+import com.example.playlistmaker.search.data.api.NetworkClientImpl
+import com.example.playlistmaker.search.domain.SearchInteractor
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
@@ -56,7 +59,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var clearButton: ImageView
     private lateinit var reloadButton: Button
 
-    private val vm by viewModel<SearchViewModel>()
+    private lateinit var vm: SearchViewModel
+    //    private val vm by viewModel<SearchViewModel>()
+
     private var mainThreadHandler: Handler? = null
     private var isClickAllowed = true
     private var isSearchAllowed = true
@@ -82,6 +87,18 @@ class SearchActivity : AppCompatActivity() {
         progressBar = binding.progressBarLayout
         clearHistoryButton = binding.clearHistoryButton
         mainThreadHandler = Handler(Looper.getMainLooper())
+
+        vm = ViewModelProvider(
+            this,
+            SearchViewModel.getViewModelFactory(
+                SearchInteractor(
+                    SearchRepository(
+                        NetworkClientImpl(),
+                        this
+                    )
+                )
+            )
+        )[SearchViewModel::class.java]
 
         vm.historyState.observe(this) { isEmpty ->
             historyListManagement(isEmpty)

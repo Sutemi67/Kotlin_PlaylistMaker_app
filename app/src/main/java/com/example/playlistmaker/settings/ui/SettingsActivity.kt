@@ -10,12 +10,15 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.playlistmaker.settings.data.SettingsRepository
+import com.example.playlistmaker.settings.domain.SettingsInteractor
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val vm by viewModel<SettingsViewModel>()
+    //    private val vm by viewModel<SettingsViewModel>()
+    private lateinit var vm: SettingsViewModel
     private lateinit var binding: ActivitySettingsBinding
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -31,13 +34,22 @@ class SettingsActivity : AppCompatActivity() {
         }
         val nightThemeSwitcher = binding.nightThemeSwitch
 
+        vm = ViewModelProvider(
+            this,
+            SettingsViewModel.getViewModelFactory(
+                SettingsInteractor(
+                    SettingsRepository(this)
+                )
+            )
+        )[SettingsViewModel::class.java]
+
         binding.backButton.setOnClickListener { finish() }
         binding.buttonAgreement.setOnClickListener { vm.onAgreementClick() }
         binding.buttonSupport.setOnClickListener { vm.onLinkClick() }
         binding.buttonShare.setOnClickListener { vm.onShareClick() }
 
         vm.isChecked.observe(this) {
-            Log.e("theme","changing to $it in observer")
+            Log.e("theme", "changing to $it in observer")
             nightThemeSwitcher.isChecked = !it
             when (!it) {
                 true -> setDefaultNightMode(MODE_NIGHT_YES)

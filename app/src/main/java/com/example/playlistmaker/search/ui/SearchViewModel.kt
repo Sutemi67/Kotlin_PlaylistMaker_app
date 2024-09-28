@@ -3,6 +3,7 @@ package com.example.playlistmaker.search.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
@@ -13,6 +14,18 @@ import com.example.playlistmaker.search.domain.models.Track
 class SearchViewModel(
     private val interactor: SearchInteractorInterface
 ) : ViewModel() {
+
+    companion object {
+        fun getViewModelFactory(interactor: SearchInteractorInterface): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return SearchViewModel(
+                        interactor
+                    ) as T
+                }
+            }
+    }
 
     private var _uiState: MutableLiveData<Int> = MutableLiveData(SEARCH_UI_STATE_FILLED)
     val uiState: LiveData<Int> = _uiState
