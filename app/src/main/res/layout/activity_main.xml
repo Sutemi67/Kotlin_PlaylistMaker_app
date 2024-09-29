@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:background="@color/YP_blue"
     android:orientation="vertical"
-    tools:context=".presentation.main.MainActivity">
+    tools:context=".main.ui.MainActivity">
 
     <TextView
         style="@style/HeaderTextStyle"

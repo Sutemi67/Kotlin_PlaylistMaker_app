@@ -15,5 +15,8 @@
     <dimen name="button_backTo_padding">16dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="search_editText_height">36dp</dimen>
+    <dimen name="player_text_stroke_height">32dp</dimen>
+    <dimen name="player_text_stroke_width">0dp</dimen>
+
 
 </resources>
