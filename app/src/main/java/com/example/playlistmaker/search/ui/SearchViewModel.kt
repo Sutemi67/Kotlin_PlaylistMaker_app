@@ -9,6 +9,7 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
 import com.example.playlistmaker.search.data.TrackAdapter
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
+import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
 
 class SearchViewModel(
@@ -42,7 +43,7 @@ class SearchViewModel(
         interactor.addTrackInHistory(track)
     }
 
-    fun searchAction(expression: String, consumer: SearchInteractorInterface.TracksConsumer) {
+    fun searchAction(expression: String, consumer: TracksConsumer) {
         interactor.searchAction(expression, consumer)
     }
 

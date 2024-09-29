@@ -3,7 +3,6 @@ package com.example.playlistmaker.settings.data
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.edit
@@ -48,7 +47,6 @@ class SettingsRepository(
     override fun themeChangeAction(): Boolean {
         val nightModeSharedPrefs = context.getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
         val nightThemeSwitcher = nightModeSharedPrefs.getBoolean(IS_NIGHT_SP_KEY, false)
-        Log.e("theme","changing from $nightThemeSwitcher")
 
         if (nightThemeSwitcher) {
             nightModeSharedPrefs.edit { putBoolean(IS_NIGHT_SP_KEY, false) }

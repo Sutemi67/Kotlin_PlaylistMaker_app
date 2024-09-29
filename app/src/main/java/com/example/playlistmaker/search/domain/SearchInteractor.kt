@@ -12,7 +12,7 @@ class SearchInteractor(
 
     override fun searchAction(
         expression: String,
-        consumer: SearchInteractorInterface.TracksConsumer
+        consumer: TracksConsumer
     ) {
         executor.execute {
             val fromRep = repository.searchAction(expression)

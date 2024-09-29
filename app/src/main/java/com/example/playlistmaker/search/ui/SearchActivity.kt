@@ -41,7 +41,7 @@ import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.data.TrackAdapter
-import com.example.playlistmaker.search.domain.SearchInteractorInterface
+import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -170,7 +170,7 @@ class SearchActivity : AppCompatActivity() {
             uiManagement(SEARCH_UI_STATE_PROGRESS)
             vm.searchAction(
                 binding.searchInputText.text.toString(),
-                object : SearchInteractorInterface.TracksConsumer {
+                object : TracksConsumer {
                     override fun consume(findTracks: List<Track>, response: Int) {
                         mainThreadHandler?.post {
                             if (findTracks.isEmpty()) {

@@ -19,6 +19,7 @@ val dataModule = module {
     single<SettingsRepositoryInterface> { SettingsRepository(get()) }
     single<NetworkClient> { NetworkClientImpl(get()) }
     single<TrackAdapter> { TrackAdapter() }
+
     single<ITunesApi> {
         Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")
