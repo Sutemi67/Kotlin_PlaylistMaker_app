@@ -1,6 +1,11 @@
 package com.example.playlistmaker.di
 
-//val appModule = module {
-//    viewModel<SettingsViewModel> { SettingsViewModel(get()) }
-//    viewModel<SearchViewModel> { SearchViewModel(get()) }
-//}
+import com.example.playlistmaker.search.ui.SearchViewModel
+import com.example.playlistmaker.settings.ui.SettingsViewModel
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
+
+val appModule = module {
+    viewModel<SettingsViewModel> { SettingsViewModel(get()) }
+    viewModel<SearchViewModel> { SearchViewModel(get(), get()) }
+}

@@ -10,15 +10,12 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.settings.data.SettingsRepository
-import com.example.playlistmaker.settings.domain.SettingsInteractor
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    //    private val vm by viewModel<SettingsViewModel>()
-    private lateinit var vm: SettingsViewModel
+    private val vm by viewModel<SettingsViewModel>()
     private lateinit var binding: ActivitySettingsBinding
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -33,15 +30,6 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
         val nightThemeSwitcher = binding.nightThemeSwitch
-
-        vm = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory(
-                SettingsInteractor(
-                    SettingsRepository(this)
-                )
-            )
-        )[SettingsViewModel::class.java]
 
         binding.backButton.setOnClickListener { finish() }
         binding.buttonAgreement.setOnClickListener { vm.onAgreementClick() }

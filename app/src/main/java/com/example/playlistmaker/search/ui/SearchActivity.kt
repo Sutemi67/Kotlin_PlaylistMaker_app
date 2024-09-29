@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -41,12 +40,10 @@ import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.data.SearchRepository
 import com.example.playlistmaker.search.data.TrackAdapter
-import com.example.playlistmaker.search.data.api.NetworkClientImpl
-import com.example.playlistmaker.search.domain.SearchInteractor
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
@@ -59,13 +56,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var clearButton: ImageView
     private lateinit var reloadButton: Button
 
-    private lateinit var vm: SearchViewModel
-    //    private val vm by viewModel<SearchViewModel>()
-
+    private val vm by viewModel<SearchViewModel>()
     private var mainThreadHandler: Handler? = null
     private var isClickAllowed = true
     private var isSearchAllowed = true
-    private var trackListAdapter = TrackAdapter()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,18 +82,6 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = binding.clearHistoryButton
         mainThreadHandler = Handler(Looper.getMainLooper())
 
-        vm = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(
-                SearchInteractor(
-                    SearchRepository(
-                        NetworkClientImpl(),
-                        this
-                    )
-                )
-            )
-        )[SearchViewModel::class.java]
-
         vm.historyState.observe(this) { isEmpty ->
             historyListManagement(isEmpty)
         }
@@ -109,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             binding.searchInputText.text.clear()
-            trackListAdapter.setData(vm.getHistory())
+            vm.setAdapterList(vm.getHistory())
             uiManagement(SEARCH_UI_STATE_FILLED)
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -121,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
         reloadButton.setOnClickListener { mainThreadHandler?.post(searchAction()) }
         clearHistoryButton.setOnClickListener {
             vm.clearHistory()
-            trackListAdapter.setData(emptyList())
+            vm.setAdapterList(emptyList())
         }
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -154,12 +136,12 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         }
-        trackListAdapter.setData(vm.getHistory())
-        recycler.adapter = trackListAdapter
+        vm.setAdapterList(vm.getHistory())
+        recycler.adapter = vm.getAdapter()
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
         recycler.layoutManager = LinearLayoutManager(this)
 
-        trackListAdapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
+        vm.getAdapter().openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
                 if (isClickAllowed) {
                     vm.addTrackInHistory(track)
@@ -198,7 +180,7 @@ class SearchActivity : AppCompatActivity() {
                                 }
                                 vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
                             } else {
-                                trackListAdapter.setData(findTracks)
+                                vm.setAdapterList(findTracks)
                                 vm.setUIState(SEARCH_UI_STATE_FILLED)
                             }
                         }

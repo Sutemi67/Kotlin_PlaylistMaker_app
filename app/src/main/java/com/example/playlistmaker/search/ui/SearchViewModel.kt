@@ -3,34 +3,29 @@ package com.example.playlistmaker.search.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
+import com.example.playlistmaker.search.data.TrackAdapter
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
 
 class SearchViewModel(
-    private val interactor: SearchInteractorInterface
+    private val interactor: SearchInteractorInterface,
+    private val adapter: TrackAdapter
 ) : ViewModel() {
-
-    companion object {
-        fun getViewModelFactory(interactor: SearchInteractorInterface): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(
-                        interactor
-                    ) as T
-                }
-            }
-    }
 
     private var _uiState: MutableLiveData<Int> = MutableLiveData(SEARCH_UI_STATE_FILLED)
     val uiState: LiveData<Int> = _uiState
     private var _historyState = MutableLiveData(true)
     val historyState: LiveData<Boolean> = _historyState
+
+    fun setAdapterList(list: List<Track>) {
+        adapter.setData(list)
+    }
+
+    fun getAdapter() = adapter
 
     fun getHistory(): List<Track> {
         val result = interactor.getHistory()
