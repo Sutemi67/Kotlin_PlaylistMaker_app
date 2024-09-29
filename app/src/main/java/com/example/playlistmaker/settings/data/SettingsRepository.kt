@@ -2,8 +2,8 @@ package com.example.playlistmaker.settings.data
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.edit
 import com.example.playlistmaker.R
@@ -11,7 +11,8 @@ import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
 import com.example.playlistmaker.settings.domain.SettingsRepositoryInterface
 
 class SettingsRepository(
-    private val context: Context
+    private val context: Context,
+    private val checkerPrefs: SharedPreferences
 ) : SettingsRepositoryInterface {
 
     override fun openLinkAction() {
@@ -44,16 +45,13 @@ class SettingsRepository(
         startActivity(context, intent, null)
     }
 
-    override fun themeChangeAction(): Boolean {
-        val nightModeSharedPrefs = context.getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
-        val nightThemeSwitcher = nightModeSharedPrefs.getBoolean(IS_NIGHT_SP_KEY, false)
-
-        if (nightThemeSwitcher) {
-            nightModeSharedPrefs.edit { putBoolean(IS_NIGHT_SP_KEY, false) }
-            return true
+    override fun themeChangeAction() {
+        if (getCheckerPos()) {
+            checkerPrefs.edit { putBoolean(IS_NIGHT_SP_KEY, false) }
         } else {
-            nightModeSharedPrefs.edit { putBoolean(IS_NIGHT_SP_KEY, true) }
-            return false
+            checkerPrefs.edit { putBoolean(IS_NIGHT_SP_KEY, true) }
         }
     }
+
+    override fun getCheckerPos(): Boolean = checkerPrefs.getBoolean(IS_NIGHT_SP_KEY, false)
 }

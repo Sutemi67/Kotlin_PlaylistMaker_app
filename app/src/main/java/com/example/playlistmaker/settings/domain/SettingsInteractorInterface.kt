@@ -4,5 +4,6 @@ interface SettingsInteractorInterface {
     fun openLinkAction()
     fun agreementAction()
     fun shareAction()
-    fun themeChangeAction():Boolean
+    fun themeChangeClick()
+    fun getCheckerPos(): Boolean
 }
