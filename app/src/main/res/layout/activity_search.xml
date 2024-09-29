@@ -30,7 +30,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            style="@style/editTextElements"
+            style="@style/editTextClearAndSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -46,17 +46,17 @@
             android:layout_marginStart="@dimen/margin_mainScreen_common_left"
             android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
             android:layout_weight="1"
-            android:background="@null"
             android:hint="@string/search_activity"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:inputType="text"
             android:singleLine="true"
+            android:textCursorDrawable="@null"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck,DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <ImageView
             android:id="@+id/search_clear_button"
-            style="@style/editTextElements"
+            style="@style/editTextClearAndSearch"
             android:layout_width="@dimen/button_clearSearch_size"
             android:layout_height="@dimen/button_clearSearch_size"
             android:contentDescription="@string/description_search_icon"
