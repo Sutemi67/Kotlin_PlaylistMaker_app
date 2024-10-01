@@ -1,6 +1,5 @@
 package com.example.playlistmaker.player.ui
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,7 +23,8 @@ import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import java.io.IOException
+import com.example.playlistmaker.player.data.PlaybackStatus
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -34,10 +34,10 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var binding: ActivityPlayerBinding
+
     private var timePlaying = 0L
     private var playerHandler: Handler? = null
-    private val mediaPlayer = MediaPlayer()
-
+    private val vm by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,70 +79,73 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.img_placeholder)
             .into(binding.playerCover)
 
-        mediaPlayer.apply {
-            try {
-                setDataSource(previewUrl)
-                prepareAsync()
-                setOnCompletionListener {
-                    playButton.setImageResource(R.drawable.audioplayer_button_play_light)
-                    playerHandler?.removeCallbacks(timeCounter())
-                    timePlaying = 0L
-                    currentTime.text =
-                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Toast.makeText(
-                    this@PlayerActivity,
-                    R.string.player_error_loading_preview,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        vm.setPlayer(
+            previewUrl = previewUrl,
+            context = this
+        )
+        vm.getPlaybackLiveData().observe(this) { status ->
+            uiManaging(status)
+        }
+        vm.player().setOnCompletionListener {
+            Toast.makeText(this, "End of track", Toast.LENGTH_SHORT).show()
+            uiManaging(PlaybackStatus.Ready)
         }
 
         playButton.setOnClickListener {
-            mediaPlayer.let {
-                if (it.isPlaying) {
-                    pausePlayer()
-                } else {
-                    startPlayer()
-                }
-            }
+            vm.playOrPauseAction()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        vm.pausing()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
         playerHandler?.removeCallbacks(timeCounter())
+        vm.release()
     }
 
-    private fun startPlayer() {
-        mediaPlayer.start()
-        playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
-        playerHandler?.post(timeCounter())
-    }
-
-    private fun pausePlayer() {
-        if (mediaPlayer.isPlaying) mediaPlayer.pause()
-        playButton.setImageResource(R.drawable.audioplayer_button_play_light)
+    override fun onStop() {
+        super.onStop()
         playerHandler?.removeCallbacks(timeCounter())
     }
 
     private fun timeCounter(): Runnable {
         return Runnable {
-            mediaPlayer.let {
+            vm.player().let {
                 timePlaying = it.currentPosition.toLong()
                 currentTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
-                playerHandler?.postDelayed(timeCounter(), 1000L)
+                playerHandler?.postDelayed(timeCounter(), 300L)
+            }
+        }
+    }
+
+    private fun uiManaging(status: PlaybackStatus) {
+        when (status) {
+            PlaybackStatus.Playing -> {
+                playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
+                playerHandler?.post(timeCounter())
+            }
+
+            PlaybackStatus.Paused -> {
+                playButton.setImageResource(R.drawable.audioplayer_button_play_light)
+                playerHandler?.removeCallbacks(timeCounter())
+            }
+
+            PlaybackStatus.Ready -> {
+                playerHandler?.removeCallbacks(timeCounter())
+                playButton.setImageResource(R.drawable.audioplayer_button_play_light)
+                Toast.makeText(this, "Ready", Toast.LENGTH_SHORT).show()
+            }
+
+            PlaybackStatus.Error -> {
+                Toast.makeText(this, "Unsuccessful loading", Toast.LENGTH_SHORT).show()
             }
         }
     }
 }
+
 
