@@ -107,7 +107,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         playerHandler?.removeCallbacks(timeCounterRunnable)
-        vm.release()
+        vm.reset()
         Log.e("timeCounterStart", "removing callbacks on destroy and release")
     }
 
@@ -115,7 +115,7 @@ class PlayerActivity : AppCompatActivity() {
         super.onStop()
         playerHandler?.removeCallbacks(timeCounterRunnable)
         Log.e("timeCounterStart", "removing callbacks on stop")
-        vm.release()
+        vm.reset()
     }
 
     private val timeCounterRunnable: Runnable by lazy {

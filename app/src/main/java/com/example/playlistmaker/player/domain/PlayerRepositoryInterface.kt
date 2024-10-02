@@ -9,7 +9,7 @@ interface PlayerRepositoryInterface {
     fun stopping(): PlaybackStatus.Ready
     fun pause(): PlaybackStatus.Paused
     fun play(): PlaybackStatus.Playing
-    fun release()
+    fun reset()
     fun playOrPauseAction(): PlaybackStatus
     fun player(): MediaPlayer
 }

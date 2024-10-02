@@ -20,8 +20,8 @@ class PlayerInteractor(
         repository.pause()
     }
 
-    override fun release() {
-        repository.release()
+    override fun reset() {
+        repository.reset()
     }
 
     override fun playOrPauseAction(): PlaybackStatus {

@@ -38,7 +38,7 @@ class PlayerViewModel(
         interactor.pause()
     }
 
-    fun release() {
-        interactor.release()
+    fun reset() {
+        interactor.reset()
     }
 }

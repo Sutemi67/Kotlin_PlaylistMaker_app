@@ -118,7 +118,7 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.isVisible = false
                 } else {
                     clearButton.isVisible = true
-                    if (isSearchAllowed) {
+                    if (isSearchAllowed && s.isNotEmpty()) {
                         isSearchAllowed = false
                         mainThreadHandler?.postDelayed(searchAction(), SEARCH_REFRESH_RATE)
                         mainThreadHandler?.postDelayed(
@@ -158,7 +158,7 @@ class SearchActivity : AppCompatActivity() {
                     intent.putExtra(PREVIEW_URL, track.previewUrl)
                     startActivity(intent)
 //                    опционально - история треков после финиша плеера
-//                    trackListAdapter.setData(vm.getHistory())
+                    vm.setAdapterList(vm.getHistory())
                 }
             }
         }
@@ -166,6 +166,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchAction(): Runnable {
         return Runnable {
+            if (binding.searchInputText.text.isNullOrEmpty()) return@Runnable
+
             uiManagement(SEARCH_UI_STATE_PROGRESS)
             vm.searchAction(
                 binding.searchInputText.text.toString(),
