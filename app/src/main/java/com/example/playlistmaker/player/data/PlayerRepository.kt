@@ -40,7 +40,7 @@ class PlayerRepository : PlayerRepositoryInterface, KoinComponent {
         }
     }
 
-    override fun stopping(): PlaybackStatus.Ready {
+    override fun stop(): PlaybackStatus.Ready {
         player.stop()
         return PlaybackStatus.Ready
     }

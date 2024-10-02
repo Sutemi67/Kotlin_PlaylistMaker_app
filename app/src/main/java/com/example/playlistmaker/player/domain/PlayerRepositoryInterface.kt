@@ -6,7 +6,7 @@ import com.example.playlistmaker.player.data.PlaybackStatus
 
 interface PlayerRepositoryInterface {
     fun setPlayer(previewUrl: String, context: Context): PlaybackStatus
-    fun stopping(): PlaybackStatus.Ready
+    fun stop(): PlaybackStatus.Ready
     fun pause(): PlaybackStatus.Paused
     fun play(): PlaybackStatus.Playing
     fun reset()

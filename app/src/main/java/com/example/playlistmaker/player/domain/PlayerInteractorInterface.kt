@@ -10,5 +10,4 @@ interface PlayerInteractorInterface {
     fun reset()
     fun playOrPauseAction(): PlaybackStatus
     fun player(): MediaPlayer
-    fun stopping(): PlaybackStatus.Ready
 }

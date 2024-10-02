@@ -30,10 +30,6 @@ class PlayerViewModel(
         playbackStatus.postValue(interactor.playOrPauseAction())
     }
 
-    fun stopping() {
-        playbackStatus.postValue(interactor.stopping())
-    }
-
     fun pausing() {
         interactor.pause()
     }

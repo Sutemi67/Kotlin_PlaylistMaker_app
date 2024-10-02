@@ -30,7 +30,4 @@ class PlayerInteractor(
 
     override fun player(): MediaPlayer = repository.player()
 
-    override fun stopping(): PlaybackStatus.Ready {
-        return repository.stopping()
-    }
 }

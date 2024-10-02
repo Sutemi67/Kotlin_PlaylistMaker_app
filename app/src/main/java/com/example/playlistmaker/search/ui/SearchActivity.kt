@@ -120,7 +120,10 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.isVisible = true
                     if (isSearchAllowed && s.isNotEmpty()) {
                         isSearchAllowed = false
-                        mainThreadHandler?.postDelayed(searchAction(), SEARCH_REFRESH_RATE)
+                        mainThreadHandler?.postDelayed(
+                            searchAction(),
+                            SEARCH_REFRESH_RATE
+                        )
                         mainThreadHandler?.postDelayed(
                             { isSearchAllowed = true },
                             SEARCH_REFRESH_RATE
