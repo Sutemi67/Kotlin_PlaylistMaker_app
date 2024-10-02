@@ -42,6 +42,6 @@ val dataModule = module {
             .create(ITunesApi::class.java)
     }
 
-    single<MediaPlayer> { MediaPlayer() }
+    factory<MediaPlayer> { MediaPlayer() }
 
 }

@@ -1,8 +1,10 @@
 package com.example.playlistmaker.player.ui
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -34,6 +36,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var binding: ActivityPlayerBinding
+    private lateinit var player: MediaPlayer
 
     private var timePlaying = 0L
     private var playerHandler: Handler? = null
@@ -63,7 +66,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.releaseDate.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
         previewUrl = intent.getStringExtra(PREVIEW_URL).toString()
         val getDuration = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0)
-
+        player = vm.player()
         currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
         binding.playerDuration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
@@ -86,8 +89,8 @@ class PlayerActivity : AppCompatActivity() {
         vm.getPlaybackLiveData().observe(this) { status ->
             uiManaging(status)
         }
-        vm.player().setOnCompletionListener {
-            Toast.makeText(this, "End of track", Toast.LENGTH_SHORT).show()
+        player.setOnCompletionListener {
+            Log.e("timeCounterStart", "player completed")
             uiManaging(PlaybackStatus.Ready)
         }
 
@@ -103,22 +106,26 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        playerHandler?.removeCallbacks(timeCounter())
+        playerHandler?.removeCallbacks(timeCounterRunnable)
         vm.release()
+        Log.e("timeCounterStart", "removing callbacks on destroy and release")
     }
 
     override fun onStop() {
         super.onStop()
-        playerHandler?.removeCallbacks(timeCounter())
+        playerHandler?.removeCallbacks(timeCounterRunnable)
+        Log.e("timeCounterStart", "removing callbacks on stop")
+        vm.release()
     }
 
-    private fun timeCounter(): Runnable {
-        return Runnable {
-            vm.player().let {
-                timePlaying = it.currentPosition.toLong()
+    private val timeCounterRunnable: Runnable by lazy {
+        Runnable {
+            Log.e("timeCounterStart", "time counter started")
+            player.let {
+                timePlaying = player.currentPosition.toLong()
                 currentTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
-                playerHandler?.postDelayed(timeCounter(), 300L)
+                playerHandler?.postDelayed(timeCounterRunnable, 1000L)
             }
         }
     }
@@ -127,18 +134,23 @@ class PlayerActivity : AppCompatActivity() {
         when (status) {
             PlaybackStatus.Playing -> {
                 playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
-                playerHandler?.post(timeCounter())
+                playerHandler?.post(timeCounterRunnable)
+                Log.e("timeCounterStart", "playing status changed - time counter go!")
             }
 
             PlaybackStatus.Paused -> {
                 playButton.setImageResource(R.drawable.audioplayer_button_play_light)
-                playerHandler?.removeCallbacks(timeCounter())
+                playerHandler?.removeCallbacks(timeCounterRunnable)
+                Log.e("timeCounterStart", "removing callbacks of time counter")
             }
 
             PlaybackStatus.Ready -> {
-                playerHandler?.removeCallbacks(timeCounter())
+                playerHandler?.removeCallbacks(timeCounterRunnable)
                 playButton.setImageResource(R.drawable.audioplayer_button_play_light)
-                Toast.makeText(this, "Ready", Toast.LENGTH_SHORT).show()
+                timePlaying = 0L
+                currentTime.text =
+                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
+                Log.e("timeCounterStart", "removing callbacks of time counter")
             }
 
             PlaybackStatus.Error -> {
