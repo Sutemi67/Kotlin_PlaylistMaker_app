@@ -12,6 +12,7 @@ class PlayerRepository : PlayerRepositoryInterface, KoinComponent {
 
     private val player: MediaPlayer by inject()
     override fun player(): MediaPlayer = player
+    private var isExist = false
 
     override fun playOrPauseAction(): PlaybackStatus {
         if (player.isPlaying) {
@@ -27,6 +28,8 @@ class PlayerRepository : PlayerRepositoryInterface, KoinComponent {
         previewUrl: String,
         context: Context
     ): PlaybackStatus {
+//        if (isExist) {
+        isExist = true
         try {
             player.apply {
                 setDataSource(previewUrl)
@@ -52,6 +55,7 @@ class PlayerRepository : PlayerRepositoryInterface, KoinComponent {
 
     override fun release() {
         player.release()
+        isExist = false
     }
 
     override fun play(): PlaybackStatus.Playing {
