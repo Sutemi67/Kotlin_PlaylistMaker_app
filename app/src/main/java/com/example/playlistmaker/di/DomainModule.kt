@@ -1,5 +1,7 @@
 package com.example.playlistmaker.di
 
+import android.os.Handler
+import android.os.Looper
 import com.example.playlistmaker.main.domain.MainInteractor
 import com.example.playlistmaker.main.domain.MainInteractorInterface
 import com.example.playlistmaker.player.domain.PlayerInteractor
@@ -15,4 +17,5 @@ val domainModule = module {
     single<SettingsInteractorInterface> { SettingsInteractor(get()) }
     single<MainInteractorInterface> { MainInteractor(get()) }
     single<PlayerInteractorInterface> { PlayerInteractor(get()) }
+    single<Handler> { Handler(Looper.getMainLooper()) }
 }

@@ -11,5 +11,5 @@ val appModule = module {
     viewModel<SettingsViewModel> { SettingsViewModel(get()) }
     viewModel<SearchViewModel> { SearchViewModel(get(), get()) }
     viewModel<MainViewModel> { MainViewModel(get()) }
-    viewModel<PlayerViewModel> { PlayerViewModel(get()) }
+    viewModel<PlayerViewModel> { PlayerViewModel(get(), get()) }
 }
