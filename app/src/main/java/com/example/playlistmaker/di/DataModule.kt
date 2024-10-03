@@ -28,7 +28,7 @@ val dataModule = module {
     single<SettingsRepositoryInterface> { SettingsRepository(get(), get()) }
     single<NetworkClient> { NetworkClientImpl(get()) }
     single<MainRepositoryInterface> { MainRepository(get()) }
-    single<PlayerRepositoryInterface> { PlayerRepository() }
+    single<PlayerRepositoryInterface> { PlayerRepository(get()) }
 
     single<TrackAdapter> { TrackAdapter() }
     single<SharedPreferences> {

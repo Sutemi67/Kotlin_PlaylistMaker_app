@@ -1,6 +1,5 @@
 package com.example.playlistmaker.player.ui
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,15 +29,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
 class PlayerActivity : AppCompatActivity() {
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var binding: ActivityPlayerBinding
-    private lateinit var player: MediaPlayer
 
-    private var timePlaying = 0L
     private var playerHandler: Handler? = null
     private val vm by viewModel<PlayerViewModel>()
 
@@ -66,8 +62,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.releaseDate.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
         previewUrl = intent.getStringExtra(PREVIEW_URL).toString()
         val getDuration = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0)
-        player = vm.player()
-        currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
+        currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
         binding.playerDuration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
 
@@ -88,10 +83,6 @@ class PlayerActivity : AppCompatActivity() {
         )
         vm.getPlaybackLiveData().observe(this) { status ->
             uiManaging(status)
-        }
-        player.setOnCompletionListener {
-            Log.e("timeCounterStart", "player completed")
-            uiManaging(PlaybackStatus.Ready)
         }
 
         playButton.setOnClickListener {
@@ -121,13 +112,11 @@ class PlayerActivity : AppCompatActivity() {
     private val timeCounterRunnable: Runnable by lazy {
         Runnable {
             Log.e("timeCounterStart", "time counter started")
-            player.let {
-                timePlaying = player.currentPosition.toLong()
-                currentTime.text =
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
-                playerHandler?.postDelayed(timeCounterRunnable, 1000L)
-            }
+            currentTime.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(vm.playerGetCurrentTime())
+            playerHandler?.postDelayed(timeCounterRunnable, 1000L)
         }
+
     }
 
     private fun uiManaging(status: PlaybackStatus) {
@@ -147,9 +136,8 @@ class PlayerActivity : AppCompatActivity() {
             PlaybackStatus.Ready -> {
                 playerHandler?.removeCallbacks(timeCounterRunnable)
                 playButton.setImageResource(R.drawable.audioplayer_button_play_light)
-                timePlaying = 0L
                 currentTime.text =
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(timePlaying)
+                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
                 Log.e("timeCounterStart", "removing callbacks of time counter")
             }
 

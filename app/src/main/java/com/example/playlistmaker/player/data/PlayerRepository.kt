@@ -1,17 +1,33 @@
 package com.example.playlistmaker.player.data
 
-import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
 import com.example.playlistmaker.player.domain.PlayerRepositoryInterface
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.io.IOException
 
-class PlayerRepository : PlayerRepositoryInterface, KoinComponent {
+class PlayerRepository(
+    private val player: MediaPlayer
+) : PlayerRepositoryInterface {
 
-    private val player: MediaPlayer by inject()
-    override fun player(): MediaPlayer = player
+    override fun setPlayer(
+        previewUrl: String,
+        onCompletion: () -> Unit
+    ): PlaybackStatus {
+        try {
+            player.apply {
+                setDataSource(previewUrl)
+                prepareAsync()
+                setOnCompletionListener {
+                    onCompletion()
+                }
+                return PlaybackStatus.Ready
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Log.e("error", "поймал в setPlayer")
+            return PlaybackStatus.Error
+        }
+    }
 
     override fun playOrPauseAction(): PlaybackStatus {
         if (player.isPlaying) {
@@ -23,22 +39,7 @@ class PlayerRepository : PlayerRepositoryInterface, KoinComponent {
         }
     }
 
-    override fun setPlayer(
-        previewUrl: String,
-        context: Context
-    ): PlaybackStatus {
-        try {
-            player.apply {
-                setDataSource(previewUrl)
-                prepareAsync()
-                return PlaybackStatus.Ready
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Log.e("error", "поймал в setPlayer")
-            return PlaybackStatus.Error
-        }
-    }
+    override fun playerGetCurrentTime(): Long = player.currentPosition.toLong()
 
     override fun stop(): PlaybackStatus.Ready {
         player.stop()

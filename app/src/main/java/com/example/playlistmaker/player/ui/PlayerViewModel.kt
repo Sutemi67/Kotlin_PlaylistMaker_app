@@ -1,7 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.content.Context
-import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,12 +18,13 @@ class PlayerViewModel(
         previewUrl: String,
         context: Context,
     ) {
-        interactor.setPlayer(previewUrl, context, state = { state ->
-            playbackStatus.postValue(state)
-        })
+        interactor.setPlayer(
+            previewUrl = previewUrl,
+            context = context,
+            state = { state -> playbackStatus.postValue(state) },
+            onCompletion = { playbackStatus.postValue(PlaybackStatus.Ready) }
+        )
     }
-
-    fun player(): MediaPlayer = interactor.player()
 
     fun playOrPauseAction() {
         playbackStatus.postValue(interactor.playOrPauseAction())
@@ -37,4 +37,6 @@ class PlayerViewModel(
     fun reset() {
         interactor.reset()
     }
+
+    fun playerGetCurrentTime(): Long = interactor.playerGetCurrentTime()
 }
