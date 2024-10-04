@@ -21,7 +21,7 @@ class PlayerViewModel(
     private var counterData = MutableLiveData("")
     fun getCounterText(): LiveData<String> = counterData
 
-    val timeCounterRunnable: Runnable by lazy {
+    private val timeCounterRunnable: Runnable by lazy {
         Runnable {
             Log.e("timeCounterStart", "time counter started")
             counterData.value =
