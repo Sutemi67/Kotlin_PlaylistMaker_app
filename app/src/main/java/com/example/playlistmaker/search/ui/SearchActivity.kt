@@ -1,6 +1,5 @@
 package com.example.playlistmaker.search.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -61,7 +60,6 @@ class SearchActivity : AppCompatActivity() {
     private var isClickAllowed = true
     private var isSearchAllowed = true
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
