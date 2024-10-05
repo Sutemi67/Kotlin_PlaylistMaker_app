@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -42,6 +41,7 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -56,7 +56,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var reloadButton: Button
 
     private val vm by viewModel<SearchViewModel>()
-    private var mainThreadHandler: Handler? = null
+    private val mainThreadHandler: Handler by inject()
+    private val adapter = TrackAdapter()
     private var isClickAllowed = true
     private var isSearchAllowed = true
 
@@ -79,10 +80,9 @@ class SearchActivity : AppCompatActivity() {
         connectionProblemError = binding.connectionProblem
         progressBar = binding.progressBarLayout
         clearHistoryButton = binding.clearHistoryButton
-        mainThreadHandler = Handler(Looper.getMainLooper())
 
-        vm.historyState.observe(this) { isEmpty ->
-            historyListManagement(isEmpty)
+        vm.isHistoryEmpty.observe(this) { isEmpty ->
+            clearButtonManagement(isEmpty)
         }
         vm.uiState.observe(this) { state ->
             uiManagement(state)
@@ -90,7 +90,7 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             binding.searchInputText.text.clear()
-            vm.setAdapterList(vm.getHistory())
+            adapter.setData(vm.getHistory())
             uiManagement(SEARCH_UI_STATE_FILLED)
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -99,14 +99,14 @@ class SearchActivity : AppCompatActivity() {
                 0
             )
         }
-        reloadButton.setOnClickListener { mainThreadHandler?.post(searchAction()) }
+        reloadButton.setOnClickListener { mainThreadHandler.post(searchAction()) }
         clearHistoryButton.setOnClickListener {
             vm.clearHistory()
-            vm.setAdapterList(emptyList())
+            adapter.setData(emptyList())
         }
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                mainThreadHandler?.post(searchAction())
+                mainThreadHandler.post(searchAction())
             }
             false
         }
@@ -120,11 +120,11 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.isVisible = true
                     if (isSearchAllowed && s.isNotEmpty()) {
                         isSearchAllowed = false
-                        mainThreadHandler?.postDelayed(
+                        mainThreadHandler.postDelayed(
                             searchAction(),
                             SEARCH_REFRESH_RATE
                         )
-                        mainThreadHandler?.postDelayed(
+                        mainThreadHandler.postDelayed(
                             { isSearchAllowed = true },
                             SEARCH_REFRESH_RATE
                         )
@@ -138,17 +138,17 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         }
-        vm.setAdapterList(vm.getHistory())
-        recycler.adapter = vm.getAdapter()
+        adapter.setData(vm.getHistory())
+        recycler.adapter = adapter
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
         recycler.layoutManager = LinearLayoutManager(this)
 
-        vm.getAdapter().openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
+        adapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
                 if (isClickAllowed) {
                     vm.addTrackInHistory(track)
                     isClickAllowed = false
-                    mainThreadHandler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+                    mainThreadHandler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
                     val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
                     intent.putExtra(TRACK_NAME, track.trackName)
                     intent.putExtra(ARTIST, track.artistName)
@@ -160,8 +160,6 @@ class SearchActivity : AppCompatActivity() {
                     intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
                     intent.putExtra(PREVIEW_URL, track.previewUrl)
                     startActivity(intent)
-//                    опционально - история треков после финиша плеера
-                    vm.setAdapterList(vm.getHistory())
                 }
             }
         }
@@ -176,7 +174,7 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchInputText.text.toString(),
                 object : TracksConsumer {
                     override fun consume(findTracks: List<Track>, response: Int) {
-                        mainThreadHandler?.post {
+                        mainThreadHandler.post {
                             if (findTracks.isEmpty()) {
                                 if (response == 400) {
                                     vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
@@ -184,7 +182,7 @@ class SearchActivity : AppCompatActivity() {
                                 }
                                 vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
                             } else {
-                                vm.setAdapterList(findTracks)
+                                adapter.setData(findTracks)
                                 vm.setUIState(SEARCH_UI_STATE_FILLED)
                             }
                         }
@@ -193,7 +191,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun historyListManagement(isEmpty: Boolean) {
+    private fun clearButtonManagement(isEmpty: Boolean) {
         clearHistoryButton.isVisible = !isEmpty
         binding.textHintBeforeTyping.isVisible = !isEmpty
     }

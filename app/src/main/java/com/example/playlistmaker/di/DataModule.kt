@@ -13,7 +13,6 @@ import com.example.playlistmaker.search.data.api.ITunesApi
 import com.example.playlistmaker.search.data.api.NetworkClient
 import com.example.playlistmaker.search.data.api.NetworkClientImpl
 import com.example.playlistmaker.search.domain.SearchRepositoryInterface
-import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.settings.data.SettingsRepository
 import com.example.playlistmaker.settings.domain.SettingsRepositoryInterface
 import org.koin.android.ext.koin.androidContext
@@ -30,7 +29,6 @@ val dataModule = module {
     single<MainRepositoryInterface> { MainRepository(get()) }
     single<PlayerRepositoryInterface> { PlayerRepository(get()) }
 
-    single<TrackAdapter> { TrackAdapter() }
     single<SharedPreferences> {
         androidContext().getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
     }

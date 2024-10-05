@@ -13,29 +13,22 @@ import com.example.playlistmaker.search.domain.models.Track
 
 class SearchViewModel(
     private val interactor: SearchInteractorInterface,
-    private val adapter: TrackAdapter
 ) : ViewModel() {
 
     private var _uiState: MutableLiveData<Int> = MutableLiveData(SEARCH_UI_STATE_FILLED)
     val uiState: LiveData<Int> = _uiState
-    private var _historyState = MutableLiveData(true)
-    val historyState: LiveData<Boolean> = _historyState
-
-    fun setAdapterList(list: List<Track>) {
-        adapter.setData(list)
-    }
-
-    fun getAdapter() = adapter
+    private var _isHistoryEmpty = MutableLiveData(true)
+    val isHistoryEmpty: LiveData<Boolean> = _isHistoryEmpty
 
     fun getHistory(): List<Track> {
         val result = interactor.getHistory()
-        _historyState.postValue(result.isEmpty())
+        _isHistoryEmpty.postValue(result.isEmpty())
         return result
     }
 
     fun clearHistory() {
         interactor.clearHistory()
-        _historyState.postValue(true)
+        _isHistoryEmpty.postValue(true)
     }
 
     fun addTrackInHistory(track: Track) {
