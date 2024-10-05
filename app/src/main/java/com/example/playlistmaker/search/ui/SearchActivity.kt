@@ -143,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
         recycler.layoutManager = LinearLayoutManager(this)
 
-        adapter.openPlayerActivity = object : TrackAdapter.OpenPlayerActivity {
+        adapter.openPlayerActivity = object : OpenPlayerActivity {
             override fun openPlayerActivity(track: Track) {
                 if (isClickAllowed) {
                     vm.addTrackInHistory(track)

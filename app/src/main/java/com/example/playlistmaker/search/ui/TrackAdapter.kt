@@ -32,7 +32,4 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
 
     override fun getItemCount(): Int = asyncListDiffer.currentList.size
 
-    interface OpenPlayerActivity {
-        fun openPlayerActivity(track: Track)
-    }
 }
