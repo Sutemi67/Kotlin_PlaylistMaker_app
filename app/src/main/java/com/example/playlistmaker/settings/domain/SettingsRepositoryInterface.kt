@@ -4,5 +4,6 @@ interface SettingsRepositoryInterface {
     fun openLinkAction()
     fun agreementAction()
     fun shareAction()
-    fun themeChangeAction(): Boolean
+    fun themeChangeAction()
+    fun getCheckerPos(): Boolean
 }

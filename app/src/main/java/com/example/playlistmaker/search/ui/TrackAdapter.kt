@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.data
+package com.example.playlistmaker.search.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,7 +32,4 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
 
     override fun getItemCount(): Int = asyncListDiffer.currentList.size
 
-    interface OpenPlayerActivity {
-        fun openPlayerActivity(track: Track)
-    }
 }

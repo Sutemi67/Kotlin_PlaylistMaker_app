@@ -20,7 +20,11 @@ class SettingsInteractor(
         executor.execute { repository.shareAction() }
     }
 
-    override fun themeChangeAction(): Boolean {
-        return repository.themeChangeAction()
+    override fun themeChangeClick() {
+        repository.themeChangeAction()
+    }
+
+    override fun getCheckerPos(): Boolean {
+        return repository.getCheckerPos()
     }
 }

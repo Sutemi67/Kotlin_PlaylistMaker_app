@@ -15,16 +15,26 @@
     </style>
 
     <style name="editTextElements">
-        <item name="tint">@color/YP_black</item>
+        <item name="tint">@color/YP_blue</item>
         <item name="backgroundTint">@color/Transparent</item>
         <item name="android:textColorHint">@color/YP_black</item>
         <item name="android:textColor">@color/YP_black</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textFontWeight">400</item>
+        <item name="android:background">@null</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
+    <style name="editTextClearAndSearch">
+        <item name="tint">@color/YP_light_gray_text</item>
+        <item name="backgroundTint">@color/Transparent</item>
+        <item name="android:textColorHint">@color/YP_light_gray_text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
 
     <style name="HeaderTextStyle">
         <item name="android:textColor">@color/YP_white</item>

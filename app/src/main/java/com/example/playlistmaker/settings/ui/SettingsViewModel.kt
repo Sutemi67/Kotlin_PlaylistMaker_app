@@ -1,7 +1,8 @@
 package com.example.playlistmaker.settings.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.SettingsInteractorInterface
 
@@ -10,9 +11,6 @@ import com.example.playlistmaker.settings.domain.SettingsInteractorInterface
 class SettingsViewModel(
     private val interactor: SettingsInteractorInterface
 ) : ViewModel() {
-
-    private var _isChecked: MutableLiveData<Boolean> = MutableLiveData()
-    val isChecked: LiveData<Boolean> = _isChecked
 
     fun onShareClick() {
         interactor.shareAction()
@@ -26,7 +24,19 @@ class SettingsViewModel(
         interactor.agreementAction()
     }
 
+    fun getCheckerPos(): Boolean = interactor.getCheckerPos()
+
     fun onThemeCheckerClick() {
-        _isChecked.value = interactor.themeChangeAction()
+        when (interactor.getCheckerPos()) {
+            true -> {
+                setDefaultNightMode(MODE_NIGHT_NO)
+                interactor.themeChangeClick()
+            }
+
+            else -> {
+                setDefaultNightMode(MODE_NIGHT_YES)
+                interactor.themeChangeClick()
+            }
+        }
     }
 }

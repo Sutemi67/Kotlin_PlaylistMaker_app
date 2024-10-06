@@ -4,19 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
 import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.media.ui.MediaActivity
 import com.example.playlistmaker.search.ui.SearchActivity
 import com.example.playlistmaker.settings.ui.SettingsActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val vm by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +26,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        vm.setThemeValue()
 
-        val nightThemeSharedPref = getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
-        when (nightThemeSharedPref.getBoolean(IS_NIGHT_SP_KEY, false)) {
-            true -> {
-                setDefaultNightMode(MODE_NIGHT_YES)
-            }
-
-            false -> {
-                setDefaultNightMode(MODE_NIGHT_NO)
-            }
-        }
         binding.buttonSearch.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }

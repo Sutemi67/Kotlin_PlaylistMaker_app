@@ -10,8 +10,4 @@ interface SearchInteractorInterface {
     fun addTrackInHistory(track: Track)
     fun saveHistory()
     fun clearHistory()
-
-    interface TracksConsumer {
-        fun consume(findTracks: List<Track>, response: Int)
-    }
 }
