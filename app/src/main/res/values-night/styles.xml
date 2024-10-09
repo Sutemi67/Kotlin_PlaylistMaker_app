@@ -134,4 +134,10 @@
     <style name="sidebutton">
         <item name="android:tint">@color/YP_white</item>
     </style>
+
+    <style name="mediaTabs">
+        <item name="android:backgroundTint">@color/Transparent</item>
+        <item name="tabIndicatorColor">@color/YP_white</item>
+        <item name="tabTextColor">@color/YP_white</item>
+    </style>
 </resources>

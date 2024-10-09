@@ -3,23 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".media.ui.FragmentPlaylist">
 
     <Button
+        style="@style/reloadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Новый плейлист" />
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="46dp"
+        android:text="@string/newPlaylist" />
 
     <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/button_backTo_padding"
         android:src="@drawable/img_nothing_found_light" />
 
     <TextView
+        style="@style/errorText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Вы не создани ни одного плейлиста" />
+        android:text="@string/noPlaylists"
+        android:textAlignment="center" />
 
 </LinearLayout>

@@ -15,8 +15,8 @@ class FragmentsAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> FragmentPlaylist.newInstance()
-            else -> FragmentFavourites.newInstance()
+            0 -> FragmentFavourites.newInstance()
+            else -> FragmentPlaylist.newInstance()
         }
     }
 }

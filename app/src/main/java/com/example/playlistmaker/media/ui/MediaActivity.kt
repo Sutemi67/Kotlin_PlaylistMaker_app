@@ -33,6 +33,13 @@ class MediaActivity : AppCompatActivity() {
                 }
             }
         tabLayoutMediator.attach()
+        setOnClickListeners()
+    }
+
+    private fun setOnClickListeners() {
+        binding.mediaToolbar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     override fun onDestroy() {

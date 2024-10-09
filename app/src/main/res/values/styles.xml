@@ -128,5 +128,9 @@
         <item name="android:textColor">@color/YP_white</item>
     </style>
 
-
+    <style name="mediaTabs">
+        <item name="android:backgroundTint">@color/YP_white</item>
+        <item name="tabIndicatorColor">@color/YP_black</item>
+        <item name="tabTextColor">@color/YP_black</item>
+    </style>
 </resources>
