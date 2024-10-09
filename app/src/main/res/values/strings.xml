@@ -33,4 +33,6 @@
     <string name="player_genre">Жанр</string>
     <string name="player_country">Страна</string>
     <string name="player_error_loading_preview">Ошибка загрузки аудиофайла</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
