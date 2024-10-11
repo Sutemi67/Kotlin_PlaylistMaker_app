@@ -7,31 +7,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/settings_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_margin="@dimen/margin_mainScreen_common_left"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:id="@+id/back_button"
-            style="@style/BG_icons"
-            android:layout_width="@dimen/iconSize_topScreen"
-            android:layout_height="@dimen/iconSize_topScreen"
-            android:backgroundTint="@color/Transparent"
-            android:contentDescription="@string/back_arrow_icon"
-            android:src="@drawable/ic_back_arrow" />
-
-        <TextView
-            style="@style/HeaderTextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:backgroundTint="@color/YP_white"
-            android:text="@string/main_settings" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/Transparent"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:title="@string/main_settings"
+        app:titleMargin="12dp"
+        app:titleTextAppearance="@style/HeaderTextStyle" />
 
     <Switch
         android:id="@+id/nightThemeSwitch"

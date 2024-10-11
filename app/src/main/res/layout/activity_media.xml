@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/media"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".media.ui.MediaActivity"
     tools:ignore="UseCompoundDrawables">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/media_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/media_activity"
-        android:textSize="30sp" />
+        android:background="@color/Transparent"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:title="@string/mediateka"
+        app:titleMargin="12dp"
+        app:titleTextAppearance="@style/HeaderTextStyle" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/table_layout"
+        style="@style/mediaTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorFullWidth="true" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

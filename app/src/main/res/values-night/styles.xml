@@ -18,6 +18,7 @@
         <item name="tint">@color/YP_blue</item>
         <item name="backgroundTint">@color/Transparent</item>
         <item name="android:textColorHint">@color/YP_black</item>
+        <item name="drawableTint">@color/YP_black</item>
         <item name="android:textColor">@color/YP_black</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_vertical</item>
@@ -133,5 +134,11 @@
 
     <style name="sidebutton">
         <item name="android:tint">@color/YP_white</item>
+    </style>
+
+    <style name="mediaTabs">
+        <item name="android:backgroundTint">@color/Transparent</item>
+        <item name="tabIndicatorColor">@color/YP_white</item>
+        <item name="tabTextColor">@color/YP_white</item>
     </style>
 </resources>
