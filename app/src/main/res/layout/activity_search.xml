@@ -29,27 +29,20 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
-            style="@style/editTextClearAndSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:contentDescription="@string/description_search_icon"
-            android:src="@drawable/ic_search_light"
-            tools:ignore="ImageContrastCheck" />
-
         <EditText
             android:id="@+id/search_input_text"
             style="@style/editTextElements"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/search_editText_height"
-            android:layout_marginStart="@dimen/margin_mainScreen_common_left"
-            android:layout_marginEnd="@dimen/margin_settingScreen_common_right"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shapes_search"
+            android:drawableStart="@drawable/ic_search_light"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/YP_black"
             android:hint="@string/search_activity"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:paddingHorizontal="12dp"
             android:singleLine="true"
             android:textCursorDrawable="@null"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck,DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
@@ -59,6 +52,7 @@
             style="@style/editTextClearAndSearch"
             android:layout_width="@dimen/button_clearSearch_size"
             android:layout_height="@dimen/button_clearSearch_size"
+            android:layout_gravity="end|center_vertical"
             android:contentDescription="@string/description_search_icon"
             android:padding="14dp"
             android:src="@drawable/ic_clear"

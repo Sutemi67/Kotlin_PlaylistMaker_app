@@ -19,6 +19,7 @@
         <item name="color">@color/YP_blue</item>
         <item name="backgroundTint">@color/Transparent</item>
         <item name="android:textColorHint">@color/YP_light_gray_text</item>
+        <item name="drawableTint">@color/YP_light_gray_text</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textFontWeight">400</item>
