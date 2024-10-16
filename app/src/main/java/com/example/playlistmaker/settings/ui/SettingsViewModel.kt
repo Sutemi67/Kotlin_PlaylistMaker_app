@@ -12,18 +12,9 @@ class SettingsViewModel(
     private val interactor: SettingsInteractorInterface
 ) : ViewModel() {
 
-    fun onShareClick() {
-        interactor.shareAction()
-    }
-
-    fun onLinkClick() {
-        interactor.openLinkAction()
-    }
-
-    fun onAgreementClick() {
-        interactor.agreementAction()
-    }
-
+    fun onShareClick() = interactor.shareAction()
+    fun onLinkClick() = interactor.openLinkAction()
+    fun onAgreementClick() = interactor.agreementAction()
     fun getCheckerPos(): Boolean = interactor.getCheckerPos()
 
     fun onThemeCheckerClick() {

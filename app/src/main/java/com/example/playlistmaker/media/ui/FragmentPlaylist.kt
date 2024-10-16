@@ -12,7 +12,7 @@ import org.koin.core.parameter.parametersOf
 class FragmentPlaylist : Fragment() {
     private lateinit var binding: FragmentPlaylistBinding
 
-    private val playlistViewModel by viewModel<PlaylistViewModel> {
+    private val vm by viewModel<PlaylistViewModel> {
         parametersOf(requireArguments().getString(PLAYLIST_BUNDLE_KEY))
     }
     private var param1: String? = null
@@ -28,9 +28,8 @@ class FragmentPlaylist : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPlaylistBinding.inflate(layoutInflater, container, false)
-//        return inflater.inflate(R.layout.fragment_playlist, container, false)
         return binding.root
     }
 
