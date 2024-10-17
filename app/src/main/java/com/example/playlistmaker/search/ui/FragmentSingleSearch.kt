@@ -1,4 +1,4 @@
-package com.example.playlistmaker.singleActivity
+package com.example.playlistmaker.search.ui
 
 import android.content.Context
 import android.content.Intent
@@ -38,8 +38,6 @@ import com.example.playlistmaker.databinding.FragmentSingleSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.ui.OpenPlayerActivity
-import com.example.playlistmaker.search.ui.TrackAdapter
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -16,7 +16,7 @@
         android:theme="@style/Base.Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".singleActivity.SingleActivity"
+            android:name=".main.ui.SingleActivity"
             android:windowSoftInputMode="adjustNothing"
             android:exported="true" />
         <activity

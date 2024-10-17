@@ -1,4 +1,4 @@
-package com.example.playlistmaker.singleActivity
+package com.example.playlistmaker.search.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
