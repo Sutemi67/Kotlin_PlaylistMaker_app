@@ -6,15 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class FragmentPlaylist : Fragment() {
     private lateinit var binding: FragmentPlaylistBinding
-
-    private val vm by viewModel<PlaylistViewModel> {
-        parametersOf(requireArguments().getString(PLAYLIST_BUNDLE_KEY))
-    }
     private var param1: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

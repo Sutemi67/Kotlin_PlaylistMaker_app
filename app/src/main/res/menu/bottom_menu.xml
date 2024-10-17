@@ -3,13 +3,13 @@
     <item
         android:id="@+id/fragmentSingleSearch"
         android:icon="@drawable/ic_search_light"
-        android:title="search" />
+        android:title="@string/search_activity" />
     <item
         android:id="@+id/fragmentSingleMedia"
         android:icon="@drawable/ic_library"
-        android:title="media" />
+        android:title="@string/mediateka" />
     <item
         android:id="@+id/fragmentSingleSettings"
         android:icon="@drawable/ic_settings_light"
-        android:title="settings" />
+        android:title="@string/main_settings" />
 </menu>

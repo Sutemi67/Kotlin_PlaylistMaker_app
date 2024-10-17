@@ -1,4 +1,4 @@
-package com.example.playlistmaker.singleActivity
+package com.example.playlistmaker.main.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +9,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySingleBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SingleActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivitySingleBinding
+
+    private val vm by viewModel<SingleActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,5 +33,6 @@ class SingleActivity : AppCompatActivity() {
         val bottomNavigationView: BottomNavigationView = binding.bottomNavigationView
         bottomNavigationView.setupWithNavController(navController)
 
+        vm.setThemeValue()
     }
 }

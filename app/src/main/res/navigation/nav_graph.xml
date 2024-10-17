@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentSingleSearch">
+    app:startDestination="@id/fragmentSingleMedia">
 
     <fragment
         android:id="@+id/fragmentSingleSearch"
-        android:name="com.example.playlistmaker.singleActivity.FragmentSingleSearch"
+        android:name="com.example.playlistmaker.search.ui.FragmentSingleSearch"
         android:label="fragment_single_main"
         tools:layout="@layout/fragment_single_search" />
     <fragment

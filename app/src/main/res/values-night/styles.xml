@@ -148,4 +148,17 @@
         <item name="itemRippleColor">@color/YP_blue</item>
         <item name="itemTextColor">@color/bottom_nav_night</item>
     </style>
+
+    <style name="tab_layout_media">
+        <item name="tabIndicatorColor">@color/YP_white</item>
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabTextColor">@color/YP_white</item>
+    </style>
+
+    <style name="tabs_media_text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
 </resources>
