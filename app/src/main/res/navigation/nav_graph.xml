@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_single_search" />
     <fragment
         android:id="@+id/fragmentSingleMedia"
-        android:name="com.example.playlistmaker.singleActivity.FragmentSingleMedia"
+        android:name="com.example.playlistmaker.media.ui.FragmentSingleMedia"
         android:label="fragment_single_media"
         tools:layout="@layout/fragment_single_media" />
     <fragment
