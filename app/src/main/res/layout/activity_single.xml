@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".main.ui.SingleActivity">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/YP_light_gray"
+        app:layout_constraintTop_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         style="@style/navigationBar"
