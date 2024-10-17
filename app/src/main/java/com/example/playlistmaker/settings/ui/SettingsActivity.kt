@@ -27,7 +27,6 @@ class SettingsActivity : AppCompatActivity() {
         }
         val nightThemeSwitcher = binding.nightThemeSwitch
 
-        binding.settingsToolbar.setNavigationOnClickListener { finish() }
         binding.buttonAgreement.setOnClickListener { vm.onAgreementClick() }
         binding.buttonSupport.setOnClickListener { vm.onLinkClick() }
         binding.buttonShare.setOnClickListener { vm.onShareClick() }
