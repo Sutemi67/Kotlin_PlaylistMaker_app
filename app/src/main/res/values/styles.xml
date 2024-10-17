@@ -145,7 +145,7 @@
     <style name="tab_layout_media">
         <item name="tabIndicatorColor">@color/YP_black</item>
         <item name="tabIndicatorFullWidth">true</item>
-        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabIndicatorHeight">2dp</item>
         <item name="tabTextColor">@color/YP_black</item>
     </style>
 
