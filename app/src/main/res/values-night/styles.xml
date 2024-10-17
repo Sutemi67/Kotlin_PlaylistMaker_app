@@ -141,4 +141,11 @@
         <item name="tabIndicatorColor">@color/YP_white</item>
         <item name="tabTextColor">@color/YP_white</item>
     </style>
+
+    <style name="navigationBar" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:background">@color/Transparent</item>
+        <item name="itemIconTint">@color/bottom_nav_night</item>
+        <item name="itemRippleColor">@color/YP_blue</item>
+        <item name="itemTextColor">@color/bottom_nav_night</item>
+    </style>
 </resources>
