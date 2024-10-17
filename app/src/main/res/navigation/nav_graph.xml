@@ -17,7 +17,7 @@
         tools:layout="@layout/fragment_single_media" />
     <fragment
         android:id="@+id/fragmentSingleSettings"
-        android:name="com.example.playlistmaker.singleActivity.FragmentSingleSettings"
+        android:name="com.example.playlistmaker.settings.ui.FragmentSingleSettings"
         android:label="fragment_single_settings"
         tools:layout="@layout/fragment_single_settings" />
 </navigation>
