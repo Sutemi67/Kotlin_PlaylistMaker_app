@@ -12,7 +12,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SingleActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivitySingleBinding
+
     private val vm by viewModel<SingleActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

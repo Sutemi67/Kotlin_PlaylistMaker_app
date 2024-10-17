@@ -103,7 +103,6 @@ class FragmentSingleSearch : Fragment() {
             val inputMethodManager =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(
-//                findViewById<View>(android.R.id.content).windowToken,
                 requireView().windowToken,
                 0
             )
