@@ -5,6 +5,7 @@ import com.example.playlistmaker.media.ui.FavouritesViewModel
 import com.example.playlistmaker.media.ui.PlaylistViewModel
 import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
+import com.example.playlistmaker.settings.ui.FragmentSettingsViewModel
 import com.example.playlistmaker.settings.ui.SettingsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -16,4 +17,5 @@ val appModule = module {
     viewModel<PlayerViewModel> { PlayerViewModel(get(), get()) }
     viewModel<PlaylistViewModel> { PlaylistViewModel() }
     viewModel<FavouritesViewModel> { FavouritesViewModel() }
+    viewModel<FragmentSettingsViewModel> { FragmentSettingsViewModel(get()) }
 }

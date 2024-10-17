@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".singleActivity.FragmentSingleSettings">
+    android:orientation="vertical"
+    tools:context=".settings.ui.FragmentSingleSettings">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/settings_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@color/Transparent"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:title="@string/main_settings"
+        app:titleMargin="12dp"
+        app:titleTextAppearance="@style/HeaderTextStyle" />
 
-</FrameLayout>
+    <Switch
+        android:id="@+id/nightThemeSwitch"
+        style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
+        android:text="@string/settings_dark"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:id="@+id/button_share"
+        style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
+        android:text="@string/settings_share"
+        app:drawableEndCompat="@drawable/ic_share" />
+
+    <TextView
+        android:id="@+id/button_support"
+        style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
+        android:text="@string/settings_support"
+        app:drawableEndCompat="@drawable/ic_support" />
+
+    <TextView
+        android:id="@+id/button_agreement"
+        style="@style/SettingsMenuButtons"
+        android:layout_width="match_parent"
+        android:text="@string/settings_agreement"
+        app:drawableEndCompat="@drawable/ic_next" />
+
+</LinearLayout>
