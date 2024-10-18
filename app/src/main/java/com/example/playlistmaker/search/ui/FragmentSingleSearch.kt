@@ -185,7 +185,6 @@ class FragmentSingleSearch : Fragment() {
     private val searchAction: Runnable by lazy {
         Runnable {
             if (binding.searchInputText.text.isNullOrEmpty()) return@Runnable
-
             uiManagement(SEARCH_UI_STATE_PROGRESS)
             vm.searchAction(
                 binding.searchInputText.text.toString(),
@@ -253,7 +252,6 @@ class FragmentSingleSearch : Fragment() {
 
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
-
 
         @JvmStatic
         fun newInstance(param1: String, param2: String) =

@@ -9,14 +9,12 @@
     android:orientation="vertical"
     tools:context=".settings.ui.FragmentSingleSettings">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/settings_toolbar"
+    <Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/Transparent"
-        app:title="@string/main_settings"
-        app:titleMargin="12dp"
-        app:titleTextAppearance="@style/HeaderTextStyle" />
+        android:layout_height="@dimen/toolbar_height"
+        android:gravity="center_vertical"
+        android:title="@string/main_settings"
+        android:titleTextAppearance="@style/HeaderTextStyle" />
 
     <Switch
         android:id="@+id/nightThemeSwitch"

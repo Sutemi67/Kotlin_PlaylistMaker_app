@@ -41,7 +41,6 @@
             android:inputType="text"
             android:paddingHorizontal="12dp"
             android:singleLine="true"
-            android:textCursorDrawable="@null"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck,DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <ImageView
