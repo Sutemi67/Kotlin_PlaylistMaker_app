@@ -30,10 +30,12 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
+
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var binding: ActivityPlayerBinding
+
     private val vm by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
