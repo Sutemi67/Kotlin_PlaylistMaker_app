@@ -27,14 +27,10 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
-    <style name="editTextClearAndSearch">
+    <style name="editTextClearButton">
         <item name="tint">@color/YP_light_gray_text</item>
         <item name="backgroundTint">@color/Transparent</item>
         <item name="android:textColorHint">@color/YP_light_gray_text</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textFontWeight">400</item>
-        <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
     <style name="HeaderTextStyle">

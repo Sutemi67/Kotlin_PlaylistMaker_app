@@ -46,7 +46,7 @@
 
         <ImageView
             android:id="@+id/search_clear_button"
-            style="@style/editTextClearAndSearch"
+            style="@style/editTextClearButton"
             android:layout_width="@dimen/button_clearSearch_size"
             android:layout_height="@dimen/button_clearSearch_size"
             android:layout_gravity="end|center_vertical"

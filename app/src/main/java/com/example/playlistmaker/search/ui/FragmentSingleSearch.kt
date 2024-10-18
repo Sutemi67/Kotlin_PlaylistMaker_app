@@ -59,7 +59,7 @@ class FragmentSingleSearch : Fragment() {
     private val mainThreadHandler: Handler by inject()
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
-    private var isSearchAllowed = true
+    private var isSearchAllowed = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,14 +107,14 @@ class FragmentSingleSearch : Fragment() {
                 0
             )
         }
-        reloadButton.setOnClickListener { mainThreadHandler.post(searchAction()) }
+        reloadButton.setOnClickListener { mainThreadHandler.post(searchAction) }
         clearHistoryButton.setOnClickListener {
             vm.clearHistory()
             adapter.setData(emptyList())
         }
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                mainThreadHandler.post(searchAction())
+                mainThreadHandler.post(searchAction)
             }
             false
         }
@@ -124,19 +124,12 @@ class FragmentSingleSearch : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     clearButton.isVisible = false
+                    mainThreadHandler.removeCallbacks(startSearchAction)
                 } else {
                     clearButton.isVisible = true
-                    if (isSearchAllowed && s.isNotEmpty()) {
-                        isSearchAllowed = false
-                        mainThreadHandler.postDelayed(
-                            searchAction(),
-                            SEARCH_REFRESH_RATE
-                        )
-                        mainThreadHandler.postDelayed(
-                            { isSearchAllowed = true },
-                            SEARCH_REFRESH_RATE
-                        )
-                    }
+                    mainThreadHandler.removeCallbacks(allowingSearchAction)
+                    mainThreadHandler.postDelayed(allowingSearchAction, SEARCH_REFRESH_RATE)
+                    mainThreadHandler.postDelayed(startSearchAction, SEARCH_REFRESH_RATE)
                 }
                 if (vm.getHistory().isNotEmpty()) {
                     binding.historyLayout.isVisible =
@@ -146,6 +139,7 @@ class FragmentSingleSearch : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {}
         }
+
         adapter.setData(vm.getHistory())
         recycler.adapter = adapter
         binding.searchInputText.addTextChangedListener(searchTextWatcher)
@@ -173,8 +167,23 @@ class FragmentSingleSearch : Fragment() {
         }
     }
 
-    private fun searchAction(): Runnable {
-        return Runnable {
+    private val allowingSearchAction: Runnable by lazy {
+        Runnable {
+            isSearchAllowed = true
+        }
+    }
+
+    private val startSearchAction: Runnable by lazy {
+        Runnable {
+            if (isSearchAllowed) {
+                isSearchAllowed = false
+                mainThreadHandler.post(searchAction)
+            }
+        }
+    }
+
+    private val searchAction: Runnable by lazy {
+        Runnable {
             if (binding.searchInputText.text.isNullOrEmpty()) return@Runnable
 
             uiManagement(SEARCH_UI_STATE_PROGRESS)
