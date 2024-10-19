@@ -6,24 +6,13 @@ import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.SettingsInteractorInterface
 
-//вьюмодель ничего не должна возвращать!
-
-class SettingsViewModel(
+class FragmentSettingsViewModel(
     private val interactor: SettingsInteractorInterface
 ) : ViewModel() {
 
-    fun onShareClick() {
-        interactor.shareAction()
-    }
-
-    fun onLinkClick() {
-        interactor.openLinkAction()
-    }
-
-    fun onAgreementClick() {
-        interactor.agreementAction()
-    }
-
+    fun onShareClick() = interactor.shareAction()
+    fun onLinkClick() = interactor.openLinkAction()
+    fun onAgreementClick() = interactor.agreementAction()
     fun getCheckerPos(): Boolean = interactor.getCheckerPos()
 
     fun onThemeCheckerClick() {

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.main.domain.MainInteractorInterface
 
-class MainViewModel(
+class SingleActivityViewModel(
     private val interactor: MainInteractorInterface
 ) : ViewModel() {
 

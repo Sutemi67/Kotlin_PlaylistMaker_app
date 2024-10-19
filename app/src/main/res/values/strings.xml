@@ -37,5 +37,6 @@
     <string name="emptyMedia">Ваша медиатека пуста</string>
     <string name="newPlaylist">Новый плейлист</string>
     <string name="noPlaylists">Вы не создали ни одного плейлиста</string>
+    <string name="media_tabs">tabs of media menu</string>
 
 </resources>
