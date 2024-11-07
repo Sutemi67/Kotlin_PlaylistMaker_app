@@ -12,10 +12,7 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
     private val difUtil = TrackDiffUtilCallback()
     private val asyncListDiffer = AsyncListDiffer(this, difUtil)
 
-    fun setData(list: List<Track>) {
-        val l = list.toList()
-        asyncListDiffer.submitList(l)
-    }
+    fun setData(list: List<Track>) = asyncListDiffer.submitList(list.toList())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)

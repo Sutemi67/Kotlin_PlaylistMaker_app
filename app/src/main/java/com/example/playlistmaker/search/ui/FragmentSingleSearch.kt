@@ -3,9 +3,9 @@ package com.example.playlistmaker.search.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.app.ARTIST
@@ -38,7 +39,9 @@ import com.example.playlistmaker.databinding.FragmentSingleSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
-import org.koin.android.ext.android.inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentSingleSearch : Fragment() {
@@ -56,11 +59,12 @@ class FragmentSingleSearch : Fragment() {
     private lateinit var reloadButton: Button
 
     private val vm by viewModel<FragmentSingleSearchViewModel>()
-    private val mainThreadHandler: Handler by inject()
+
+    //    private val mainThreadHandler: Handler by inject()
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
-    private var isSearchAllowed = false
-
+    private var isSearchAllowed = true
+    private var searchJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,12 +93,8 @@ class FragmentSingleSearch : Fragment() {
         progressBar = binding.progressBarLayout
         clearHistoryButton = binding.clearHistoryButton
 
-        vm.isHistoryEmpty.observe(viewLifecycleOwner) { isEmpty ->
-            clearButtonManagement(isEmpty)
-        }
-        vm.uiState.observe(viewLifecycleOwner) { state ->
-            uiManagement(state)
-        }
+        vm.isHistoryEmpty.observe(viewLifecycleOwner) { clearButtonManagement(it) }
+        vm.uiState.observe(viewLifecycleOwner) { uiManagement(it) }
 
         clearButton.setOnClickListener {
             binding.searchInputText.text.clear()
@@ -107,14 +107,16 @@ class FragmentSingleSearch : Fragment() {
                 0
             )
         }
-        reloadButton.setOnClickListener { mainThreadHandler.post(searchAction) }
+//        reloadButton.setOnClickListener { mainThreadHandler.post(searchAction) }
+        reloadButton.setOnClickListener { searchAction() }
         clearHistoryButton.setOnClickListener {
             vm.clearHistory()
             adapter.setData(emptyList())
         }
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                mainThreadHandler.post(searchAction)
+//                mainThreadHandler.post(searchAction)
+                searchAction()
             }
             false
         }
@@ -124,12 +126,17 @@ class FragmentSingleSearch : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     clearButton.isVisible = false
-                    mainThreadHandler.removeCallbacks(startSearchAction)
+                    searchJob?.cancel()
                 } else {
                     clearButton.isVisible = true
-                    mainThreadHandler.removeCallbacks(allowingSearchAction)
-                    mainThreadHandler.postDelayed(allowingSearchAction, SEARCH_REFRESH_RATE)
-                    mainThreadHandler.postDelayed(startSearchAction, SEARCH_REFRESH_RATE)
+                    searchJob?.cancel()
+                    Log.e("searchTAG", "$searchJob")
+                    if (searchJob == null || searchJob!!.isCancelled || searchJob!!.isCompleted) {
+                        searchJob = lifecycleScope.launch {
+                            delay(SEARCH_REFRESH_RATE)
+                            searchAction()
+                        }
+                    }
                 }
                 if (vm.getHistory().isNotEmpty()) {
                     binding.historyLayout.isVisible =
@@ -150,7 +157,10 @@ class FragmentSingleSearch : Fragment() {
                 if (isClickAllowed) {
                     vm.addTrackInHistory(track)
                     isClickAllowed = false
-                    mainThreadHandler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        delay(CLICK_DEBOUNCE_DELAY)
+                        isClickAllowed = true
+                    }
                     val intent = Intent(requireContext(), PlayerActivity::class.java)
                     intent.putExtra(TRACK_NAME, track.trackName)
                     intent.putExtra(ARTIST, track.artistName)
@@ -167,45 +177,70 @@ class FragmentSingleSearch : Fragment() {
         }
     }
 
-    private val allowingSearchAction: Runnable by lazy {
-        Runnable {
-            isSearchAllowed = true
-        }
-    }
+//    private val allowingSearchAction: Runnable by lazy {
+//        Runnable {
+//            isSearchAllowed = true
+//        }
+//    }
+//
+//    private val startSearchAction: Runnable by lazy {
+//        Runnable {
+//            if (isSearchAllowed) {
+//                isSearchAllowed = false
+//                mainThreadHandler.post(searchAction)
+//            }
+//        }
+//    }
 
-    private val startSearchAction: Runnable by lazy {
-        Runnable {
-            if (isSearchAllowed) {
-                isSearchAllowed = false
-                mainThreadHandler.post(searchAction)
-            }
-        }
-    }
-
-    private val searchAction: Runnable by lazy {
-        Runnable {
-            if (binding.searchInputText.text.isNullOrEmpty()) return@Runnable
-            uiManagement(SEARCH_UI_STATE_PROGRESS)
-            vm.searchAction(
-                binding.searchInputText.text.toString(),
-                object : TracksConsumer {
-                    override fun consume(findTracks: List<Track>, response: Int) {
-                        mainThreadHandler.post {
-                            if (findTracks.isEmpty()) {
-                                if (response == 400) {
-                                    vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
-                                    return@post
-                                }
-                                vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
-                            } else {
-                                adapter.setData(findTracks)
-                                vm.setUIState(SEARCH_UI_STATE_FILLED)
-                            }
+    private fun searchAction() {
+        if (binding.searchInputText.text.isNullOrEmpty()) return
+        uiManagement(SEARCH_UI_STATE_PROGRESS)
+        vm.searchAction(
+            binding.searchInputText.text.toString(),
+            object : TracksConsumer {
+                override fun consume(findTracks: List<Track>, response: Int) {
+//                    mainThreadHandler.post {
+//                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                    if (findTracks.isEmpty()) {
+                        if (response == 400) {
+                            vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
+//                                searchJob?.cancel()
                         }
+                        vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
+                    } else {
+                        adapter.setData(findTracks)
+                        vm.setUIState(SEARCH_UI_STATE_FILLED)
+//                        }
                     }
-                })
-        }
+                }
+            })
     }
+
+
+//    private val searchAction: Runnable by lazy {
+//        Runnable {
+//            if (binding.searchInputText.text.isNullOrEmpty()) return@Runnable
+//            uiManagement(SEARCH_UI_STATE_PROGRESS)
+//            vm.searchAction(
+//                binding.searchInputText.text.toString(),
+//                object : TracksConsumer {
+//                    override fun consume(findTracks: List<Track>, response: Int) {
+//                        mainThreadHandler.post {
+//                            if (findTracks.isEmpty()) {
+//                                if (response == 400) {
+//                                    vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
+//                                    return@post
+//                                }
+//                                vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
+//                            } else {
+//                                adapter.setData(findTracks)
+//                                vm.setUIState(SEARCH_UI_STATE_FILLED)
+//                            }
+//                        }
+//                    }
+//                })
+//        }
+//    }
 
     private fun clearButtonManagement(isEmpty: Boolean) {
         clearHistoryButton.isVisible = !isEmpty
