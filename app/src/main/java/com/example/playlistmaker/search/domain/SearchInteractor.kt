@@ -1,26 +1,18 @@
 package com.example.playlistmaker.search.domain
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.search.data.dto.TrackListAndResponse
 import com.example.playlistmaker.search.domain.models.Track
-import java.util.concurrent.Executors
+import kotlinx.coroutines.flow.Flow
 
 class SearchInteractor(
     private val repository: SearchRepositoryInterface
 ) : SearchInteractorInterface {
 
-    private val executor = Executors.newCachedThreadPool()
-
-    override fun searchAction(
-        expression: String,
-        consumer: TracksConsumer
-    ) {
-        executor.execute {
-            val fromRep = repository.searchAction(expression)
-            consumer.consume(
-                findTracks = fromRep.trackList,
-                response = fromRep.responseCode
-            )
-        }
+    override suspend fun searchAction(
+        expression: String
+    ): Flow<TrackListAndResponse> {
+        return repository.searchAction(expression)
     }
 
     override fun getPrefs(): SharedPreferences {

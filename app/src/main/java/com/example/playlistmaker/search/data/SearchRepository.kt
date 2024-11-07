@@ -13,6 +13,8 @@ import com.example.playlistmaker.search.domain.SearchRepositoryInterface
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class SearchRepository(
     private val networkClient: NetworkClient,
@@ -20,13 +22,12 @@ class SearchRepository(
 ) : SearchRepositoryInterface {
     private var historyList: MutableList<Track> = mutableListOf()
 
-    override fun searchAction(expression: String): TrackListAndResponse {
+    override suspend fun searchAction(expression: String): Flow<TrackListAndResponse> = flow {
         val response = networkClient.doRequestApi(TracksSearchRequest(expression))
-        var trackList: List<Track> = emptyList()
 
         if (response.resultCode == 200) {
-            (response as TracksResponse).results.map {
-                trackList = response.results.map {
+            with(response as TracksResponse) {
+                val trackList = results.map {
                     Track(
                         it.trackId,
                         it.previewUrl,
@@ -40,10 +41,10 @@ class SearchRepository(
                         it.releaseDate
                     )
                 }
+                emit(TrackListAndResponse(trackList, response.resultCode))
             }
-            return TrackListAndResponse(trackList, response.resultCode)
         } else {
-            return TrackListAndResponse(emptyList(), response.resultCode)
+            emit(TrackListAndResponse(emptyList(), response.resultCode))
         }
     }
 

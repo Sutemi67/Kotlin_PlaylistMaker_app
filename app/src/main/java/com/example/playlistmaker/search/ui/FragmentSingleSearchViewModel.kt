@@ -7,9 +7,10 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
+import com.example.playlistmaker.search.data.dto.TrackListAndResponse
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
-import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
 
 class FragmentSingleSearchViewModel(
     private val interactor: SearchInteractorInterface,
@@ -34,8 +35,8 @@ class FragmentSingleSearchViewModel(
         interactor.addTrackInHistory(track)
     }
 
-    fun searchAction(expression: String, consumer: TracksConsumer) {
-        interactor.searchAction(expression, consumer)
+    suspend fun searchAction(expression: String): Flow<TrackListAndResponse> {
+        return interactor.searchAction(expression)
     }
 
     fun setUIState(state: Int) {

@@ -36,7 +36,6 @@ import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.FragmentSingleSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -44,9 +43,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentSingleSearch : Fragment() {
-
-//    private var param1: String? = null
-//    private var param2: String? = null
 
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
@@ -59,19 +55,9 @@ class FragmentSingleSearch : Fragment() {
 
     private val vm by viewModel<FragmentSingleSearchViewModel>()
 
-    //    private val mainThreadHandler: Handler by inject()
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
-    private var isSearchAllowed = true
     private var searchJob: Job? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,7 +92,6 @@ class FragmentSingleSearch : Fragment() {
                 0
             )
         }
-//        reloadButton.setOnClickListener { mainThreadHandler.post(searchAction) }
         reloadButton.setOnClickListener { searchAction() }
         clearHistoryButton.setOnClickListener {
             vm.clearHistory()
@@ -114,7 +99,6 @@ class FragmentSingleSearch : Fragment() {
         }
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                mainThreadHandler.post(searchAction)
                 searchAction()
             }
             false
@@ -142,7 +126,6 @@ class FragmentSingleSearch : Fragment() {
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
                 }
             }
-
             override fun afterTextChanged(s: Editable?) {}
         }
 
@@ -176,70 +159,24 @@ class FragmentSingleSearch : Fragment() {
         }
     }
 
-//    private val allowingSearchAction: Runnable by lazy {
-//        Runnable {
-//            isSearchAllowed = true
-//        }
-//    }
-//
-//    private val startSearchAction: Runnable by lazy {
-//        Runnable {
-//            if (isSearchAllowed) {
-//                isSearchAllowed = false
-//                mainThreadHandler.post(searchAction)
-//            }
-//        }
-//    }
-
     private fun searchAction() {
         if (binding.searchInputText.text.isNullOrEmpty()) return
         uiManagement(SEARCH_UI_STATE_PROGRESS)
-        vm.searchAction(
-            binding.searchInputText.text.toString(),
-            object : TracksConsumer {
-                override fun consume(findTracks: List<Track>, response: Int) {
-//                    mainThreadHandler.post {
-//                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
-                    if (findTracks.isEmpty()) {
-                        if (response == 400) {
+        lifecycleScope.launch {
+            vm.searchAction(binding.searchInputText.text.toString())
+                .collect {
+                    if (it.trackList.isEmpty()) {
+                        if (it.responseCode == 400) {
                             vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
-//                                searchJob?.cancel()
                         }
                         vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
                     } else {
-                        adapter.setData(findTracks)
+                        adapter.setData(it.trackList)
                         vm.setUIState(SEARCH_UI_STATE_FILLED)
-//                        }
                     }
                 }
-            })
+        }
     }
-
-
-//    private val searchAction: Runnable by lazy {
-//        Runnable {
-//            if (binding.searchInputText.text.isNullOrEmpty()) return@Runnable
-//            uiManagement(SEARCH_UI_STATE_PROGRESS)
-//            vm.searchAction(
-//                binding.searchInputText.text.toString(),
-//                object : TracksConsumer {
-//                    override fun consume(findTracks: List<Track>, response: Int) {
-//                        mainThreadHandler.post {
-//                            if (findTracks.isEmpty()) {
-//                                if (response == 400) {
-//                                    vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
-//                                    return@post
-//                                }
-//                                vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
-//                            } else {
-//                                adapter.setData(findTracks)
-//                                vm.setUIState(SEARCH_UI_STATE_FILLED)
-//                            }
-//                        }
-//                    }
-//                })
-//        }
-//    }
 
     private fun clearButtonManagement(isEmpty: Boolean) {
         clearHistoryButton.isVisible = !isEmpty
@@ -280,20 +217,5 @@ class FragmentSingleSearch : Fragment() {
                 binding.historyLayout.isVisible = false
             }
         }
-    }
-
-    companion object {
-
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentSingleSearch().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }
