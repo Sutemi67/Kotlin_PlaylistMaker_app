@@ -62,8 +62,7 @@ class SearchRepository(
 
     override fun addTrackInHistory(track: Track) {
         historyList = getHistory().toMutableList()
-        if (historyList.contains(track)) {
-            historyList.remove(track)
+        if (historyList.remove(track)) {
             historyList.add(0, track)
             Log.e("saving", "track replaced")
         } else {
