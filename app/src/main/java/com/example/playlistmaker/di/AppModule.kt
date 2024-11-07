@@ -8,7 +8,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel<PlayerViewModel> { PlayerViewModel(get(), get()) }
+    viewModel<PlayerViewModel> { PlayerViewModel(get()) }
     viewModel<FragmentSettingsViewModel> { FragmentSettingsViewModel(get()) }
     viewModel<FragmentSingleSearchViewModel> { FragmentSingleSearchViewModel(get()) }
     viewModel<SingleActivityViewModel> { SingleActivityViewModel(get()) }
