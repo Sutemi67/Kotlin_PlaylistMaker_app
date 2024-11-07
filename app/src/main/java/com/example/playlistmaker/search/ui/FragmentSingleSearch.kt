@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -125,12 +124,12 @@ class FragmentSingleSearch : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
+                    adapter.setData(vm.getHistory())
                     clearButton.isVisible = false
                     searchJob?.cancel()
                 } else {
                     clearButton.isVisible = true
                     searchJob?.cancel()
-                    Log.e("searchTAG", "$searchJob")
                     if (searchJob == null || searchJob!!.isCancelled || searchJob!!.isCompleted) {
                         searchJob = lifecycleScope.launch {
                             delay(SEARCH_REFRESH_RATE)
