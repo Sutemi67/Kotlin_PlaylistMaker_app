@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,10 +8,8 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
-import com.example.playlistmaker.search.data.dto.TrackListAndResponse
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.flow.Flow
 
 class FragmentSingleSearchViewModel(
     private val interactor: SearchInteractorInterface,
@@ -35,11 +34,29 @@ class FragmentSingleSearchViewModel(
         interactor.addTrackInHistory(track)
     }
 
-    suspend fun searchAction(expression: String): Flow<TrackListAndResponse> {
-        return interactor.searchAction(expression)
+    suspend fun searchAction(expression: String): List<Track> {
+        var tl: List<Track> = emptyList()
+        interactor
+            .searchAction(expression)
+            .collect {
+                if (it.trackList.isEmpty()) {
+                    if (it.responseCode == 400) {
+                        Log.e("ee", "400, no connection")
+                        setUIState(SEARCH_UI_STATE_NOCONNECTION)
+                        return@collect
+                    }
+                    Log.e("ee", "${it.responseCode}, nothing found")
+                    setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
+                } else {
+                    tl = it.trackList
+                    setUIState(SEARCH_UI_STATE_FILLED)
+                    Log.e("ee", "${it.responseCode}, full list: $tl")
+                }
+            }
+        return tl
     }
 
-    fun setUIState(state: Int) {
+    private fun setUIState(state: Int) {
         when (state) {
             SEARCH_UI_STATE_FILLED -> _uiState.postValue(SEARCH_UI_STATE_FILLED)
             SEARCH_UI_STATE_NOTHINGFOUND -> _uiState.postValue(SEARCH_UI_STATE_NOTHINGFOUND)

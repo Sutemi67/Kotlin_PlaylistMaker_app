@@ -126,6 +126,7 @@ class FragmentSingleSearch : Fragment() {
                         binding.searchInputText.hasFocus() && s?.isEmpty() == true
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {}
         }
 
@@ -160,21 +161,11 @@ class FragmentSingleSearch : Fragment() {
     }
 
     private fun searchAction() {
-        if (binding.searchInputText.text.isNullOrEmpty()) return
+        val input = binding.searchInputText.text
+        if (input.isNullOrEmpty()) return
         uiManagement(SEARCH_UI_STATE_PROGRESS)
         lifecycleScope.launch {
-            vm.searchAction(binding.searchInputText.text.toString())
-                .collect {
-                    if (it.trackList.isEmpty()) {
-                        if (it.responseCode == 400) {
-                            vm.setUIState(SEARCH_UI_STATE_NOCONNECTION)
-                        }
-                        vm.setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
-                    } else {
-                        adapter.setData(it.trackList)
-                        vm.setUIState(SEARCH_UI_STATE_FILLED)
-                    }
-                }
+            adapter.setData(vm.searchAction(input.toString()))
         }
     }
 
