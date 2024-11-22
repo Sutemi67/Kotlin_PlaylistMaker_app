@@ -1,14 +1,13 @@
 package com.example.playlistmaker.search.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
-import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
-import com.example.playlistmaker.search.domain.TracksConsumer
 import com.example.playlistmaker.search.domain.models.Track
 
 class FragmentSingleSearchViewModel(
@@ -34,16 +33,28 @@ class FragmentSingleSearchViewModel(
         interactor.addTrackInHistory(track)
     }
 
-    fun searchAction(expression: String, consumer: TracksConsumer) {
-        interactor.searchAction(expression, consumer)
+    suspend fun searchAction(expression: String): List<Track> {
+        var tl: List<Track> = emptyList()
+        interactor
+            .searchAction(expression)
+            .collect {
+                if (it.trackList.isEmpty()) {
+                    if (it.responseCode == 400) {
+                        Log.e("ee", "400, no connection")
+                        setUIState(SEARCH_UI_STATE_NOCONNECTION)
+                        return@collect
+                    }
+                    Log.e("ee", "${it.responseCode}, nothing found")
+                    setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
+                } else {
+                    tl = it.trackList
+                    setUIState(SEARCH_UI_STATE_FILLED)
+                    Log.e("ee", "${it.responseCode}, full list: $tl")
+                }
+            }
+        return tl
     }
 
-    fun setUIState(state: Int) {
-        when (state) {
-            SEARCH_UI_STATE_FILLED -> _uiState.postValue(SEARCH_UI_STATE_FILLED)
-            SEARCH_UI_STATE_NOTHINGFOUND -> _uiState.postValue(SEARCH_UI_STATE_NOTHINGFOUND)
-            SEARCH_UI_STATE_NOCONNECTION -> _uiState.postValue(SEARCH_UI_STATE_NOCONNECTION)
-            SEARCH_UI_STATE_PROGRESS -> _uiState.postValue(SEARCH_UI_STATE_PROGRESS)
-        }
-    }
+    private fun setUIState(state: Int) = _uiState.postValue(state)
+
 }

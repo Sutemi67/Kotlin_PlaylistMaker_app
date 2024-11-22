@@ -1,7 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -17,10 +16,8 @@ import com.example.playlistmaker.app.ARTWORK_URL
 import com.example.playlistmaker.app.COLLECTION_NAME
 import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
-import com.example.playlistmaker.app.POST_COUNTER_CALLBACK
 import com.example.playlistmaker.app.PREVIEW_URL
 import com.example.playlistmaker.app.RELEASE_DATE
-import com.example.playlistmaker.app.REMOVE_COUNTER_CALLBACK
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
@@ -81,13 +78,12 @@ class PlayerActivity : AppCompatActivity() {
             previewUrl = previewUrl,
             context = this
         )
-        vm.getPlaybackLiveData().observe(this) { status ->
-            uiManaging(status)
+        vm.getPlaybackLiveData().observe(this) {
+            uiManaging(it)
         }
-        vm.getCounterText().observe(this) { text ->
-            currentTime.text = text
+        vm.getCounterText().observe(this) {
+            currentTime.text = it
         }
-
         playButton.setOnClickListener {
             vm.playOrPauseAction()
         }
@@ -100,15 +96,11 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        vm.postOrRemoveCounter(REMOVE_COUNTER_CALLBACK)
         vm.reset()
-        Log.e("timeCounterStart", "removing callbacks on destroy and release")
     }
 
     override fun onStop() {
         super.onStop()
-        vm.postOrRemoveCounter(REMOVE_COUNTER_CALLBACK)
-        Log.e("timeCounterStart", "removing callbacks on stop")
         vm.reset()
     }
 
@@ -116,22 +108,16 @@ class PlayerActivity : AppCompatActivity() {
         when (status) {
             PlaybackStatus.Playing -> {
                 playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
-                vm.postOrRemoveCounter(POST_COUNTER_CALLBACK)
-                Log.e("timeCounterStart", "playing status changed - time counter go!")
             }
 
             PlaybackStatus.Paused -> {
                 playButton.setImageResource(R.drawable.audioplayer_button_play_light)
-                vm.postOrRemoveCounter(REMOVE_COUNTER_CALLBACK)
-                Log.e("timeCounterStart", "removing callbacks of time counter")
             }
 
             PlaybackStatus.Ready -> {
-                vm.postOrRemoveCounter(REMOVE_COUNTER_CALLBACK)
                 playButton.setImageResource(R.drawable.audioplayer_button_play_light)
                 currentTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
-                Log.e("timeCounterStart", "removing callbacks of time counter")
             }
 
             PlaybackStatus.Error -> {
