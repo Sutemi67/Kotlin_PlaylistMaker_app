@@ -1,4 +1,4 @@
-package com.example.playlistmaker.app.database
+package com.example.playlistmaker.app.database.data
 
 import androidx.room.Dao
 import androidx.room.Delete

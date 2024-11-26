@@ -1,4 +1,4 @@
-package com.example.playlistmaker.app.database
+package com.example.playlistmaker.app.database.data
 
 import android.content.Context
 import androidx.room.Database
@@ -15,7 +15,7 @@ abstract class TracksDb : RoomDatabase() {
 
         fun getInstance(context: Context): TracksDb {
             synchronized(this) {
-                if (Companion::instance.isInitialized) {
+                if (!Companion::instance.isInitialized) {
                     instance = Room.databaseBuilder(
                         context,
                         TracksDb::class.java, "get-track-database"

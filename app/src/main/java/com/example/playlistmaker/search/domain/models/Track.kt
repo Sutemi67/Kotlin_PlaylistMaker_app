@@ -22,4 +22,5 @@ data class Track(
     @SerializedName(COLLECTION_NAME) val collectionName: String,
     @SerializedName(GENRE) val primaryGenreName: String,
     @SerializedName(RELEASE_DATE) val releaseDate: String?,
+    val isFavourite: Boolean
 )
