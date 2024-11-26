@@ -10,7 +10,7 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
 
-class FragmentSingleSearchViewModel(
+class FragmentSearchViewModel(
     private val interactor: SearchInteractorInterface,
 ) : ViewModel() {
     private var _uiState: MutableLiveData<Int> = MutableLiveData(SEARCH_UI_STATE_FILLED)

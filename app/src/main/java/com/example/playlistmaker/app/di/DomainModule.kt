@@ -1,4 +1,4 @@
-package com.example.playlistmaker.di
+package com.example.playlistmaker.app.di
 
 import android.os.Handler
 import android.os.Looper

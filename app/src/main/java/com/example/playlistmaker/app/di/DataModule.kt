@@ -1,9 +1,10 @@
-package com.example.playlistmaker.di
+package com.example.playlistmaker.app.di
 
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
+import com.example.playlistmaker.app.database.TracksDb
 import com.example.playlistmaker.main.data.MainRepository
 import com.example.playlistmaker.main.domain.MainRepositoryInterface
 import com.example.playlistmaker.player.data.PlayerRepository
@@ -15,6 +16,8 @@ import com.example.playlistmaker.search.data.api.NetworkClientImpl
 import com.example.playlistmaker.search.domain.SearchRepositoryInterface
 import com.example.playlistmaker.settings.data.SettingsRepository
 import com.example.playlistmaker.settings.domain.SettingsRepositoryInterface
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -29,12 +32,24 @@ val dataModule = module {
     single<MainRepositoryInterface> { MainRepository(get()) }
     single<PlayerRepositoryInterface> { PlayerRepository(get()) }
 
+    single<TracksDb> {
+        TracksDb.getInstance(get())
+    }
+
+    single<OkHttpClient> {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        OkHttpClient().newBuilder().addInterceptor(interceptor).build()
+    }
+
     single<SharedPreferences> {
         androidContext().getSharedPreferences(IS_NIGHT_SP_KEY, MODE_PRIVATE)
     }
+
     single<ITunesApi> {
         Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")
+            .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ITunesApi::class.java)

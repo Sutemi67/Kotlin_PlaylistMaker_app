@@ -42,7 +42,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FragmentSingleSearch : Fragment() {
+class FragmentSearch : Fragment() {
 
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
@@ -53,7 +53,7 @@ class FragmentSingleSearch : Fragment() {
     private lateinit var clearButton: ImageView
     private lateinit var reloadButton: Button
 
-    private val vm by viewModel<FragmentSingleSearchViewModel>()
+    private val vm by viewModel<FragmentSearchViewModel>()
 
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
