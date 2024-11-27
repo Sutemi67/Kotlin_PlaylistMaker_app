@@ -1,7 +1,10 @@
 package com.example.playlistmaker.app.database.domain
 
+import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+
 class DatabaseInteractor(
-    private val dbRepository: DatabaseRepositoryInterface
+    private val databaseRepository: DatabaseRepositoryInterface
 ) : DatabaseInteractorInterface {
     override fun addTrackToFavourites() {
         TODO("Not yet implemented")
@@ -11,7 +14,7 @@ class DatabaseInteractor(
         TODO("Not yet implemented")
     }
 
-    override fun getFavouritesList() {
-        TODO("Not yet implemented")
+    override fun getFavouritesList(): Flow<List<Track>> {
+        return databaseRepository.getFavouritesList()
     }
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.room.RoomDatabase
 import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
 import com.example.playlistmaker.app.database.data.DatabaseRepository
+import com.example.playlistmaker.app.database.data.TracksConverter
 import com.example.playlistmaker.app.database.data.TracksDb
 import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
 import com.example.playlistmaker.main.data.MainRepository
@@ -29,15 +30,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 val dataModule = module {
 
     single<NetworkClient> { NetworkClientImpl(get()) }
-    single<SearchRepositoryInterface> { SearchRepository(get(), get(), get()) }
+    single<SearchRepositoryInterface> { SearchRepository(get(), get(), get(), get()) }
     single<SettingsRepositoryInterface> { SettingsRepository(get(), get()) }
     single<MainRepositoryInterface> { MainRepository(get()) }
     single<PlayerRepositoryInterface> { PlayerRepository(get()) }
-    single<DatabaseRepositoryInterface> { DatabaseRepository(get()) }
+    single<DatabaseRepositoryInterface> { DatabaseRepository(get(), get()) }
 
     single<RoomDatabase> {
         TracksDb.getInstance(get())
     }
+
+//    single {
+//        Room.databaseBuilder(androidContext(), TracksDb::class.java, "database.db")
+//            .build()
+//    }
+
+    factory { TracksConverter() }
 
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()

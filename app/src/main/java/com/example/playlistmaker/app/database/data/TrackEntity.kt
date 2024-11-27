@@ -14,7 +14,7 @@ import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 
 @Entity(tableName = "tracks")
-data class TrackDbEntity(
+data class TrackEntity(
     @PrimaryKey val trackId: Int,
     @ColumnInfo(PREVIEW_URL) val previewUrl: String?,
     @ColumnInfo(TRACK_NAME) val trackName: String,
@@ -25,4 +25,6 @@ data class TrackDbEntity(
     @ColumnInfo(COLLECTION_NAME) val collectionName: String,
     @ColumnInfo(GENRE) val primaryGenreName: String,
     @ColumnInfo(RELEASE_DATE) val releaseDate: String?,
+    val isFavourite: Boolean
+
 )

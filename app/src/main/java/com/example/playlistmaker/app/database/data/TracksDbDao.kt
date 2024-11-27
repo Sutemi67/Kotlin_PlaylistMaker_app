@@ -10,14 +10,14 @@ import androidx.room.Query
 interface TracksDbDao {
 
     @Query("SELECT*FROM tracks")
-    fun getAllTracks(): List<TrackDbEntity>
+    fun getAllTracks(): List<TrackEntity>
 
     @Query("SELECT*from tracks where trackId LIKE :trackId")
-    fun getTrackById(trackId: Int): TrackDbEntity
+    fun getTrackById(trackId: Int): TrackEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTrack(track: TrackDbEntity)
+    fun insertTrack(track: TrackEntity)
 
     @Delete
-    fun deleteTrack(track: TrackDbEntity)
+    fun deleteTrack(track: TrackEntity)
 }

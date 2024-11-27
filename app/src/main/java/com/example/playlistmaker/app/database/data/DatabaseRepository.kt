@@ -1,10 +1,13 @@
 package com.example.playlistmaker.app.database.data
 
-import androidx.room.RoomDatabase
 import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
+import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class DatabaseRepository(
-    private val database: RoomDatabase
+    private val database: TracksDb,
+    private val converter: TracksConverter
 ) : DatabaseRepositoryInterface {
     override fun addTrackToFavourites() {
 
@@ -14,7 +17,12 @@ class DatabaseRepository(
         TODO("Not yet implemented")
     }
 
-    override fun getFavouritesList() {
+    override fun getFavouritesList(): Flow<List<Track>> = flow {
+        val tracks = database.tracksDbDao().getAllTracks()
+        emit(convertTrack(tracks))
+    }
 
+    private fun convertTrack(tracks: List<TrackEntity>): List<Track> {
+        return tracks.map { track -> converter.map(track) }
     }
 }
