@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
+import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,6 +17,7 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val interactor: PlayerInteractorInterface,
+    private val databaseInteractor: DatabaseInteractorInterface
 ) : ViewModel() {
 
     private var _playbackStatus = MutableLiveData<PlaybackStatus>(PlaybackStatus.Ready)
@@ -67,4 +70,10 @@ class PlayerViewModel(
     }
 
     private fun playerGetCurrentTime(): Long = interactor.playerGetCurrentTime()
+
+    fun addToFavourites(track: Track) {
+        viewModelScope.launch {
+            databaseInteractor.addTrackToFavourites(track)
+        }
+    }
 }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 class DatabaseInteractor(
     private val databaseRepository: DatabaseRepositoryInterface
 ) : DatabaseInteractorInterface {
-    override fun addTrackToFavourites(track: Track) {
+    override suspend fun addTrackToFavourites(track: Track) {
         databaseRepository.addTrackToFavourites(track)
     }
 

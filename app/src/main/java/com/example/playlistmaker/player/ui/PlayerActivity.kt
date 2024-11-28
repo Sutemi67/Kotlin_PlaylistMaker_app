@@ -22,6 +22,7 @@ import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.data.PlaybackStatus
+import com.example.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -78,15 +79,7 @@ class PlayerActivity : AppCompatActivity() {
             previewUrl = previewUrl,
             context = this
         )
-        vm.getPlaybackLiveData().observe(this) {
-            uiManaging(it)
-        }
-        vm.getCounterText().observe(this) {
-            currentTime.text = it
-        }
-        playButton.setOnClickListener {
-            vm.playOrPauseAction()
-        }
+        setClickListenersAndObservers()
     }
 
     override fun onPause() {
@@ -123,6 +116,36 @@ class PlayerActivity : AppCompatActivity() {
             PlaybackStatus.Error -> {
                 Toast.makeText(this, "Unsuccessful loading", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun setClickListenersAndObservers() {
+
+        vm.getPlaybackLiveData().observe(this) {
+            uiManaging(it)
+        }
+        vm.getCounterText().observe(this) {
+            currentTime.text = it
+        }
+        playButton.setOnClickListener {
+            vm.playOrPauseAction()
+        }
+        binding.playerLike.setOnClickListener {
+            vm.addToFavourites(
+                Track(
+                    trackId = intent.getIntExtra("TRACK_ID", 0),
+                    previewUrl = intent.getStringExtra(PREVIEW_URL),
+                    trackName = intent.getStringExtra(TRACK_NAME) ?: "Unknown",
+                    artistName = intent.getStringExtra(ARTIST) ?: "Unknown",
+                    trackTime = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0),
+                    artworkUrl100 = intent.getStringExtra(ARTWORK_URL),
+                    country = intent.getStringExtra(COUNTRY) ?: "Unknown",
+                    collectionName = intent.getStringExtra(COLLECTION_NAME) ?: "Unknown",
+                    primaryGenreName = intent.getStringExtra(GENRE) ?: "Unknown",
+                    releaseDate = intent.getStringExtra(RELEASE_DATE),
+                    isFavourite = true
+                )
+            )
         }
     }
 }

@@ -4,7 +4,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 interface DatabaseInteractorInterface {
-    fun addTrackToFavourites(track: Track)
+    suspend fun addTrackToFavourites(track: Track)
     fun deleteTrackFromFavourites()
     fun getFavouritesList(): Flow<List<Track>>
 }
