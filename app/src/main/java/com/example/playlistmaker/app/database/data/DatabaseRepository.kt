@@ -9,20 +9,16 @@ class DatabaseRepository(
     private val database: TracksDb,
     private val converter: TracksConverter
 ) : DatabaseRepositoryInterface {
-    override fun addTrackToFavourites() {
-
+    override fun addTrackToFavourites(track: Track) {
+        database.tracksDbDao().insertTrack(converter.mapToTrackEntity(track))
     }
 
-    override fun deleteTrackFromFavourites() {
-        TODO("Not yet implemented")
+    override fun deleteTrackFromFavourites(track: TrackEntity) {
+        database.tracksDbDao().deleteTrack(track)
     }
 
     override fun getFavouritesList(): Flow<List<Track>> = flow {
         val tracks = database.tracksDbDao().getAllTracks()
-        emit(convertTrack(tracks))
-    }
-
-    private fun convertTrack(tracks: List<TrackEntity>): List<Track> {
-        return tracks.map { track -> converter.map(track) }
+        emit(converter.mapToListOfTracks(tracks))
     }
 }

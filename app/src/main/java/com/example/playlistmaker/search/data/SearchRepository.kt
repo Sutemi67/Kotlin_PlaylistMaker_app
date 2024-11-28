@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.example.playlistmaker.app.HISTORY_KEY
 import com.example.playlistmaker.app.database.data.TracksConverter
-import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
 import com.example.playlistmaker.search.data.api.NetworkClient
 import com.example.playlistmaker.search.data.dto.TrackListAndResponse
 import com.example.playlistmaker.search.data.dto.TracksResponse
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.flow
 class SearchRepository(
     private val networkClient: NetworkClient,
     private val context: Context,
-    private val database: DatabaseRepositoryInterface,
     private val converter: TracksConverter
 ) : SearchRepositoryInterface {
     private var historyList: MutableList<Track> = mutableListOf()
@@ -31,22 +29,22 @@ class SearchRepository(
 
         if (response.resultCode == 200) {
             with(response as TracksResponse) {
-                //TODO:add new converter
-                val trackList = results.map {
-                    Track(
-                        it.trackId,
-                        it.previewUrl,
-                        it.trackName,
-                        it.artistName,
-                        it.trackTime,
-                        it.artworkUrl100,
-                        it.country,
-                        it.collectionName,
-                        it.primaryGenreName,
-                        it.releaseDate,
-                        false
-                    )
-                }
+                val trackList = converter.mapToTracks(results)
+//                val trackList = results.map {
+//                    Track(
+//                        it.trackId,
+//                        it.previewUrl,
+//                        it.trackName,
+//                        it.artistName,
+//                        it.trackTime,
+//                        it.artworkUrl100,
+//                        it.country,
+//                        it.collectionName,
+//                        it.primaryGenreName,
+//                        it.releaseDate,
+//                        false
+//                    )
+//                }
                 emit(TrackListAndResponse(trackList, response.resultCode))
             }
         } else {

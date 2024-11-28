@@ -4,23 +4,25 @@ import com.example.playlistmaker.search.data.dto.TracksDTO
 import com.example.playlistmaker.search.domain.models.Track
 
 class TracksConverter {
-    fun map(trackFromDb: TrackEntity): Track {
-        return Track(
-            trackFromDb.trackId,
-            trackFromDb.previewUrl,
-            trackFromDb.trackName,
-            trackFromDb.artistName,
-            trackFromDb.trackTime,
-            trackFromDb.artworkUrl100,
-            trackFromDb.country,
-            trackFromDb.collectionName,
-            trackFromDb.primaryGenreName,
-            trackFromDb.releaseDate,
-            false
-        )
+    fun mapToListOfTracks(tracksFromDb: List<TrackEntity>): List<Track> {
+        return tracksFromDb.map {
+            Track(
+                it.trackId,
+                it.previewUrl,
+                it.trackName,
+                it.artistName,
+                it.trackTime,
+                it.artworkUrl100,
+                it.country,
+                it.collectionName,
+                it.primaryGenreName,
+                it.releaseDate,
+                false
+            )
+        }
     }
 
-    fun map(track: TracksDTO): TrackEntity {
+    fun mapToTrackEntity(track: Track): TrackEntity {
         return TrackEntity(
             track.trackId,
             track.previewUrl,
@@ -34,5 +36,23 @@ class TracksConverter {
             track.releaseDate,
             false
         )
+    }
+
+    fun mapToTracks(list: List<TracksDTO>): List<Track> {
+        return list.map {
+            Track(
+                it.trackId,
+                it.previewUrl,
+                it.trackName,
+                it.artistName,
+                it.trackTime,
+                it.artworkUrl100,
+                it.country,
+                it.collectionName,
+                it.primaryGenreName,
+                it.releaseDate,
+                false
+            )
+        }
     }
 }

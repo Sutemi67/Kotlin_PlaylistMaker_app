@@ -8,16 +8,31 @@
     android:orientation="vertical"
     tools:context=".media.ui.FragmentTabFavourites">
 
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="106dp"
-        android:src="@drawable/img_nothing_found_light" />
-
-    <TextView
-        style="@style/errorText"
+    <LinearLayout
+        android:id="@+id/noFavouritesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/emptyMedia" />
+        android:layout_marginTop="106dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/img_nothing_found_light" />
+
+        <TextView
+            style="@style/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/emptyMedia" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favouritesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/track_list_item_layout" />
 
 </LinearLayout>
