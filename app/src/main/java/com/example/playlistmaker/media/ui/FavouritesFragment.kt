@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -84,8 +85,17 @@ class FavouritesFragment : Fragment() {
 
     private fun setFavourites() {
         lifecycleScope.launch {
-            vm.favouriteTracks.collect { trackAdapter.setData(it) }
+            vm.favouriteTracks.collect {
+                trackAdapter.setData(it)
+
+                if (it.isEmpty()) {
+                    binding.favouritesRecycler.isVisible = false
+                    binding.noFavouritesLabel.isVisible = true
+                } else {
+                    binding.favouritesRecycler.isVisible = true
+                    binding.noFavouritesLabel.isVisible = false
+                }
+            }
         }
     }
-
 }

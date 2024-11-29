@@ -33,6 +33,7 @@
         android:id="@+id/favouritesRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="@dimen/recyclers_margin_top"
         tools:listitem="@layout/track_list_item_layout" />
 
 </LinearLayout>

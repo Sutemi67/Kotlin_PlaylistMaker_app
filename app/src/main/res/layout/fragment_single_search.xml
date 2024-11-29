@@ -151,7 +151,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingTop="16dp"
+            android:paddingTop="@dimen/recyclers_margin_top"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/track_list_item_layout"
             tools:visibility="gone" />
