@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.example.playlistmaker.app.HISTORY_KEY
 import com.example.playlistmaker.app.database.data.TracksConverter
+import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
 import com.example.playlistmaker.search.data.api.NetworkClient
 import com.example.playlistmaker.search.data.dto.TrackListAndResponse
 import com.example.playlistmaker.search.data.dto.TracksResponse
@@ -15,22 +16,32 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class SearchRepository(
     private val networkClient: NetworkClient,
     private val context: Context,
-    private val converter: TracksConverter
+    private val converter: TracksConverter,
+    private val database: DatabaseRepositoryInterface
 ) : SearchRepositoryInterface {
     private var historyList: MutableList<Track> = mutableListOf()
 
     override suspend fun searchAction(expression: String): Flow<TrackListAndResponse> = flow {
         val response = networkClient.doRequestApi(TracksSearchRequest(expression))
-
         if (response.resultCode == 200) {
             with(response as TracksResponse) {
                 val trackList = converter.mapToTracks(results)
-                emit(TrackListAndResponse(trackList, response.resultCode))
+                val favouriteTracksFlow = database.getFavouritesList()
+
+                emitAll(favouriteTracksFlow.map { favouriteTracks ->
+                    val favouriteIds = favouriteTracks.map { it.trackId }.toSet()
+                    val updatedTrackList = trackList.map { track ->
+                        track.copy(isFavourite = track.trackId in favouriteIds)
+                    }
+                    TrackListAndResponse(updatedTrackList, response.resultCode)
+                })
             }
         } else {
             emit(TrackListAndResponse(emptyList(), response.resultCode))

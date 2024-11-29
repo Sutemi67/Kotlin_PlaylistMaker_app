@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface DatabaseInteractorInterface {
     suspend fun addTrackToFavourites(track: Track)
-    fun deleteTrackFromFavourites()
+    suspend fun removeTrackFromFavourites(track: Track)
     fun getFavouritesList(): Flow<List<Track>>
 }

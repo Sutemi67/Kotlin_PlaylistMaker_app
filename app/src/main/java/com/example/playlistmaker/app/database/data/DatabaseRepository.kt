@@ -7,26 +7,28 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class DatabaseRepository(
-    private val database: TracksDb,
+    private val databaseOfTracks: DatabaseOfTracks,
     private val converter: TracksConverter
 ) : DatabaseRepositoryInterface {
-
     override suspend fun addTrackToFavourites(track: Track) {
         val trackEntity = converter.mapToTrackEntity(track)
         Log.e("DATABASE", "Inserting track with ID: ${trackEntity.trackId}")
-        database.tracksDbDao().insertTrack(trackEntity)
-    }
-
-    override fun getFavouritesList(): Flow<List<Track>> = flow {
-        val tracks = database.tracksDbDao().getAllTracks()
-        emit(converter.mapToListOfTracks(tracks))
+        databaseOfTracks.tracksDbDao().insertTrack(trackEntity)
     }
 
     override suspend fun deleteTrackFromFavourites(track: Track) {
-        database.tracksDbDao().deleteTrack(converter.mapToTrackEntity(track))
+        val trackEntity = converter.mapToTrackEntity(track)
+        databaseOfTracks.tracksDbDao().removeTrack(trackEntity)
+        Log.e("DATABASE", "Removing track with ID: ${track.trackId}")
     }
 
+    override fun getFavouritesList(): Flow<List<Track>> = flow {
+        val tracks = databaseOfTracks.tracksDbDao().getAllTracks()
+        emit(converter.mapToListOfTracks(tracks))
+    }
+
+
     override fun getTracksCount(): Int {
-        return database.tracksDbDao().getTracksCount()
+        return databaseOfTracks.tracksDbDao().getTracksCount()
     }
 }

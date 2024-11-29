@@ -8,13 +8,15 @@ import com.example.playlistmaker.app.ARTWORK_URL
 import com.example.playlistmaker.app.COLLECTION_NAME
 import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
+import com.example.playlistmaker.app.IS_FAVOURITE
+import com.example.playlistmaker.app.LATEST_TIME_ADDED
 import com.example.playlistmaker.app.PREVIEW_URL
 import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 
 @Entity(tableName = "tracks")
-data class TrackEntity(
+data class DatabaseTrackEntity(
     @PrimaryKey val trackId: Int,
     @ColumnInfo(PREVIEW_URL) val previewUrl: String?,
     @ColumnInfo(TRACK_NAME) val trackName: String,
@@ -25,6 +27,6 @@ data class TrackEntity(
     @ColumnInfo(COLLECTION_NAME) val collectionName: String,
     @ColumnInfo(GENRE) val primaryGenreName: String,
     @ColumnInfo(RELEASE_DATE) val releaseDate: String?,
-    val isFavourite: Boolean
-
+    @ColumnInfo(IS_FAVOURITE) val isFavourite: Boolean,
+    @ColumnInfo(LATEST_TIME_ADDED) val latestTimeAdded: Long
 )

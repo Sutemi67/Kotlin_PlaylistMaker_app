@@ -13,6 +13,8 @@ const val COUNTRY = "country"
 const val COLLECTION_NAME = "collectionName"
 const val GENRE = "primaryGenreName"
 const val RELEASE_DATE = "releaseDate"
+const val IS_FAVOURITE = "isFavourite"
+const val LATEST_TIME_ADDED = "latestTime"
 
 const val IS_NIGHT_SP_KEY = "is_night"
 

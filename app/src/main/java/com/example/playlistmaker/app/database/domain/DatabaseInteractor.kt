@@ -10,8 +10,8 @@ class DatabaseInteractor(
         databaseRepository.addTrackToFavourites(track)
     }
 
-    override fun deleteTrackFromFavourites() {
-        TODO("Not yet implemented")
+    override suspend fun removeTrackFromFavourites(track: Track) {
+        databaseRepository.deleteTrackFromFavourites(track)
     }
 
     override fun getFavouritesList(): Flow<List<Track>> {

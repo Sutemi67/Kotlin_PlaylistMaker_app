@@ -71,9 +71,13 @@ class PlayerViewModel(
 
     private fun playerGetCurrentTime(): Long = interactor.playerGetCurrentTime()
 
-    fun addToFavourites(track: Track) {
+    fun toggleFavourite(track: Track) {
         viewModelScope.launch {
-            databaseInteractor.addTrackToFavourites(track)
+            if (track.isFavourite) {
+                databaseInteractor.removeTrackFromFavourites(track)
+            } else {
+                databaseInteractor.addTrackToFavourites(track)
+            }
         }
     }
 }

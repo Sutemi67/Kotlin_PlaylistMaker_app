@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media.ui
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,19 +20,16 @@ class FavouritesViewModel(
     private val _favouriteTracks = MutableStateFlow<List<Track>>(emptyList())
     val favouriteTracks: StateFlow<List<Track>> = _favouriteTracks
 
-    init {
+    fun refreshFavourites() {
         viewModelScope.launch {
-            interactor.getFavouritesList()
-                .collect {
-                    _favouriteTracks.value = it
-                }
-            getTracksCount()
+            interactor.getFavouritesList().collect { _favouriteTracks.value = it }
         }
     }
 
     fun getTracksCount() {
         viewModelScope.launch(Dispatchers.Default) {
             count.postValue(interactor.getTracksCount())
+            Log.d("DATABASE", "getTracksCount(): $count")
         }
     }
 }

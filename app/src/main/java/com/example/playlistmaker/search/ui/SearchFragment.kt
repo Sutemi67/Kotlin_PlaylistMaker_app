@@ -25,6 +25,7 @@ import com.example.playlistmaker.app.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.app.COLLECTION_NAME
 import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
+import com.example.playlistmaker.app.IS_FAVOURITE
 import com.example.playlistmaker.app.PREVIEW_URL
 import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.SEARCH_REFRESH_RATE
@@ -156,6 +157,7 @@ class SearchFragment : Fragment() {
                     intent.putExtra(RELEASE_DATE, track.releaseDate)
                     intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
                     intent.putExtra(PREVIEW_URL, track.previewUrl)
+                    intent.putExtra(IS_FAVOURITE, track.isFavourite)
                     startActivity(intent)
                 }
             }

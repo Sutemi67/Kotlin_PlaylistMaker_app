@@ -16,6 +16,8 @@ import com.example.playlistmaker.app.ARTWORK_URL
 import com.example.playlistmaker.app.COLLECTION_NAME
 import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
+import com.example.playlistmaker.app.IS_FAVOURITE
+import com.example.playlistmaker.app.LATEST_TIME_ADDED
 import com.example.playlistmaker.app.PREVIEW_URL
 import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.TRACK_ID
@@ -34,8 +36,8 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var binding: ActivityPlayerBinding
-
     private val vm by viewModel<PlayerViewModel>()
+    private lateinit var currentTrack: Track
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,26 +50,39 @@ class PlayerActivity : AppCompatActivity() {
             insets
         }
         binding.playerToolbar.setNavigationOnClickListener { finish() }
+        currentTrack = Track(
+            trackId = intent.getIntExtra(TRACK_ID, 0),
+            previewUrl = intent.getStringExtra(PREVIEW_URL) ?: "",
+            trackName = intent.getStringExtra(TRACK_NAME) ?: "",
+            artistName = intent.getStringExtra(ARTIST) ?: "",
+            trackTime = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0),
+            artworkUrl100 = intent.getStringExtra(ARTWORK_URL),
+            country = intent.getStringExtra(COUNTRY) ?: "",
+            collectionName = intent.getStringExtra(COLLECTION_NAME) ?: "",
+            primaryGenreName = intent.getStringExtra(GENRE) ?: "",
+            releaseDate = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-",
+            isFavourite = intent.getBooleanExtra(IS_FAVOURITE, false),
+            latestTimeAdded = intent.getLongExtra(LATEST_TIME_ADDED, 0)
+        )
 
         playButton = binding.playerPlayButton
         currentTime = binding.currentTime
 
-        binding.ArtistName.text = intent.getStringExtra(ARTIST)
-        binding.TrackName.text = intent.getStringExtra(TRACK_NAME)
-        binding.collectionName.text = intent.getStringExtra(COLLECTION_NAME)
-        binding.playerCountry.text = intent.getStringExtra(COUNTRY)
-        binding.playerPrimaryGenre.text = intent.getStringExtra(GENRE)
-        binding.releaseDate.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
-        previewUrl = intent.getStringExtra(PREVIEW_URL).toString()
-        val getDuration = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0)
-        val trackId = intent.getStringExtra(TRACK_ID)
+        binding.ArtistName.text = currentTrack.artistName
+        binding.TrackName.text = currentTrack.trackName
+        binding.collectionName.text = currentTrack.collectionName
+        binding.playerCountry.text = currentTrack.country
+        binding.playerPrimaryGenre.text = currentTrack.primaryGenreName
+        binding.releaseDate.text = currentTrack.releaseDate
+        previewUrl = currentTrack.previewUrl.toString()
+        val getDuration = currentTrack.trackTime
 
         currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
         binding.playerDuration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
 
         fun coverResolutionAmplifier(): String? {
-            return intent.getStringExtra(ARTWORK_URL)?.replaceAfterLast('/', "512x512bb.jpg")
+            return currentTrack.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
         }
 
         Glide.with(this@PlayerActivity)
@@ -133,21 +148,7 @@ class PlayerActivity : AppCompatActivity() {
             vm.playOrPauseAction()
         }
         binding.playerLike.setOnClickListener {
-            vm.addToFavourites(
-                Track(
-                    trackId = intent.getIntExtra(TRACK_ID, 0),
-                    previewUrl = intent.getStringExtra(PREVIEW_URL),
-                    trackName = intent.getStringExtra(TRACK_NAME) ?: "Unknown",
-                    artistName = intent.getStringExtra(ARTIST) ?: "Unknown",
-                    trackTime = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0),
-                    artworkUrl100 = intent.getStringExtra(ARTWORK_URL),
-                    country = intent.getStringExtra(COUNTRY) ?: "Unknown",
-                    collectionName = intent.getStringExtra(COLLECTION_NAME) ?: "Unknown",
-                    primaryGenreName = intent.getStringExtra(GENRE) ?: "Unknown",
-                    releaseDate = intent.getStringExtra(RELEASE_DATE),
-                    isFavourite = true
-                )
-            )
+            vm.toggleFavourite(currentTrack)
         }
     }
 }

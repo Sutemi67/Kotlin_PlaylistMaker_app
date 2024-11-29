@@ -11,7 +11,7 @@ import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.google.gson.annotations.SerializedName
 
-data class TracksDTO (
+data class TracksDTO(
     val trackId: Int,
     @SerializedName(PREVIEW_URL) val previewUrl: String,
     @SerializedName(TRACK_NAME) val trackName: String,
@@ -22,4 +22,6 @@ data class TracksDTO (
     @SerializedName(COLLECTION_NAME) val collectionName: String,
     @SerializedName(GENRE) val primaryGenreName: String,
     @SerializedName(RELEASE_DATE) val releaseDate: String,
-    )
+    val isFavourite: Boolean,
+    val latestTimeAdded: Long
+)
