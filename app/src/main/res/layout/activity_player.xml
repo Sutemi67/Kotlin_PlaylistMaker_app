@@ -38,7 +38,6 @@
 
         <ImageView
             android:id="@+id/player_add_playlist_button"
-            style="@style/sidebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/player_add_to_favourites"
@@ -51,11 +50,10 @@
 
         <ImageView
             android:id="@+id/player_like"
-            style="@style/sidebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/player_like"
-            android:src="@drawable/like_button"
+            android:src="@drawable/like_button_active"
             app:layout_constraintBottom_toBottomOf="@+id/player_play_button"
             app:layout_constraintEnd_toStartOf="@+id/from_right_24dp"
             app:layout_constraintStart_toEndOf="@+id/player_play_button"

@@ -72,16 +72,17 @@ class FavouritesFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
         vm.count.observe(viewLifecycleOwner) { count = it.toString() }
-        setFavouritesList()
+        setFavourites()
         Log.d("DATABASE", "Количество треков в базе: $count")
     }
 
     override fun onResume() {
         super.onResume()
         vm.refreshFavourites()
+        setFavourites()
     }
 
-    private fun setFavouritesList() {
+    private fun setFavourites() {
         lifecycleScope.launch {
             vm.favouriteTracks.collect { trackAdapter.setData(it) }
         }

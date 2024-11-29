@@ -64,7 +64,6 @@ class PlayerActivity : AppCompatActivity() {
             isFavourite = intent.getBooleanExtra(IS_FAVOURITE, false),
             latestTimeAdded = intent.getLongExtra(LATEST_TIME_ADDED, 0)
         )
-
         playButton = binding.playerPlayButton
         currentTime = binding.currentTime
 
@@ -97,6 +96,7 @@ class PlayerActivity : AppCompatActivity() {
             context = this
         )
         setClickListenersAndObservers()
+        vm.setFavouriteState(currentTrack)
     }
 
     override fun onPause() {
@@ -144,11 +144,19 @@ class PlayerActivity : AppCompatActivity() {
         vm.getCounterText().observe(this) {
             currentTime.text = it
         }
+        vm.getLikeState().observe(this) {
+            if (it) {
+                binding.playerLike.setImageResource(R.drawable.like_button_active)
+            } else {
+                binding.playerLike.setImageResource(R.drawable.like_button)
+            }
+        }
         playButton.setOnClickListener {
             vm.playOrPauseAction()
         }
         binding.playerLike.setOnClickListener {
             vm.toggleFavourite(currentTrack)
+            currentTrack.isFavourite = !currentTrack.isFavourite
         }
     }
 }

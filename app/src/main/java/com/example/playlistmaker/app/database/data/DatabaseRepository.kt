@@ -27,7 +27,6 @@ class DatabaseRepository(
         emit(converter.mapToListOfTracks(tracks))
     }
 
-
     override fun getTracksCount(): Int {
         return databaseOfTracks.tracksDbDao().getTracksCount()
     }

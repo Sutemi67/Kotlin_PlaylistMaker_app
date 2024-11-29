@@ -37,7 +37,7 @@ class TracksConverter {
             track.collectionName,
             track.primaryGenreName,
             track.releaseDate,
-            track.isFavourite,
+            true,
             timeAdded
         )
     }

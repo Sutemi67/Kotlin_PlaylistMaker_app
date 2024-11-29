@@ -24,6 +24,8 @@ class PlayerViewModel(
     fun getPlaybackLiveData(): LiveData<PlaybackStatus> = _playbackStatus
     private var _counterData = MutableLiveData("")
     fun getCounterText(): LiveData<String> = _counterData
+    private var _likeState = MutableLiveData(false)
+    fun getLikeState(): LiveData<Boolean> = _likeState
 
     private var timerJob: Job? = null
 
@@ -61,23 +63,22 @@ class PlayerViewModel(
         }
     }
 
-    fun pausing() {
-        interactor.pause()
-    }
-
-    fun reset() {
-        interactor.reset()
-    }
-
+    fun pausing() = interactor.pause()
+    fun reset() = interactor.reset()
     private fun playerGetCurrentTime(): Long = interactor.playerGetCurrentTime()
+
+    fun setFavouriteState(track: Track) = if (track.isFavourite) _likeState.value = true else false
 
     fun toggleFavourite(track: Track) {
         viewModelScope.launch {
             if (track.isFavourite) {
                 databaseInteractor.removeTrackFromFavourites(track)
+                _likeState.value = false
             } else {
                 databaseInteractor.addTrackToFavourites(track)
+                _likeState.value = true
             }
         }
+
     }
 }

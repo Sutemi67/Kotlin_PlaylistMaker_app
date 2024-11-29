@@ -6,5 +6,6 @@
     <color name="YP_light_gray">#E6E8EB</color>
     <color name="YP_light_gray_text">#AEAFB4</color>
     <color name="Transparent">#00FFFFFF</color>
-
+    <color name="like_fill_color">#F56B6C</color>
+    <color name="like_bg_color">#1A1B22</color>
 </resources>
