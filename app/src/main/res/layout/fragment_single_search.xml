@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".search.ui.FragmentSearch">
+    tools:context=".search.ui.SearchFragment">
 
     <Toolbar
         android:id="@+id/backIcon_search_screen2"

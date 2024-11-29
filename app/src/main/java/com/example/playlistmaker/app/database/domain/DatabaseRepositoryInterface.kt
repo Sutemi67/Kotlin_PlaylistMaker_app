@@ -7,4 +7,5 @@ interface DatabaseRepositoryInterface {
     suspend fun addTrackToFavourites(track: Track)
     suspend fun deleteTrackFromFavourites(track: Track)
     fun getFavouritesList(): Flow<List<Track>>
+    fun getTracksCount(): Int
 }

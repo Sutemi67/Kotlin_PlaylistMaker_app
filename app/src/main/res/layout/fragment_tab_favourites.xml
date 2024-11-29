@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".media.ui.FragmentTabFavourites">
+    tools:context=".media.ui.FavouritesFragment">
 
     <LinearLayout
         android:id="@+id/noFavouritesLabel"

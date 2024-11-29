@@ -32,6 +32,7 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
+import com.example.playlistmaker.app.TRACK_ID
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.FragmentSingleSearchBinding
@@ -42,7 +43,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FragmentSearch : Fragment() {
+class SearchFragment : Fragment() {
 
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
@@ -53,7 +54,7 @@ class FragmentSearch : Fragment() {
     private lateinit var clearButton: ImageView
     private lateinit var reloadButton: Button
 
-    private val vm by viewModel<FragmentSearchViewModel>()
+    private val vm by viewModel<SearchViewModel>()
 
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
@@ -145,6 +146,7 @@ class FragmentSearch : Fragment() {
                         isClickAllowed = true
                     }
                     val intent = Intent(requireContext(), PlayerActivity::class.java)
+                    intent.putExtra(TRACK_ID, track.trackId)
                     intent.putExtra(TRACK_NAME, track.trackName)
                     intent.putExtra(ARTIST, track.artistName)
                     intent.putExtra(ARTWORK_URL, track.artworkUrl100)

@@ -20,4 +20,7 @@ interface TracksDbDao {
 
     @Delete
     suspend fun deleteTrack(track: TrackEntity)
+
+    @Query("SELECT COUNT(*) FROM tracks")
+    fun getTracksCount(): Int
 }

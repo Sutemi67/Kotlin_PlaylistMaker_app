@@ -18,6 +18,7 @@ import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
 import com.example.playlistmaker.app.PREVIEW_URL
 import com.example.playlistmaker.app.RELEASE_DATE
+import com.example.playlistmaker.app.TRACK_ID
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
@@ -59,6 +60,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.releaseDate.text = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-"
         previewUrl = intent.getStringExtra(PREVIEW_URL).toString()
         val getDuration = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0)
+        val trackId = intent.getStringExtra(TRACK_ID)
 
         currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
         binding.playerDuration.text =
@@ -133,7 +135,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerLike.setOnClickListener {
             vm.addToFavourites(
                 Track(
-                    trackId = intent.getIntExtra("TRACK_ID", 0),
+                    trackId = intent.getIntExtra(TRACK_ID, 0),
                     previewUrl = intent.getStringExtra(PREVIEW_URL),
                     trackName = intent.getStringExtra(TRACK_NAME) ?: "Unknown",
                     artistName = intent.getStringExtra(ARTIST) ?: "Unknown",

@@ -6,6 +6,8 @@ import com.example.playlistmaker.app.database.domain.DatabaseInteractor
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.main.domain.MainInteractor
 import com.example.playlistmaker.main.domain.MainInteractorInterface
+import com.example.playlistmaker.media.domain.MediaInteractor
+import com.example.playlistmaker.media.domain.MediaInteractorInterface
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
 import com.example.playlistmaker.search.domain.SearchInteractor
@@ -21,4 +23,5 @@ val domainModule = module {
     single<PlayerInteractorInterface> { PlayerInteractor(get()) }
     single<DatabaseInteractorInterface> { DatabaseInteractor(get()) }
     single<Handler> { Handler(Looper.getMainLooper()) }
+    single<MediaInteractorInterface> { MediaInteractor(get()) }
 }

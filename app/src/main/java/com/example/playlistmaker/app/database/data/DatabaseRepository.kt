@@ -12,16 +12,21 @@ class DatabaseRepository(
 ) : DatabaseRepositoryInterface {
 
     override suspend fun addTrackToFavourites(track: Track) {
-        database.tracksDbDao().insertTrack(converter.mapToTrackEntity(track))
-        Log.e("DATABASE", "track added to database")
+        val trackEntity = converter.mapToTrackEntity(track)
+        Log.e("DATABASE", "Inserting track with ID: ${trackEntity.trackId}")
+        database.tracksDbDao().insertTrack(trackEntity)
+    }
+
+    override fun getFavouritesList(): Flow<List<Track>> = flow {
+        val tracks = database.tracksDbDao().getAllTracks()
+        emit(converter.mapToListOfTracks(tracks))
     }
 
     override suspend fun deleteTrackFromFavourites(track: Track) {
         database.tracksDbDao().deleteTrack(converter.mapToTrackEntity(track))
     }
 
-    override fun getFavouritesList(): Flow<List<Track>> = flow {
-        val tracks = database.tracksDbDao().getAllTracks()
-        emit(converter.mapToListOfTracks(tracks))
+    override fun getTracksCount(): Int {
+        return database.tracksDbDao().getTracksCount()
     }
 }

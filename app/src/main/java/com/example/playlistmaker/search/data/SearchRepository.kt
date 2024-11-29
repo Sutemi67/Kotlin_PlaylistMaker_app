@@ -30,21 +30,6 @@ class SearchRepository(
         if (response.resultCode == 200) {
             with(response as TracksResponse) {
                 val trackList = converter.mapToTracks(results)
-//                val trackList = results.map {
-//                    Track(
-//                        it.trackId,
-//                        it.previewUrl,
-//                        it.trackName,
-//                        it.artistName,
-//                        it.trackTime,
-//                        it.artworkUrl100,
-//                        it.country,
-//                        it.collectionName,
-//                        it.primaryGenreName,
-//                        it.releaseDate,
-//                        false
-//                    )
-//                }
                 emit(TrackListAndResponse(trackList, response.resultCode))
             }
         } else {

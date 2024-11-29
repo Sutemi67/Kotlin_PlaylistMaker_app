@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/fragmentSingleSearch"
-        android:name="com.example.playlistmaker.search.ui.FragmentSearch"
+        android:name="com.example.playlistmaker.search.ui.SearchFragment"
         android:label="fragment_single_main"
         tools:layout="@layout/fragment_single_search" />
     <fragment
         android:id="@+id/fragmentSingleMedia"
-        android:name="com.example.playlistmaker.media.ui.FragmentSingleMedia"
+        android:name="com.example.playlistmaker.media.ui.MediaFragment"
         android:label="fragment_single_media"
         tools:layout="@layout/fragment_single_media" />
     <fragment
