@@ -1,6 +1,5 @@
 package com.example.playlistmaker.media.ui
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,7 +28,6 @@ class FavouritesViewModel(
     fun getTracksCount() {
         viewModelScope.launch(Dispatchers.Default) {
             count.postValue(interactor.getTracksCount())
-            Log.d("DATABASE", "getTracksCount(): $count")
         }
     }
 }

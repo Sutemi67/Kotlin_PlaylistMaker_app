@@ -164,6 +164,12 @@ class SearchFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        adapter.setData(vm.getHistory())
+        searchAction()
+    }
+
     private fun searchAction() {
         val input = binding.searchInputText.text
         if (input.isNullOrEmpty()) return
@@ -214,3 +220,4 @@ class SearchFragment : Fragment() {
         }
     }
 }
+

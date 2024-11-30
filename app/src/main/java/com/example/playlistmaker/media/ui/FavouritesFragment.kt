@@ -79,11 +79,11 @@ class FavouritesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        vm.refreshFavourites()
         setFavourites()
     }
 
     private fun setFavourites() {
+        vm.refreshFavourites()
         lifecycleScope.launch {
             vm.favouriteTracks.collect {
                 trackAdapter.setData(it)

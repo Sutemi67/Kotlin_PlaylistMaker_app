@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
+import com.example.playlistmaker.search.domain.SearchRepositoryInterface
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,7 +17,7 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val interactor: PlayerInteractorInterface,
-    private val databaseInteractor: DatabaseInteractorInterface
+    private val searchRepository: SearchRepositoryInterface
 ) : ViewModel() {
 
     private var _playbackStatus = MutableLiveData<PlaybackStatus>(PlaybackStatus.Ready)
@@ -71,14 +71,11 @@ class PlayerViewModel(
 
     fun toggleFavourite(track: Track) {
         viewModelScope.launch {
-            if (track.isFavourite) {
-                databaseInteractor.removeTrackFromFavourites(track)
-                _likeState.value = false
-            } else {
-                databaseInteractor.addTrackToFavourites(track)
-                _likeState.value = true
-            }
+            _likeState.value = !track.isFavourite
+            searchRepository.updateTrackFavouriteStatus(track, !track.isFavourite)
         }
-
+        searchRepository.addTrackInHistory(
+            track.copy(isFavourite = !track.isFavourite)
+        )
     }
 }

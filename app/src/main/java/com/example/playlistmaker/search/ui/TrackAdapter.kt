@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -21,9 +22,17 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(asyncListDiffer.currentList[position])
-        holder.itemView.setOnClickListener {
-            openPlayerActivity?.openPlayerActivity(asyncListDiffer.currentList[position])
+        val currentList = asyncListDiffer.currentList
+        if (position in currentList.indices) {
+            holder.bind(currentList[position])
+            holder.itemView.setOnClickListener {
+                openPlayerActivity?.openPlayerActivity(currentList[position])
+            }
+        } else {
+            Log.e(
+                "DATABASE",
+                "Invalid position: $position, current list size: ${asyncListDiffer.currentList.size}"
+            )
         }
     }
 
