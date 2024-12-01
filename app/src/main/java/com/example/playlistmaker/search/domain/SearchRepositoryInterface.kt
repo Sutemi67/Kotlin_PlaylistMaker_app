@@ -12,4 +12,5 @@ interface SearchRepositoryInterface {
     fun addTrackInHistory(track: Track)
     fun saveHistory()
     fun clearHistory()
+    suspend fun updateTrackFavouriteStatus(track: Track, isFavourite: Boolean)
 }

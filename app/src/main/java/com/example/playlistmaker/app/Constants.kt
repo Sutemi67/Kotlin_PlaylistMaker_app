@@ -3,6 +3,7 @@ package com.example.playlistmaker.app
 const val HISTORY_KEY = "history_key"
 const val CLICK_DEBOUNCE_DELAY = 1000L
 
+const val TRACK_ID = "trackId"
 const val PREVIEW_URL = "previewUrl"
 const val TRACK_NAME = "trackName"
 const val ARTWORK_URL = "artworkUrl100"
@@ -12,6 +13,8 @@ const val COUNTRY = "country"
 const val COLLECTION_NAME = "collectionName"
 const val GENRE = "primaryGenreName"
 const val RELEASE_DATE = "releaseDate"
+const val IS_FAVOURITE = "isFavourite"
+const val LATEST_TIME_ADDED = "latestTime"
 
 const val IS_NIGHT_SP_KEY = "is_night"
 

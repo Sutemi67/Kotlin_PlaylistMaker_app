@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentSingleMediaBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-class FragmentSingleMedia : Fragment() {
+class MediaFragment : Fragment() {
 
     private lateinit var binding: FragmentSingleMediaBinding
     private lateinit var tabMediator: TabLayoutMediator
@@ -35,14 +35,4 @@ class FragmentSingleMedia : Fragment() {
         }
         tabMediator.attach()
     }
-
-//    companion object {
-
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            FragmentSingleMedia().apply {
-//                arguments = Bundle().apply {
-//                }
-//            }
-//    }
 }

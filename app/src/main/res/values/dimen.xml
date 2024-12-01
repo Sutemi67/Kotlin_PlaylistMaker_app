@@ -17,6 +17,6 @@
     <dimen name="search_editText_height">36dp</dimen>
     <dimen name="player_text_stroke_height">32dp</dimen>
     <dimen name="player_text_stroke_width">0dp</dimen>
-
+    <dimen name="recyclers_margin_top">16dp</dimen>
 
 </resources>

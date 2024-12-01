@@ -15,9 +15,9 @@ class MediaViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return if (position == 0) {
-            FragmentTabFavourites()
+            FavouritesFragment()
         } else {
-            FragmentTabPlaylists()
+            PlaylistsFragment()
         }
     }
 }

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentSingleSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FragmentSingleSettings : Fragment() {
+class FragmentSettings : Fragment() {
     private lateinit var binding: FragmentSingleSettingsBinding
     private val vm by viewModel<FragmentSettingsViewModel>()
 
@@ -35,7 +35,7 @@ class FragmentSingleSettings : Fragment() {
 
 //        @JvmStatic
 //        fun newInstance(param1: String, param2: String) =
-//            FragmentSingleSettings().apply {
+//            FragmentSettings().apply {
 //                arguments = Bundle().apply {
 //                    putString(ARG_PARAM1, param1)
 //                    putString(ARG_PARAM2, param2)

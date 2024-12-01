@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
+import com.example.playlistmaker.search.domain.SearchRepositoryInterface
+import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,12 +17,15 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val interactor: PlayerInteractorInterface,
+    private val searchRepository: SearchRepositoryInterface
 ) : ViewModel() {
 
     private var _playbackStatus = MutableLiveData<PlaybackStatus>(PlaybackStatus.Ready)
     fun getPlaybackLiveData(): LiveData<PlaybackStatus> = _playbackStatus
     private var _counterData = MutableLiveData("")
     fun getCounterText(): LiveData<String> = _counterData
+    private var _likeState = MutableLiveData(false)
+    fun getLikeState(): LiveData<Boolean> = _likeState
 
     private var timerJob: Job? = null
 
@@ -58,13 +63,19 @@ class PlayerViewModel(
         }
     }
 
-    fun pausing() {
-        interactor.pause()
-    }
-
-    fun reset() {
-        interactor.reset()
-    }
-
+    fun pausing() = interactor.pause()
+    fun reset() = interactor.reset()
     private fun playerGetCurrentTime(): Long = interactor.playerGetCurrentTime()
+
+    fun setFavouriteState(track: Track) = if (track.isFavourite) _likeState.value = true else false
+
+    fun toggleFavourite(track: Track) {
+        viewModelScope.launch {
+            _likeState.value = !track.isFavourite
+            searchRepository.updateTrackFavouriteStatus(track, !track.isFavourite)
+        }
+        searchRepository.addTrackInHistory(
+            track.copy(isFavourite = !track.isFavourite)
+        )
+    }
 }

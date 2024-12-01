@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="like_fill_color">#F56B6C</color>
+    <color name="like_bg_color">#FFFFFF</color>
+</resources>

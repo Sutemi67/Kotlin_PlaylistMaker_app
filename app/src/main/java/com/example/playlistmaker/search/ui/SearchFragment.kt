@@ -25,6 +25,7 @@ import com.example.playlistmaker.app.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.app.COLLECTION_NAME
 import com.example.playlistmaker.app.COUNTRY
 import com.example.playlistmaker.app.GENRE
+import com.example.playlistmaker.app.IS_FAVOURITE
 import com.example.playlistmaker.app.PREVIEW_URL
 import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.SEARCH_REFRESH_RATE
@@ -32,6 +33,7 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
+import com.example.playlistmaker.app.TRACK_ID
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.FragmentSingleSearchBinding
@@ -42,7 +44,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FragmentSingleSearch : Fragment() {
+class SearchFragment : Fragment() {
 
     private lateinit var nothingImage: LinearLayout
     private lateinit var connectionProblemError: LinearLayout
@@ -53,7 +55,7 @@ class FragmentSingleSearch : Fragment() {
     private lateinit var clearButton: ImageView
     private lateinit var reloadButton: Button
 
-    private val vm by viewModel<FragmentSingleSearchViewModel>()
+    private val vm by viewModel<SearchViewModel>()
 
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
@@ -145,6 +147,7 @@ class FragmentSingleSearch : Fragment() {
                         isClickAllowed = true
                     }
                     val intent = Intent(requireContext(), PlayerActivity::class.java)
+                    intent.putExtra(TRACK_ID, track.trackId)
                     intent.putExtra(TRACK_NAME, track.trackName)
                     intent.putExtra(ARTIST, track.artistName)
                     intent.putExtra(ARTWORK_URL, track.artworkUrl100)
@@ -154,10 +157,17 @@ class FragmentSingleSearch : Fragment() {
                     intent.putExtra(RELEASE_DATE, track.releaseDate)
                     intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
                     intent.putExtra(PREVIEW_URL, track.previewUrl)
+                    intent.putExtra(IS_FAVOURITE, track.isFavourite)
                     startActivity(intent)
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.setData(vm.getHistory())
+        searchAction()
     }
 
     private fun searchAction() {
@@ -210,3 +220,4 @@ class FragmentSingleSearch : Fragment() {
         }
     }
 }
+
