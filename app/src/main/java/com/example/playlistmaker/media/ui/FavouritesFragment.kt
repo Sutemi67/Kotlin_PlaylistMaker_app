@@ -22,7 +22,7 @@ import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.TRACK_ID
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
-import com.example.playlistmaker.databinding.FragmentTabFavouritesBinding
+import com.example.playlistmaker.databinding.FragmentFavouritesBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.OpenPlayerActivity
@@ -34,7 +34,7 @@ class FavouritesFragment : Fragment() {
 
     private val vm by viewModel<FavouritesViewModel>()
     private lateinit var trackAdapter: TrackAdapter
-    private lateinit var binding: FragmentTabFavouritesBinding
+    private lateinit var binding: FragmentFavouritesBinding
     private var count = "Default count"
 
     override fun onCreateView(
@@ -42,7 +42,7 @@ class FavouritesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         vm.getTracksCount()
-        binding = FragmentTabFavouritesBinding.inflate(layoutInflater, container, false)
+        binding = FragmentFavouritesBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -68,6 +68,7 @@ class FavouritesFragment : Fragment() {
                 }
             }
         }
+
         binding.favouritesRecycler.apply {
             adapter = trackAdapter
             layoutManager = LinearLayoutManager(requireContext())

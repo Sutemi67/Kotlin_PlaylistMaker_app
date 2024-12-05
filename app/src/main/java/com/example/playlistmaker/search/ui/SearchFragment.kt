@@ -36,7 +36,7 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
 import com.example.playlistmaker.app.TRACK_ID
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
-import com.example.playlistmaker.databinding.FragmentSingleSearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
@@ -51,7 +51,7 @@ class SearchFragment : Fragment() {
     private lateinit var progressBar: FrameLayout
     private lateinit var clearHistoryButton: Button
     private lateinit var recycler: RecyclerView
-    private lateinit var binding: FragmentSingleSearchBinding
+    private lateinit var binding: FragmentSearchBinding
     private lateinit var clearButton: ImageView
     private lateinit var reloadButton: Button
 
@@ -65,7 +65,7 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSingleSearchBinding.inflate(layoutInflater, container, false)
+        binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
