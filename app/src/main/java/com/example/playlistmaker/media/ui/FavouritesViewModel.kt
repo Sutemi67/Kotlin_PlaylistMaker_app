@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.media.domain.MediaInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,9 +24,9 @@ class FavouritesViewModel(
         }
     }
 
-    fun getTracksCount() {
-        viewModelScope.launch(Dispatchers.Default) {
-            count.postValue(interactor.getTracksCount())
-        }
-    }
+//    fun getTracksCount() {
+//        viewModelScope.launch(Dispatchers.Default) {
+//            count.postValue(interactor.getTracksCount())
+//        }
+//    }
 }

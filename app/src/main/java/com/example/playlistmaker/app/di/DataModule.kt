@@ -5,9 +5,9 @@ import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.room.Room
 import com.example.playlistmaker.app.IS_NIGHT_SP_KEY
-import com.example.playlistmaker.app.database.data.DatabaseOfTracks
+import com.example.playlistmaker.app.database.data.DatabaseConverter
+import com.example.playlistmaker.app.database.data.DatabaseMain
 import com.example.playlistmaker.app.database.data.DatabaseRepository
-import com.example.playlistmaker.app.database.data.TracksConverter
 import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
 import com.example.playlistmaker.main.data.MainRepository
 import com.example.playlistmaker.main.domain.MainRepositoryInterface
@@ -37,7 +37,7 @@ val dataModule = module {
     single<DatabaseRepositoryInterface> { DatabaseRepository(get(), get()) }
 
     single {
-        Room.databaseBuilder(androidContext(), DatabaseOfTracks::class.java, "database.db")
+        Room.databaseBuilder(androidContext(), DatabaseMain::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
     }
@@ -62,6 +62,6 @@ val dataModule = module {
     }
 
     factory<MediaPlayer> { MediaPlayer() }
-    factory { TracksConverter() }
+    factory { DatabaseConverter() }
 
 }

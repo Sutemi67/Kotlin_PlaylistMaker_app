@@ -41,7 +41,7 @@ class FavouritesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        vm.getTracksCount()
+//        vm.getTracksCount()
         binding = FragmentFavouritesBinding.inflate(layoutInflater, container, false)
         return binding.root
     }

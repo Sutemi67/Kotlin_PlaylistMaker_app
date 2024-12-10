@@ -7,19 +7,19 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface TracksDbDao {
+interface DaoTracks {
 
     @Query("SELECT*FROM tracks ORDER BY latestTime DESC")
-    suspend fun getAllTracks(): List<DatabaseTrackEntity>
+    suspend fun getAllTracks(): List<DatabaseEntityTrack>
 
     @Query("SELECT*from tracks where trackId = :trackId")
-    suspend fun getTrackById(trackId: Int): DatabaseTrackEntity
+    suspend fun getTrackById(trackId: Int): DatabaseEntityTrack
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrack(track: DatabaseTrackEntity)
+    suspend fun insertTrack(track: DatabaseEntityTrack)
 
     @Delete
-    suspend fun removeTrack(track: DatabaseTrackEntity)
+    suspend fun removeTrack(track: DatabaseEntityTrack)
 
     @Query("SELECT COUNT(*) FROM tracks")
     fun getTracksCount(): Int

@@ -49,10 +49,11 @@
         app:layout_constraintTop_toBottomOf="@+id/playlist_image_place">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText"
+            android:id="@+id/playlist_name"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@drawable/shape_edit_texts" />
+            android:background="@drawable/shape_edit_texts"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -66,13 +67,15 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText2"
+            android:id="@+id/playlist_description"
             android:layout_width="match_parent"
-            android:layout_height="56dp" />
+            android:layout_height="56dp"
+            android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        android:id="@+id/create_button"
         android:layout_width="326dp"
         android:layout_height="44dp"
         android:layout_marginBottom="32dp"

@@ -1,11 +1,12 @@
 package com.example.playlistmaker.app.database.data
 
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.search.data.dto.TracksDTO
 import com.example.playlistmaker.search.domain.models.Track
 import java.util.Date
 
-class TracksConverter {
-    fun mapToListOfTracks(tracksFromDb: List<DatabaseTrackEntity>): List<Track> {
+class DatabaseConverter {
+    fun mapToListOfTracks(tracksFromDb: List<DatabaseEntityTrack>): List<Track> {
         return tracksFromDb.map {
             Track(
                 it.trackId,
@@ -24,9 +25,9 @@ class TracksConverter {
         }
     }
 
-    fun mapToTrackEntity(track: Track): DatabaseTrackEntity {
+    fun mapToTrackEntity(track: Track): DatabaseEntityTrack {
         val timeAdded = Date().time
-        return DatabaseTrackEntity(
+        return DatabaseEntityTrack(
             track.trackId,
             track.previewUrl,
             track.trackName,
@@ -59,5 +60,15 @@ class TracksConverter {
                 it.latestTimeAdded
             )
         }
+    }
+
+    fun mapToPlaylistEntity(playlist: Playlist): DatabaseEntityPlaylist {
+        return DatabaseEntityPlaylist(
+            playlistName = playlist.name,
+            playlistDescription = playlist.description,
+            playlistTracks = playlist.tracks,
+            playlistTracksCount = playlist.count,
+            imagePath = playlist.coverUrl
+        )
     }
 }

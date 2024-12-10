@@ -24,6 +24,7 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         binding.newPlaylistButton.setOnClickListener {
             findNavController()
                 .navigate(R.id.action_fragmentSingleMedia_to_newPlaylistFragment)

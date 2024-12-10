@@ -15,6 +15,11 @@ const val GENRE = "primaryGenreName"
 const val RELEASE_DATE = "releaseDate"
 const val IS_FAVOURITE = "isFavourite"
 const val LATEST_TIME_ADDED = "latestTime"
+const val PLAYLIST_NAME = "playlist_name"
+const val PLAYLIST_DESCRIPTION = "playlist_description"
+const val PLAYLIST_PIC_PATH = "playlist_pic_path"
+const val PLAYLIST_TRACKLIST = "playlist_tracklist"
+const val PLAYLIST_TRACKS_COUNT = "playlist_tracks_count"
 
 const val IS_NIGHT_SP_KEY = "is_night"
 
