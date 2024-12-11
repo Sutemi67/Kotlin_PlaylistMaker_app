@@ -19,13 +19,19 @@ class PlaylistsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(model: Playlist) {
         name.text = model.name
         count.text = model.count.toString()
+
         val uri = model.coverUrl
         if (uri != "null") {
-            cover.setImageURI(uri?.toUri())
             Log.e("DATABASE", "загрузка картинки - $uri - как строка")
+            try {
+                cover.setImageURI(uri?.toUri())
+            } catch (e: Exception) {
+                Log.d("DATABASE", "загрузка картинки не удалась и вот почему:\n${e.message}")
+            }
         } else {
             cover.setImageResource(R.drawable.img_placeholder)
             Log.e("DATABASE", "загрузка картинки - $uri - как нуль")
         }
     }
 }
+

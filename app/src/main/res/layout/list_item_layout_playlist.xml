@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/playlist_card_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@null"
-    card_view:cardElevation="5dp">
+    android:backgroundTint="@color/Transparent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/playlist_cover"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_placeholder" />
+
+    <TextView
+        android:id="@+id/album_name"
+        style="@style/playlist_name_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:text="Meteora" />
 
-        <ImageView
-            android:id="@+id/playlist_cover"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:src="@drawable/img_placeholder" />
-
-        <TextView
-            android:id="@+id/album_name"
-            style="@style/playlist_name_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:text="Meteora" />
-
-        <TextView
-            android:id="@+id/tracks_count"
-            style="@style/playlist_name_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="84 tracks" />
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/tracks_count"
+        style="@style/playlist_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="84 tracks" />
+</LinearLayout>

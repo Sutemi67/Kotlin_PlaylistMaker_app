@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
@@ -25,6 +26,8 @@ class NewPlaylistFragment(
 ) : Fragment() {
     private lateinit var binding: FragmentNewPlaylistBinding
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+
+    //    private lateinit var pickMedia: ActivityResultLauncher<Array<String>>
     private val vm by viewModel<NewPlaylistViewModel>()
     private var coverUri: Uri? = null
 
@@ -39,22 +42,28 @@ class NewPlaylistFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pickMedia =
-            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                if (uri != null) {
-                    requireContext().contentResolver.takePersistableUriPermission(
-                        uri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                    binding.playlistImagePlace.setImageURI(uri)
-                    coverUri = uri
-
-                } else {
-                    Log.d("PhotoPicker", "No media selected")
-                }
+        pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                getPermissions(uri)
+                saveImageToPrivateStorage(uri)
+                binding.playlistImagePlace.setImageURI(uri)
             }
+        }
 
         setOnClickListeners()
+    }
+
+    private fun getPermissions(uri: Uri) {
+        val takeFlags: Int =
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        try {
+            requireContext().contentResolver.takePersistableUriPermission(uri, takeFlags)
+        } catch (e: SecurityException) {
+            Log.e(
+                "DATABASE",
+                "Persistable permission not supported for this URI: $uri, ${e.message}"
+            )
+        }
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) {
@@ -69,7 +78,7 @@ class NewPlaylistFragment(
             filePath.mkdirs()
         }
         //создаём экземпляр класса File, который указывает на файл внутри каталога
-        val file = File(filePath, "first_cover.jpg")
+        val file = File(filePath, "${System.currentTimeMillis()}_cover.jpg")
         // создаём входящий поток байтов из выбранной картинки
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         // создаём исходящий поток байтов в созданный выше файл
@@ -78,6 +87,7 @@ class NewPlaylistFragment(
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        coverUri = file.toUri()
     }
 
     private fun setOnClickListeners() {
@@ -92,9 +102,6 @@ class NewPlaylistFragment(
                 image = coverUri.toString()
             ) { result ->
                 if (result) {
-                    if (coverUri != null) {
-                        saveImageToPrivateStorage(coverUri!!)
-                    }
                     findNavController().navigateUp()
                 } else {
                     Toast
