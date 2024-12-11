@@ -7,18 +7,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -54,13 +57,25 @@ class NewPlaylistFragment(
             .setTitle("Завершить создание плейлиста?")
             .setMessage("Все несохраненные данные будут потеряны")
             .setNeutralButton("Отмена") { dialog, which ->
-                // ничего не делаем
+                //
             }.setPositiveButton("Завершить") { dialog, which ->
                 findNavController().navigateUp()
             }
+
         setOnClickListeners()
+
     }
 
+    private fun showSnackBar(text: String) {
+        val snack = Snackbar.make(requireView(), text, 3000)
+        snack.view.setBackgroundResource(R.drawable.shape_toast)
+        val textView =
+            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView.textSize = 16f
+        textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+        textView.gravity = Gravity.CENTER
+        snack.show()
+    }
 
     private fun getPermissions(uri: Uri) {
         val takeFlags: Int =
@@ -76,23 +91,14 @@ class NewPlaylistFragment(
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) {
-        //создаём экземпляр класса File, который указывает на нужный каталог
-        val filePath =
-            File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "playlists_covers"
-            )
-        //создаем каталог, если он не создан
-        if (!filePath.exists()) {
-            filePath.mkdirs()
-        }
-        //создаём экземпляр класса File, который указывает на файл внутри каталога
+        val filePath = File(
+            requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "playlists_covers"
+        )
+        if (!filePath.exists()) filePath.mkdirs()
         val file = File(filePath, "${System.currentTimeMillis()}_cover.jpg")
-        // создаём входящий поток байтов из выбранной картинки
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        // создаём исходящий поток байтов в созданный выше файл
         val outputStream = FileOutputStream(file)
-        // записываем картинку с помощью BitmapFactory
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
@@ -120,11 +126,10 @@ class NewPlaylistFragment(
                 image = coverUri.toString()
             ) { result ->
                 if (result) {
+                    showSnackBar("Плейлист ${binding.playlistName.text} создан")
                     findNavController().navigateUp()
                 } else {
-                    Toast
-                        .makeText(requireContext(), "Playlist already exists", Toast.LENGTH_LONG)
-                        .show()
+                    showSnackBar("Такой плейлист уже создан!")
                 }
             }
         }

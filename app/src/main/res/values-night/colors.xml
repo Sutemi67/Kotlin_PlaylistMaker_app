@@ -2,4 +2,5 @@
 <resources>
     <color name="like_fill_color">#F56B6C</color>
     <color name="like_bg_color">#FFFFFF</color>
+    <color name="toast_bg_color">@color/YP_white</color>
 </resources>
