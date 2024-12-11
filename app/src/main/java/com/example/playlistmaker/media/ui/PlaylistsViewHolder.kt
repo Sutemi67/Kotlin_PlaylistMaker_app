@@ -1,7 +1,5 @@
 package com.example.playlistmaker.media.ui
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,22 +13,21 @@ class PlaylistsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val count: TextView = itemView.findViewById(R.id.tracks_count)
     private val cover: ImageView = itemView.findViewById(R.id.playlist_cover)
 
-    @SuppressLint("SetTextI18n")
     fun bind(model: Playlist) {
         name.text = model.name
-        count.text = model.count.toString()
+
+        count.text = when (model.count % 10) {
+            0 -> "Нет треков"
+            1 -> "${model.count} трек"
+            in 2..4 -> "${model.count} трека"
+            else -> "${model.count} треков"
+        }
 
         val uri = model.coverUrl
-        if (uri != "null") {
-            Log.e("DATABASE", "загрузка картинки - $uri - как строка")
-            try {
-                cover.setImageURI(uri?.toUri())
-            } catch (e: Exception) {
-                Log.d("DATABASE", "загрузка картинки не удалась и вот почему:\n${e.message}")
-            }
+        if (!uri.equals("null", ignoreCase = true)) {
+            cover.setImageURI(uri?.toUri())
         } else {
             cover.setImageResource(R.drawable.img_placeholder)
-            Log.e("DATABASE", "загрузка картинки - $uri - как нуль")
         }
     }
 }
