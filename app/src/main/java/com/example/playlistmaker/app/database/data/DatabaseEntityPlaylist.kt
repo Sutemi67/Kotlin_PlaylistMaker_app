@@ -18,7 +18,7 @@ data class DatabaseEntityPlaylist(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     @ColumnInfo(PLAYLIST_NAME) val playlistName: String,
     @ColumnInfo(PLAYLIST_DESCRIPTION) val playlistDescription: String?,
-    @ColumnInfo(PLAYLIST_PIC_PATH) val imagePath: String,
+    @ColumnInfo(PLAYLIST_PIC_PATH) val imagePath: String?,
     @ColumnInfo(PLAYLIST_TRACKLIST) val playlistTracks: String,
     @ColumnInfo(PLAYLIST_TRACKS_COUNT) val playlistTracksCount: Int,
 )

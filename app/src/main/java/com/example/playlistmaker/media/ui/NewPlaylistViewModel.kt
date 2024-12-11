@@ -16,6 +16,7 @@ class NewPlaylistViewModel(
     fun addPlaylist(
         name: String,
         description: String,
+        image: String?,
         onResult: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
@@ -25,7 +26,7 @@ class NewPlaylistViewModel(
                     description = description,
                     tracks = "",
                     count = 0,
-                    coverUrl = ""
+                    coverUrl = image
                 )
             )
             onResult(result)

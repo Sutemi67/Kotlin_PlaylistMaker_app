@@ -8,25 +8,38 @@
     tools:context=".media.ui.PlaylistsFragment">
 
     <Button
+        android:id="@+id/new_playlist_button"
         style="@style/reloadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:id="@+id/new_playlist_button"
         android:layout_marginBottom="46dp"
         android:text="@string/newPlaylist" />
 
-    <ImageView
+    <LinearLayout
+        android:id="@+id/no_playlists"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/button_backTo_padding"
-        android:src="@drawable/img_nothing_found_light" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <TextView
-        style="@style/errorText"
-        android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/button_backTo_padding"
+            android:src="@drawable/img_nothing_found_light" />
+
+        <TextView
+            style="@style/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/noPlaylists"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycler"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/noPlaylists"
-        android:textAlignment="center" />
-
+        tools:listitem="@layout/list_item_layout_playlist" />
 </LinearLayout>

@@ -28,10 +28,6 @@ class DatabaseRepository(
         val tracks = databaseMain.tracksDbDao().getAllTracks()
         emit(converter.mapToListOfTracks(tracks))
     }
-//
-//    override fun getTracksCount(): Int {
-//        return databaseOfTracks.tracksDbDao().getTracksCount()
-//    }
 
     override suspend fun addPlaylist(playlist: Playlist): Boolean {
         return try {
@@ -48,7 +44,8 @@ class DatabaseRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAllPlaylists() {
-        TODO("Not yet implemented")
+    override suspend fun getAllPlaylists(): Flow<List<Playlist>> = flow {
+        val playlists = databaseMain.playlistsDao().getPlaylists()
+        emit(converter.mapToPlaylist(playlists))
     }
 }

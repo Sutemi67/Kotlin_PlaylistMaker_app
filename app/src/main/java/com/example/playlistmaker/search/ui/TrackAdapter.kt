@@ -17,7 +17,7 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.track_list_item_layout, parent, false)
+            .inflate(R.layout.list_item_layout_track, parent, false)
         return TrackViewHolder(view)
     }
 

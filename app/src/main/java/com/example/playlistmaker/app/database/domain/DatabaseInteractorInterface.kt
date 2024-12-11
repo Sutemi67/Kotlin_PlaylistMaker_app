@@ -12,4 +12,5 @@ interface DatabaseInteractorInterface {
 
     //playlists
     suspend fun addPlaylist(playlist: Playlist): Boolean
+    suspend fun getAllPlaylists(): Flow<List<Playlist>>
 }

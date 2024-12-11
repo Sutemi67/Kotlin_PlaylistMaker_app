@@ -71,4 +71,16 @@ class DatabaseConverter {
             imagePath = playlist.coverUrl
         )
     }
+
+    fun mapToPlaylist(playlist: List<DatabaseEntityPlaylist>): List<Playlist> {
+        return playlist.map {
+            Playlist(
+                name = it.playlistName,
+                description = it.playlistDescription,
+                tracks = it.playlistTracks,
+                count = it.playlistTracksCount,
+                coverUrl = it.imagePath
+            )
+        }
+    }
 }

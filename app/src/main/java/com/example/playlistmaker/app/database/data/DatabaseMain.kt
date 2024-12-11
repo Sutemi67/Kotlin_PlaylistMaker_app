@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
         DatabaseEntityTrack::class,
         DatabaseEntityPlaylist::class
     ],
-    version = 6
+    version = 7
 )
 abstract class DatabaseMain : RoomDatabase() {
     abstract fun tracksDbDao(): DaoTracks
