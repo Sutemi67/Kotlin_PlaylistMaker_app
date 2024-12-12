@@ -7,12 +7,12 @@
     android:orientation="vertical"
     tools:context=".media.ui.MediaFragment">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:gravity="center_vertical"
-        android:title="@string/mediateka"
-        android:titleTextAppearance="@style/HeaderTextStyle" />
+        app:titleTextAppearance="@style/HeaderTextStyle"
+        app:title="@string/mediateka" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"

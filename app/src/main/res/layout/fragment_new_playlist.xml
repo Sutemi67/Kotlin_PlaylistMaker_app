@@ -44,6 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="Название*"
+        app:boxStrokeColor="@color/selector_edittext"
+        app:hintTextColor="@color/selector_edittext"
+        app:cursorColor="@color/YP_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlist_image_place">
@@ -52,7 +55,6 @@
             android:id="@+id/playlist_name"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@drawable/shape_edit_texts"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -62,6 +64,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="Описание"
+        app:boxStrokeColor="@color/selector_edittext"
+        app:hintTextColor="@color/selector_edittext"
+        app:cursorColor="@color/YP_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextLayout">
@@ -74,13 +79,14 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/create_button"
         android:layout_width="326dp"
         android:layout_height="44dp"
         android:layout_marginBottom="32dp"
-        android:background="@drawable/shape_edit_texts"
+        android:background="@drawable/selector_button"
         android:text="Создать"
+        android:textColor="@color/YP_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
