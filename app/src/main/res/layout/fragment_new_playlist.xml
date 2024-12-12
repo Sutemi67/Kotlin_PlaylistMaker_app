@@ -6,17 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".media.ui.NewPlaylistFragment">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:gravity="center_vertical"
-        android:navigationIcon="@drawable/ic_back_arrow"
-        android:title="@string/newPlaylist"
-        android:titleTextAppearance="@style/HeaderTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:title="@string/newPlaylist"
+        app:titleTextAppearance="@style/HeaderTextStyle" />
 
     <ImageView
         android:id="@+id/playlist_image_view"
@@ -45,8 +45,8 @@
         android:layout_margin="16dp"
         android:hint="Название*"
         app:boxStrokeColor="@color/selector_edittext"
-        app:hintTextColor="@color/selector_edittext"
         app:cursorColor="@color/YP_blue"
+        app:hintTextColor="@color/selector_edittext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlist_image_place">
@@ -65,8 +65,8 @@
         android:layout_margin="16dp"
         android:hint="Описание"
         app:boxStrokeColor="@color/selector_edittext"
-        app:hintTextColor="@color/selector_edittext"
         app:cursorColor="@color/YP_blue"
+        app:hintTextColor="@color/selector_edittext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextLayout">

@@ -6,12 +6,15 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,7 +48,7 @@ class NewPlaylistFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.createButton.isEnabled = false
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 getPermissions(uri)
@@ -62,9 +65,90 @@ class NewPlaylistFragment(
                 findNavController().navigateUp()
             }
 
+        val playlistNameTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+//
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                binding.createButton.isEnabled = !s.isNullOrEmpty()
+                setConfirmDialogCallback()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                //
+            }
+        }
+        val playlistDescriptionTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+//
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                setConfirmDialogCallback()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                //
+            }
+        }
+
+        binding.playlistName.addTextChangedListener(playlistNameTextWatcher)
+        binding.playlistDescription.addTextChangedListener(playlistDescriptionTextWatcher)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, dialogCallback)
         setOnClickListeners()
 
     }
+
+    //todo подумать над упрощением колбэка, может убрать совсем.
+    val dialogCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (binding.playlistName.text?.isEmpty() == false ||
+                binding.playlistDescription.text?.isEmpty() == false ||
+                coverUri != null
+            ) {
+                confirmDialog.show()
+            } else {
+                findNavController().navigateUp()
+            }
+        }
+    }
+
+    private fun setConfirmDialogCallback() {
+        if (binding.playlistName.text?.isEmpty() == false ||
+            binding.playlistDescription.text?.isEmpty() == false ||
+            coverUri != null
+        ) {
+            val dialogCallback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    confirmDialog.show()
+                }
+            }
+            requireActivity().onBackPressedDispatcher.addCallback(this, dialogCallback)
+        }
+    }
+
 
     private fun showSnackBar(text: String) {
         val snack = Snackbar.make(requireView(), text, 3000)
@@ -109,6 +193,8 @@ class NewPlaylistFragment(
         binding.playlistImagePlace.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
+
         binding.toolbar.setNavigationOnClickListener {
             if (binding.playlistName.text?.isEmpty() == false ||
                 binding.playlistDescription.text?.isEmpty() == false ||
@@ -129,9 +215,11 @@ class NewPlaylistFragment(
                     showSnackBar("Плейлист ${binding.playlistName.text} создан")
                     findNavController().navigateUp()
                 } else {
-                    showSnackBar("Такой плейлист уже создан!")
+                    showSnackBar("Не удалось создать плейлист.")
                 }
             }
         }
+
+
     }
 }
