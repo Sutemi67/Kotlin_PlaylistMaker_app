@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
+import com.example.playlistmaker.media.ui.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
 import com.example.playlistmaker.search.domain.SearchRepositoryInterface
@@ -17,6 +19,7 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val interactor: PlayerInteractorInterface,
+    private val databaseInteractor: DatabaseInteractorInterface,
     private val searchRepository: SearchRepositoryInterface
 ) : ViewModel() {
 
@@ -26,7 +29,8 @@ class PlayerViewModel(
     fun getCounterText(): LiveData<String> = _counterData
     private var _likeState = MutableLiveData(false)
     fun getLikeState(): LiveData<Boolean> = _likeState
-
+    private val _listState = MutableLiveData<PlaylistState>(PlaylistState.EmptyList)
+    val listState: LiveData<PlaylistState> = _listState
     private var timerJob: Job? = null
 
     fun setPlayer(
@@ -77,5 +81,21 @@ class PlayerViewModel(
         searchRepository.addTrackInHistory(
             track.copy(isFavourite = !track.isFavourite)
         )
+    }
+
+    suspend fun getPlaylists() {
+        databaseInteractor
+            .getAllPlaylists()
+            .collect {
+                if (it.isEmpty()) {
+                    _listState.value = PlaylistState.EmptyList
+                } else {
+                    _listState.value = PlaylistState.FullList(it)
+                }
+            }
+    }
+
+    fun addInPlaylist(track: Track) {
+        interactor.addTrackInPlaylist(track)
     }
 }

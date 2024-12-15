@@ -2,11 +2,14 @@ package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
 import android.util.Log
+import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
 import com.example.playlistmaker.player.domain.PlayerRepositoryInterface
+import com.example.playlistmaker.search.domain.models.Track
 import java.io.IOException
 
 class PlayerRepository(
-    private val player: MediaPlayer
+    private val player: MediaPlayer,
+    private val database: DatabaseRepositoryInterface
 ) : PlayerRepositoryInterface {
 
     override fun setPlayer(
@@ -58,5 +61,9 @@ class PlayerRepository(
     override fun play(): PlaybackStatus.Playing {
         player.start()
         return PlaybackStatus.Playing
+    }
+
+    override fun addTrackInPlaylist(track: Track) {
+        Log.d("DATABASE", "добавил трек в базу")
     }
 }

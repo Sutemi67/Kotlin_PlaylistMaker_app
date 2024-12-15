@@ -14,4 +14,5 @@ interface PlayerInteractorInterface {
     fun reset()
     fun playOrPauseAction(): PlaybackStatus
     fun playerGetCurrentTime(): Long
+    fun addTrackInPlaylist(track: com.example.playlistmaker.search.domain.models.Track)
 }

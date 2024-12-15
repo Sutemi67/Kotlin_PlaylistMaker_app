@@ -1,13 +1,16 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -24,8 +27,11 @@ import com.example.playlistmaker.app.TRACK_ID
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.media.ui.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -36,8 +42,12 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var binding: ActivityPlayerBinding
-    private val vm by viewModel<PlayerViewModel>()
     private lateinit var currentTrack: Track
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var bottomSheetContainer: LinearLayout
+    private val adapter = PlayerAdapter()
+
+    private val vm by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,13 +86,16 @@ class PlayerActivity : AppCompatActivity() {
         previewUrl = currentTrack.previewUrl.toString()
         val getDuration = currentTrack.trackTime
 
+        bottomSheetContainer = findViewById<LinearLayout>(R.id.bottom_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.bottomList.adapter = adapter
+
         currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
         binding.playerDuration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
-
-        fun coverResolutionAmplifier(): String? {
-            return currentTrack.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
-        }
 
         Glide.with(this@PlayerActivity)
             .load(coverResolutionAmplifier())
@@ -91,12 +104,8 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.img_placeholder)
             .into(binding.playerCover)
 
-        vm.setPlayer(
-            previewUrl = previewUrl,
-            context = this
-        )
         setClickListenersAndObservers()
-        vm.setFavouriteState(currentTrack)
+
     }
 
     override fun onPause() {
@@ -112,6 +121,10 @@ class PlayerActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         vm.reset()
+    }
+
+    private fun coverResolutionAmplifier(): String? {
+        return currentTrack.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
     }
 
     private fun uiManaging(status: PlaybackStatus) {
@@ -138,6 +151,12 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun setClickListenersAndObservers() {
 
+        vm.setPlayer(
+            previewUrl = previewUrl,
+            context = this
+        )
+        vm.setFavouriteState(currentTrack)
+
         vm.getPlaybackLiveData().observe(this) {
             uiManaging(it)
         }
@@ -151,12 +170,32 @@ class PlayerActivity : AppCompatActivity() {
                 binding.playerLike.setImageResource(R.drawable.like_button)
             }
         }
+        vm.listState.observe(this) {
+            when (it) {
+                is PlaylistState.EmptyList -> {
+//
+                }
+
+                is PlaylistState.FullList -> {
+                    adapter.setData(it.playlist)
+                    Log.e("DATABASE", "список загружен, плейлистов - ${it.playlist.size}")
+                }
+            }
+        }
+
         playButton.setOnClickListener {
             vm.playOrPauseAction()
         }
         binding.playerLike.setOnClickListener {
             vm.toggleFavourite(currentTrack)
             currentTrack.isFavourite = !currentTrack.isFavourite
+        }
+        binding.playerAddPlaylistButton.setOnClickListener {
+            lifecycleScope.launch {
+                Log.e("DATABASE", "пошел запрос списка")
+                vm.getPlaylists()
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
         }
     }
 }

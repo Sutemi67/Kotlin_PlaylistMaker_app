@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.domain
 
 import com.example.playlistmaker.player.data.PlaybackStatus
+import com.example.playlistmaker.search.domain.models.Track
 
 interface PlayerRepositoryInterface {
     fun setPlayer(previewUrl: String, onCompletion: () -> Unit): PlaybackStatus
@@ -10,4 +11,6 @@ interface PlayerRepositoryInterface {
     fun reset()
     fun playOrPauseAction(): PlaybackStatus
     fun playerGetCurrentTime(): Long
+    fun addTrackInPlaylist(track: Track)
+
 }

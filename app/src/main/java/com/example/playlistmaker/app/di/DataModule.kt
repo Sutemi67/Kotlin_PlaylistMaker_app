@@ -33,7 +33,7 @@ val dataModule = module {
     single<SearchRepositoryInterface> { SearchRepository(get(), get(), get(), get()) }
     single<SettingsRepositoryInterface> { SettingsRepository(get(), get()) }
     single<MainRepositoryInterface> { MainRepository(get()) }
-    single<PlayerRepositoryInterface> { PlayerRepository(get()) }
+    single<PlayerRepositoryInterface> { PlayerRepository(get(), get()) }
     single<DatabaseRepositoryInterface> { DatabaseRepository(get(), get()) }
 
     single {
