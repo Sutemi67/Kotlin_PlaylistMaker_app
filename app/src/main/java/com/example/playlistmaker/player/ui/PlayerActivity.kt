@@ -168,6 +168,18 @@ class PlayerActivity : AppCompatActivity() {
         vm.getPlaybackLiveData().observe(this) {
             uiManaging(it)
         }
+        vm.addingStatus.observe(this) {
+            if (it.state) Toast.makeText(
+                this@PlayerActivity,
+                "Добавлено в плейлист ${it.playlist.name}",
+                Toast.LENGTH_SHORT
+            ).show()
+            else Toast.makeText(
+                this@PlayerActivity,
+                "Трек уже добавлен в плейлист ${it.playlist.name}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         vm.getCounterText().observe(this) {
             currentTime.text = it
         }

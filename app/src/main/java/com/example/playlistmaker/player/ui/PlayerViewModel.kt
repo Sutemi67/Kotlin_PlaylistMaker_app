@@ -32,6 +32,9 @@ class PlayerViewModel(
     fun getLikeState(): LiveData<Boolean> = _likeState
     private val _listState = MutableLiveData<PlaylistState>(PlaylistState.EmptyList)
     val listState: LiveData<PlaylistState> = _listState
+    private val _addingStatus = MutableLiveData<TrackToPlaylistState>()
+    val addingStatus: LiveData<TrackToPlaylistState> = _addingStatus
+
     private var timerJob: Job? = null
 
     fun setPlayer(
@@ -98,7 +101,10 @@ class PlayerViewModel(
 
     fun addInPlaylist(track: Track, playlist: Playlist) {
         viewModelScope.launch {
-            interactor.addTrackInPlaylist(track, playlist)
+            _addingStatus.value = TrackToPlaylistState(
+                playlist,
+                interactor.addTrackInPlaylist(track, playlist)
+            )
         }
     }
 }

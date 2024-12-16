@@ -12,6 +12,6 @@ interface PlayerRepositoryInterface {
     fun reset()
     fun playOrPauseAction(): PlaybackStatus
     fun playerGetCurrentTime(): Long
-    suspend fun addTrackInPlaylist(track: Track, playlist: Playlist)
+    suspend fun addTrackInPlaylist(track: Track, playlist: Playlist): Boolean
 
 }

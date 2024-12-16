@@ -62,17 +62,17 @@ class PlayerRepository(
         return PlaybackStatus.Playing
     }
 
-    override suspend fun addTrackInPlaylist(track: Track, playlist: Playlist) {
-
+    override suspend fun addTrackInPlaylist(track: Track, playlist: Playlist): Boolean {
         if (playlist.tracks.contains(track)) {
-            //todo something
             Log.e("DATABASE", "трек уже есть в базе")
+            return false
         } else {
             val list = playlist.tracks.toMutableList()
             list.add(track)
             playlist.tracks = list.toList()
             database.addPlaylist(playlist)
             Log.d("DATABASE", "добавил трек в базу")
+            return true
         }
     }
 

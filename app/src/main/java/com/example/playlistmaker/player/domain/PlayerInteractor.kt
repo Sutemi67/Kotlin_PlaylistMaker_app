@@ -32,8 +32,8 @@ class PlayerInteractor(
         return repository.playOrPauseAction()
     }
 
-    override suspend fun addTrackInPlaylist(track: Track, playlist: Playlist) {
-        repository.addTrackInPlaylist(track, playlist)
+    override suspend fun addTrackInPlaylist(track: Track, playlist: Playlist): Boolean {
+        return repository.addTrackInPlaylist(track, playlist)
     }
 
 }
