@@ -2,32 +2,22 @@ package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.ARTIST
-import com.example.playlistmaker.app.ARTWORK_URL
-import com.example.playlistmaker.app.COLLECTION_NAME
-import com.example.playlistmaker.app.COUNTRY
-import com.example.playlistmaker.app.GENRE
-import com.example.playlistmaker.app.IS_FAVOURITE
-import com.example.playlistmaker.app.LATEST_TIME_ADDED
-import com.example.playlistmaker.app.PREVIEW_URL
-import com.example.playlistmaker.app.RELEASE_DATE
-import com.example.playlistmaker.app.TRACK_ID
-import com.example.playlistmaker.app.TRACK_NAME
-import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
+import com.example.playlistmaker.app.ARG_TRACK
 import com.example.playlistmaker.app.database.domain.model.Playlist
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.media.ui.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.search.domain.models.Track
@@ -36,45 +26,51 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.getValue
 
-class PlayerActivity : AppCompatActivity() {
-
+class PlayerFragment : Fragment() {
+    private lateinit var binding: FragmentPlayerBinding
+    private val vm by viewModel<PlayerViewModel>()
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
-    private lateinit var binding: ActivityPlayerBinding
     private lateinit var currentTrack: Track
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var bottomSheetContainer: LinearLayout
     private val adapter = PlayerAdapter()
 
-    private val vm by viewModel<PlayerViewModel>()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentPlayerBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.playerToolbar.setNavigationOnClickListener {
+//            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
-        binding.playerToolbar.setNavigationOnClickListener { finish() }
-        currentTrack = Track(
-            trackId = intent.getIntExtra(TRACK_ID, 0),
-            previewUrl = intent.getStringExtra(PREVIEW_URL) ?: "",
-            trackName = intent.getStringExtra(TRACK_NAME) ?: "",
-            artistName = intent.getStringExtra(ARTIST) ?: "",
-            trackTime = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0),
-            artworkUrl100 = intent.getStringExtra(ARTWORK_URL),
-            country = intent.getStringExtra(COUNTRY) ?: "",
-            collectionName = intent.getStringExtra(COLLECTION_NAME) ?: "",
-            primaryGenreName = intent.getStringExtra(GENRE) ?: "",
-            releaseDate = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-",
-            isFavourite = intent.getBooleanExtra(IS_FAVOURITE, false),
-            latestTimeAdded = intent.getLongExtra(LATEST_TIME_ADDED, 0)
-        )
+        arguments?.getParcelable<Track>(ARG_TRACK)?.let { track ->
+            currentTrack = track
+        } ?: throw IllegalStateException("Track data is missing")
+
+//        currentTrack = Track(
+//            trackId = intent.getIntExtra(TRACK_ID, 0),
+//            previewUrl = intent.getStringExtra(PREVIEW_URL) ?: "",
+//            trackName = intent.getStringExtra(TRACK_NAME) ?: "",
+//            artistName = intent.getStringExtra(ARTIST) ?: "",
+//            trackTime = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0),
+//            artworkUrl100 = intent.getStringExtra(ARTWORK_URL),
+//            country = intent.getStringExtra(COUNTRY) ?: "",
+//            collectionName = intent.getStringExtra(COLLECTION_NAME) ?: "",
+//            primaryGenreName = intent.getStringExtra(GENRE) ?: "",
+//            releaseDate = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-",
+//            isFavourite = intent.getBooleanExtra(IS_FAVOURITE, false),
+//            latestTimeAdded = intent.getLongExtra(LATEST_TIME_ADDED, 0)
+//        )
         playButton = binding.playerPlayButton
         currentTime = binding.currentTime
 
@@ -87,7 +83,7 @@ class PlayerActivity : AppCompatActivity() {
         previewUrl = currentTrack.previewUrl.toString()
         val getDuration = currentTrack.trackTime
 
-        bottomSheetContainer = findViewById<LinearLayout>(R.id.bottom_sheet)
+        bottomSheetContainer = binding.bottomSheet
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -98,7 +94,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerDuration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
 
-        Glide.with(this@PlayerActivity)
+        Glide.with(requireActivity())
             .load(coverResolutionAmplifier())
             .centerCrop()
             .transform(RoundedCorners(2))
@@ -153,7 +149,8 @@ class PlayerActivity : AppCompatActivity() {
             }
 
             PlaybackStatus.Error -> {
-                Toast.makeText(this, "Unsuccessful loading", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Unsuccessful loading", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -162,36 +159,36 @@ class PlayerActivity : AppCompatActivity() {
 
         vm.setPlayer(
             previewUrl = previewUrl,
-            context = this
+            context = requireContext(),
         )
         vm.setFavouriteState(currentTrack)
 
-        vm.getPlaybackLiveData().observe(this) {
+        vm.getPlaybackLiveData().observe(viewLifecycleOwner) {
             uiManaging(it)
         }
-        vm.addingStatus.observe(this) {
+        vm.addingStatus.observe(viewLifecycleOwner) {
             if (it.state) Toast.makeText(
-                this@PlayerActivity,
+                requireContext(),
                 "Добавлено в плейлист ${it.playlist.name}",
                 Toast.LENGTH_SHORT
             ).show()
             else Toast.makeText(
-                this@PlayerActivity,
+                requireContext(),
                 "Трек уже добавлен в плейлист ${it.playlist.name}",
                 Toast.LENGTH_SHORT
             ).show()
         }
-        vm.getCounterText().observe(this) {
+        vm.getCounterText().observe(viewLifecycleOwner) {
             currentTime.text = it
         }
-        vm.getLikeState().observe(this) {
+        vm.getLikeState().observe(viewLifecycleOwner) {
             if (it) {
                 binding.playerLike.setImageResource(R.drawable.like_button_active)
             } else {
                 binding.playerLike.setImageResource(R.drawable.like_button)
             }
         }
-        vm.listState.observe(this) {
+        vm.listState.observe(viewLifecycleOwner) {
             when (it) {
                 is PlaylistState.EmptyList -> {
 //
@@ -222,6 +219,15 @@ class PlayerActivity : AppCompatActivity() {
             //TODO set click
         }
     }
+
+    companion object {
+
+        fun newInstance(track: Track): PlayerFragment {
+            return PlayerFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ARG_TRACK, track)
+                }
+            }
+        }
+    }
 }
-
-

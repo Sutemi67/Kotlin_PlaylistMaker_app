@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,27 +16,18 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.app.ARTIST
-import com.example.playlistmaker.app.ARTWORK_URL
+import com.example.playlistmaker.R
+import com.example.playlistmaker.app.ARG_TRACK
 import com.example.playlistmaker.app.CLICK_DEBOUNCE_DELAY
-import com.example.playlistmaker.app.COLLECTION_NAME
-import com.example.playlistmaker.app.COUNTRY
-import com.example.playlistmaker.app.GENRE
-import com.example.playlistmaker.app.IS_FAVOURITE
-import com.example.playlistmaker.app.PREVIEW_URL
-import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.SEARCH_REFRESH_RATE
 import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
-import com.example.playlistmaker.app.TRACK_ID
-import com.example.playlistmaker.app.TRACK_NAME
-import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -146,19 +136,28 @@ class SearchFragment : Fragment() {
                         delay(CLICK_DEBOUNCE_DELAY)
                         isClickAllowed = true
                     }
-                    val intent = Intent(requireContext(), PlayerActivity::class.java)
-                    intent.putExtra(TRACK_ID, track.trackId)
-                    intent.putExtra(TRACK_NAME, track.trackName)
-                    intent.putExtra(ARTIST, track.artistName)
-                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
-                    intent.putExtra(COLLECTION_NAME, track.collectionName)
-                    intent.putExtra(COUNTRY, track.country)
-                    intent.putExtra(GENRE, track.primaryGenreName)
-                    intent.putExtra(RELEASE_DATE, track.releaseDate)
-                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
-                    intent.putExtra(PREVIEW_URL, track.previewUrl)
-                    intent.putExtra(IS_FAVOURITE, track.isFavourite)
-                    startActivity(intent)
+                    val bundle = Bundle().apply {
+                        putParcelable(ARG_TRACK, track)
+                    }
+                    findNavController()
+                        .navigate(
+                            R.id.action_fragmentSingleSearch_to_playerFragment,
+                            bundle
+                        )
+
+//                    val intent = Intent(requireContext(), PlayerActivity::class.java)
+//                    intent.putExtra(TRACK_ID, track.trackId)
+//                    intent.putExtra(TRACK_NAME, track.trackName)
+//                    intent.putExtra(ARTIST, track.artistName)
+//                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
+//                    intent.putExtra(COLLECTION_NAME, track.collectionName)
+//                    intent.putExtra(COUNTRY, track.country)
+//                    intent.putExtra(GENRE, track.primaryGenreName)
+//                    intent.putExtra(RELEASE_DATE, track.releaseDate)
+//                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
+//                    intent.putExtra(PREVIEW_URL, track.previewUrl)
+//                    intent.putExtra(IS_FAVOURITE, track.isFavourite)
+//                    startActivity(intent)
                 }
             }
         }
