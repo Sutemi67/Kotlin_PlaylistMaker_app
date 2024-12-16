@@ -38,5 +38,6 @@
     <string name="noPlaylists">Вы не создали ни одного плейлиста</string>
     <string name="media_tabs">tabs of media menu</string>
     <string name="new_playlist">Новый плейлист</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
 
 </resources>

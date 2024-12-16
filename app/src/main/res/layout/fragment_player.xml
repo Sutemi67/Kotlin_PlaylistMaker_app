@@ -279,13 +279,14 @@
             android:layout_height="52dp"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="Добавить в плейлист" />
+            android:text="@string/add_to_playlist" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/new_playlist"
+            style="@style/clearHistoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Новый плейлист" />
+            android:text="@string/new_playlist" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bottom_list"
