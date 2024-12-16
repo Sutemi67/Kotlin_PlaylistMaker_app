@@ -256,6 +256,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
@@ -275,15 +276,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="120dp"
             android:gravity="center"
-            android:text="Добавить в плейлист" />
+            android:text="Добавить в плейлистпропропропро" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/new_playlist"
-            android:layout_width="wrap_content"
+            style="@style/reloadButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Новый плейлист" />
+            android:text="@string/new_playlist" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bottom_list"

@@ -132,7 +132,7 @@ class SearchFragment : Fragment() {
                 if (isClickAllowed) {
                     vm.addTrackInHistory(track)
                     isClickAllowed = false
-                    viewLifecycleOwner.lifecycleScope.launch {
+                    lifecycleScope.launch {
                         delay(CLICK_DEBOUNCE_DELAY)
                         isClickAllowed = true
                     }
@@ -144,20 +144,6 @@ class SearchFragment : Fragment() {
                             R.id.action_fragmentSingleSearch_to_playerFragment,
                             bundle
                         )
-
-//                    val intent = Intent(requireContext(), PlayerActivity::class.java)
-//                    intent.putExtra(TRACK_ID, track.trackId)
-//                    intent.putExtra(TRACK_NAME, track.trackName)
-//                    intent.putExtra(ARTIST, track.artistName)
-//                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
-//                    intent.putExtra(COLLECTION_NAME, track.collectionName)
-//                    intent.putExtra(COUNTRY, track.country)
-//                    intent.putExtra(GENRE, track.primaryGenreName)
-//                    intent.putExtra(RELEASE_DATE, track.releaseDate)
-//                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
-//                    intent.putExtra(PREVIEW_URL, track.previewUrl)
-//                    intent.putExtra(IS_FAVOURITE, track.isFavourite)
-//                    startActivity(intent)
                 }
             }
         }

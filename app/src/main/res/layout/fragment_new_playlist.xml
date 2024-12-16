@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back_arrow"
-        app:title="@string/newPlaylist"
+        app:title="@string/new_playlist"
         app:titleTextAppearance="@style/HeaderTextStyle" />
 
     <ImageView

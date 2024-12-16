@@ -23,7 +23,6 @@ class FavouritesFragment : Fragment() {
     private val vm by viewModel<FavouritesViewModel>()
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var binding: FragmentFavouritesBinding
-    private var count = "Default count"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,20 +44,6 @@ class FavouritesFragment : Fragment() {
                         R.id.action_fragmentSingleMedia_to_playerFragment,
                         bundle
                     )
-//                    val intent = Intent(requireContext(), PlayerActivity::class.java)
-//                    intent.putExtra(TRACK_ID, track.trackId)
-//                    intent.putExtra(TRACK_NAME, track.trackName)
-//                    intent.putExtra(ARTIST, track.artistName)
-//                    intent.putExtra(ARTWORK_URL, track.artworkUrl100)
-//                    intent.putExtra(COLLECTION_NAME, track.collectionName)
-//                    intent.putExtra(COUNTRY, track.country)
-//                    intent.putExtra(GENRE, track.primaryGenreName)
-//                    intent.putExtra(RELEASE_DATE, track.releaseDate)
-//                    intent.putExtra(TRACK_TIME_IN_MILLIS, track.trackTime)
-//                    intent.putExtra(PREVIEW_URL, track.previewUrl)
-//                    intent.putExtra(IS_FAVOURITE, track.isFavourite)
-//                    intent.putExtra(LATEST_TIME_ADDED, track.latestTimeAdded)
-//                    startActivity(intent)
                 }
             }
         }

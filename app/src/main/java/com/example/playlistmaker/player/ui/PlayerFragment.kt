@@ -53,24 +53,14 @@ class PlayerFragment : Fragment() {
 //            findNavController().navigateUp()
             findNavController().popBackStack()
         }
-        arguments?.getParcelable<Track>(ARG_TRACK)?.let { track ->
-            currentTrack = track
-        } ?: throw IllegalStateException("Track data is missing")
+        try {
+            arguments?.getParcelable<Track>(ARG_TRACK)?.let { track ->
+                currentTrack = track
+            }
+        } catch (e: Exception) {
+            Log.e("DATABASE", e.message.toString())
+        }
 
-//        currentTrack = Track(
-//            trackId = intent.getIntExtra(TRACK_ID, 0),
-//            previewUrl = intent.getStringExtra(PREVIEW_URL) ?: "",
-//            trackName = intent.getStringExtra(TRACK_NAME) ?: "",
-//            artistName = intent.getStringExtra(ARTIST) ?: "",
-//            trackTime = intent.getIntExtra(TRACK_TIME_IN_MILLIS, 0),
-//            artworkUrl100 = intent.getStringExtra(ARTWORK_URL),
-//            country = intent.getStringExtra(COUNTRY) ?: "",
-//            collectionName = intent.getStringExtra(COLLECTION_NAME) ?: "",
-//            primaryGenreName = intent.getStringExtra(GENRE) ?: "",
-//            releaseDate = intent.getStringExtra(RELEASE_DATE)?.substring(0, 4) ?: "-",
-//            isFavourite = intent.getBooleanExtra(IS_FAVOURITE, false),
-//            latestTimeAdded = intent.getLongExtra(LATEST_TIME_ADDED, 0)
-//        )
         playButton = binding.playerPlayButton
         currentTime = binding.currentTime
 
@@ -216,18 +206,9 @@ class PlayerFragment : Fragment() {
             }
         }
         binding.newPlaylist.setOnClickListener {
-            //TODO set click
-        }
-    }
-
-    companion object {
-
-        fun newInstance(track: Track): PlayerFragment {
-            return PlayerFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(ARG_TRACK, track)
-                }
-            }
+            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
     }
 }
+
+
