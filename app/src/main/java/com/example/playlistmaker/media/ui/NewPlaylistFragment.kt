@@ -149,7 +149,6 @@ class NewPlaylistFragment(
         }
     }
 
-
     private fun showSnackBar(text: String) {
         val snack = Snackbar.make(requireView(), text, 3000)
         snack.view.setBackgroundResource(R.drawable.shape_toast)
@@ -215,11 +214,9 @@ class NewPlaylistFragment(
                     showSnackBar("Плейлист ${binding.playlistName.text} создан")
                     findNavController().navigateUp()
                 } else {
-                    showSnackBar("Не удалось создать плейлист.")
+                    showSnackBar("Такой плейлист уже существует")
                 }
             }
         }
-
-
     }
 }

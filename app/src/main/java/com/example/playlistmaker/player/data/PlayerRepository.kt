@@ -70,10 +70,9 @@ class PlayerRepository(
             val list = playlist.tracks.toMutableList()
             list.add(track)
             playlist.tracks = list.toList()
-            database.addPlaylist(playlist)
-            Log.d("DATABASE", "добавил трек в базу")
+            database.updatePlaylist(playlist)
+            Log.d("DATABASE", "добавил трек в базу, плейлист такой - ${playlist.tracks}")
             return true
         }
     }
-
 }

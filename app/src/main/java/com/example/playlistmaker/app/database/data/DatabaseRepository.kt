@@ -51,4 +51,8 @@ class DatabaseRepository(
         emit(converter.mapToPlaylist(playlists))
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        val playlistEntity = converter.mapToPlaylistEntity(playlist)
+        databaseMain.playlistsDao().updatePlaylist(playlistEntity)
+    }
 }
