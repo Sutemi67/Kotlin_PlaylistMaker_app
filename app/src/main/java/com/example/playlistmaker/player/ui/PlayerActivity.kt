@@ -26,6 +26,7 @@ import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.TRACK_ID
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.media.ui.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
@@ -106,6 +107,12 @@ class PlayerActivity : AppCompatActivity() {
 
         setClickListenersAndObservers()
 
+        adapter.addTrackInPlaylist = object : AddingTrackInPlaylistInterface {
+            override fun addTrackInPlaylist(playlist: Playlist) {
+                vm.addInPlaylist(currentTrack, playlist)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
     }
 
     override fun onPause() {
@@ -122,6 +129,7 @@ class PlayerActivity : AppCompatActivity() {
         super.onStop()
         vm.reset()
     }
+
 
     private fun coverResolutionAmplifier(): String? {
         return currentTrack.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
@@ -192,10 +200,14 @@ class PlayerActivity : AppCompatActivity() {
         }
         binding.playerAddPlaylistButton.setOnClickListener {
             lifecycleScope.launch {
-                Log.e("DATABASE", "пошел запрос списка")
+                Log.i("DATABASE", "пошел запрос списка")
                 vm.getPlaylists()
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
+        }
+        binding.newPlaylist.setOnClickListener {
+            //TODO set click
+//            findNavController().navigate(R.id.newPlaylistFragment)
         }
     }
 }

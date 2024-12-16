@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.media.ui.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
@@ -95,7 +96,9 @@ class PlayerViewModel(
             }
     }
 
-    fun addInPlaylist(track: Track) {
-        interactor.addTrackInPlaylist(track)
+    fun addInPlaylist(track: Track, playlist: Playlist) {
+        viewModelScope.launch {
+            interactor.addTrackInPlaylist(track, playlist)
+        }
     }
 }

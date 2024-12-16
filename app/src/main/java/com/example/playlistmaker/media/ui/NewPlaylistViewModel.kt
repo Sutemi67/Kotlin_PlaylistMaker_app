@@ -22,9 +22,10 @@ class NewPlaylistViewModel(
         viewModelScope.launch {
             val result = interactor.addPlaylist(
                 playlist = Playlist(
+                    id = null,
                     name = name,
                     description = description,
-                    tracks = "",
+                    tracks = emptyList(),
                     count = 0,
                     coverUrl = image
                 )

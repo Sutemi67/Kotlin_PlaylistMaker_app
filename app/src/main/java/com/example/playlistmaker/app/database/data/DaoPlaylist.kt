@@ -12,7 +12,7 @@ interface DaoPlaylist {
     @Query("SELECT*FROM playlist ORDER BY playlist_tracks_count DESC")
     suspend fun getPlaylists(): List<DatabaseEntityPlaylist>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createPlaylist(playlist: DatabaseEntityPlaylist)
 
     @Delete

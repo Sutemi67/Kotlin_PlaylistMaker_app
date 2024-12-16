@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.domain
 
 import android.content.Context
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.search.domain.models.Track
 
@@ -31,8 +32,8 @@ class PlayerInteractor(
         return repository.playOrPauseAction()
     }
 
-    override fun addTrackInPlaylist(track: Track) {
-        repository.addTrackInPlaylist(track)
+    override suspend fun addTrackInPlaylist(track: Track, playlist: Playlist) {
+        repository.addTrackInPlaylist(track, playlist)
     }
 
 }

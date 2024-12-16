@@ -12,6 +12,7 @@ class PlayerAdapter : ListAdapter<Playlist, PlayerViewHolder>(PlayerDiffUtilCall
 
     private val difUtil = PlayerDiffUtilCallback()
     private val asyncListDiffer = AsyncListDiffer(this, difUtil)
+    var addTrackInPlaylist: AddingTrackInPlaylistInterface? = null
 
     fun setData(list: List<Playlist>) = asyncListDiffer.submitList(list.toList())
 
@@ -32,7 +33,7 @@ class PlayerAdapter : ListAdapter<Playlist, PlayerViewHolder>(PlayerDiffUtilCall
         if (position in currentList.indices) {
             holder.bind(currentList[position])
             holder.itemView.setOnClickListener {
-//                openPlayerActivity?.openPlayerActivity(currentList[position])
+                addTrackInPlaylist?.addTrackInPlaylist(currentList[position])
             }
         } else {
             Log.e(

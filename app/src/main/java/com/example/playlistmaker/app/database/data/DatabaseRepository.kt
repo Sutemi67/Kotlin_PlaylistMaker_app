@@ -40,8 +40,8 @@ class DatabaseRepository(
         }
     }
 
-    override suspend fun removePlaylist() {
-        TODO("Not yet implemented")
+    override suspend fun removePlaylist(playlist: Playlist) {
+        databaseMain.playlistsDao().deletePlaylist(converter.mapToPlaylistEntity(playlist))
     }
 
     override suspend fun getAllPlaylists(): Flow<List<Playlist>> = flow {

@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import kotlinx.coroutines.launch
@@ -29,8 +30,13 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.playlistsRecycler.adapter = adapter
+        val recycler = binding.playlistsRecycler
+        val columnsCount = 2
+        val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
+        recycler.layoutManager = GridLayoutManager(requireContext(), columnsCount)
+        recycler.addItemDecoration(GridSpacingItemDecoration(columnsCount, spacing, true))
 
+        binding.playlistsRecycler.adapter = adapter
         vm.listState.observe(viewLifecycleOwner) {
             uiState(it)
         }

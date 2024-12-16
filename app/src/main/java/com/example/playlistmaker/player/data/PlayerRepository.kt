@@ -3,18 +3,17 @@ package com.example.playlistmaker.player.data
 import android.media.MediaPlayer
 import android.util.Log
 import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.player.domain.PlayerRepositoryInterface
 import com.example.playlistmaker.search.domain.models.Track
 import java.io.IOException
 
 class PlayerRepository(
-    private val player: MediaPlayer,
-    private val database: DatabaseRepositoryInterface
+    private val player: MediaPlayer, private val database: DatabaseRepositoryInterface
 ) : PlayerRepositoryInterface {
 
     override fun setPlayer(
-        previewUrl: String,
-        onCompletion: () -> Unit
+        previewUrl: String, onCompletion: () -> Unit
     ): PlaybackStatus {
         try {
             player.apply {
@@ -63,7 +62,18 @@ class PlayerRepository(
         return PlaybackStatus.Playing
     }
 
-    override fun addTrackInPlaylist(track: Track) {
-        Log.d("DATABASE", "добавил трек в базу")
+    override suspend fun addTrackInPlaylist(track: Track, playlist: Playlist) {
+
+        if (playlist.tracks.contains(track)) {
+            //todo something
+            Log.e("DATABASE", "трек уже есть в базе")
+        } else {
+            val list = playlist.tracks.toMutableList()
+            list.add(track)
+            playlist.tracks = list.toList()
+            database.addPlaylist(playlist)
+            Log.d("DATABASE", "добавил трек в базу")
+        }
     }
+
 }

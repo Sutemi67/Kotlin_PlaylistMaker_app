@@ -1,8 +1,11 @@
 package com.example.playlistmaker.app.database.data
 
+import android.util.Log
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.search.data.dto.TracksDTO
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.Date
 
 class DatabaseConverter {
@@ -63,21 +66,27 @@ class DatabaseConverter {
     }
 
     fun mapToPlaylistEntity(playlist: Playlist): DatabaseEntityPlaylist {
+        val trackList = Gson().toJson(playlist.tracks)
         return DatabaseEntityPlaylist(
             playlistName = playlist.name,
             playlistDescription = playlist.description,
-            playlistTracks = playlist.tracks,
-            playlistTracksCount = playlist.count,
+            playlistTracks = trackList,
+            playlistTracksCount = playlist.tracks.size,
             imagePath = playlist.coverUrl
         )
     }
 
     fun mapToPlaylist(playlist: List<DatabaseEntityPlaylist>): List<Playlist> {
+
         return playlist.map {
+            val token = object : TypeToken<List<Track>>() {}.type
+            val trackList: List<Track> = Gson().fromJson(it.playlistTracks, token) ?: emptyList()
+            Log.d("DATABASE", "список треков в плейлисте - $trackList")
             Playlist(
+                id = it.id,
                 name = it.playlistName,
                 description = it.playlistDescription,
-                tracks = it.playlistTracks,
+                tracks = trackList,
                 count = it.playlistTracksCount,
                 coverUrl = it.imagePath
             )
