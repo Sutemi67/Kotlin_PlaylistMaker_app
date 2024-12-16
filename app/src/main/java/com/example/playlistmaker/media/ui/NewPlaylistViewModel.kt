@@ -10,9 +10,6 @@ class NewPlaylistViewModel(
     private val interactor: DatabaseInteractorInterface
 ) : ViewModel() {
 
-//    private val _addingState = MutableLiveData(false)
-//    val addingState: LiveData<Boolean> = _addingState
-
     fun addPlaylist(
         name: String,
         description: String,

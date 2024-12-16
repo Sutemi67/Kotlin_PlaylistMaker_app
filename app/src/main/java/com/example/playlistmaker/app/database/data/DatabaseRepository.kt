@@ -4,8 +4,10 @@ import android.util.Log
 import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class DatabaseRepository(
     private val databaseMain: DatabaseMain,
@@ -47,7 +49,6 @@ class DatabaseRepository(
     override suspend fun getAllPlaylists(): Flow<List<Playlist>> = flow {
         val playlists = databaseMain.playlistsDao().getPlaylists()
         emit(converter.mapToPlaylist(playlists))
-    }
-
+    }.flowOn(Dispatchers.IO)
 
 }
