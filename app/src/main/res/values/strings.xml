@@ -35,8 +35,9 @@
     <string name="player_error_loading_preview">Ошибка загрузки аудиофайла</string>
     <string name="mediateka">Медиатека</string>
     <string name="emptyMedia">Ваша медиатека пуста</string>
-    <string name="newPlaylist">Новый плейлист</string>
     <string name="noPlaylists">Вы не создали ни одного плейлиста</string>
     <string name="media_tabs">tabs of media menu</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
 
 </resources>

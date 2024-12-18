@@ -5,7 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.util.Log
 import com.example.playlistmaker.app.HISTORY_KEY
-import com.example.playlistmaker.app.database.data.TracksConverter
+import com.example.playlistmaker.app.database.data.DatabaseConverter
 import com.example.playlistmaker.app.database.domain.DatabaseRepositoryInterface
 import com.example.playlistmaker.search.data.api.NetworkClient
 import com.example.playlistmaker.search.data.dto.TrackListAndResponse
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.flowOf
 class SearchRepository(
     private val networkClient: NetworkClient,
     private val context: Context,
-    private val converter: TracksConverter,
+    private val converter: DatabaseConverter,
     private val database: DatabaseRepositoryInterface
 ) : SearchRepositoryInterface {
     private var historyList: MutableList<Track> = mutableListOf()
@@ -65,8 +65,6 @@ class SearchRepository(
         val sharedPrefs = context.getSharedPreferences(HISTORY_KEY, MODE_PRIVATE)
         return sharedPrefs
     }
-
-
 
     override fun addTrackInHistory(track: Track) {
         historyList = getHistory().toMutableList()

@@ -8,13 +8,13 @@
     android:orientation="vertical"
     tools:context=".search.ui.SearchFragment">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/backIcon_search_screen2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:gravity="center_vertical"
-        android:title="@string/search_activity"
-        android:titleTextAppearance="@style/HeaderTextStyle" />
+        app:title="@string/search_activity"
+        app:titleTextAppearance="@style/HeaderTextStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,8 +29,8 @@
             android:id="@+id/search_input_text"
             style="@style/editTextElements"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/shapes_search"
             android:drawableStart="@drawable/ic_search_light"
             android:drawablePadding="8dp"
@@ -153,7 +153,7 @@
             android:layout_weight="1"
             android:paddingTop="@dimen/recyclers_margin_top"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/track_list_item_layout"
+            tools:listitem="@layout/list_item_layout_track"
             tools:visibility="gone" />
 
         <Button

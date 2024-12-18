@@ -8,5 +8,5 @@ class MediaInteractor(
     private val repository: DatabaseRepositoryInterface
 ) : MediaInteractorInterface {
     override fun getFavouritesList(): Flow<List<Track>> = repository.getFavouritesList()
-    override fun getTracksCount(): Int = repository.getTracksCount()
+//    override fun getTracksCount(): Int = repository.getTracksCount()
 }

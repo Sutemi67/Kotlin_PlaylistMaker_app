@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.domain.models
 
+import android.os.Parcelable
 import com.example.playlistmaker.app.ARTIST
 import com.example.playlistmaker.app.ARTWORK_URL
 import com.example.playlistmaker.app.COLLECTION_NAME
@@ -10,7 +11,9 @@ import com.example.playlistmaker.app.RELEASE_DATE
 import com.example.playlistmaker.app.TRACK_NAME
 import com.example.playlistmaker.app.TRACK_TIME_IN_MILLIS
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Track(
     @SerializedName("trackId") val trackId: Int,
     @SerializedName(PREVIEW_URL) val previewUrl: String?,
@@ -24,4 +27,15 @@ data class Track(
     @SerializedName(RELEASE_DATE) val releaseDate: String?,
     var isFavourite: Boolean,
     val latestTimeAdded: Long
-)
+) : Parcelable {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Track) return false
+
+        return trackId == other.trackId
+    }
+
+    override fun hashCode(): Int {
+        return trackId
+    }
+}

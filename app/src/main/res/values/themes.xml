@@ -5,6 +5,7 @@
         <item name="colorError">@color/YP_black</item>
         <item name="colorAccent">@color/YP_blue</item>
         <item name="android:colorBackground">@color/YP_white</item>
+
     </style>
 
 </resources>
