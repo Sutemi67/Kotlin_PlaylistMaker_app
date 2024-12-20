@@ -10,11 +10,17 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.app.ARG_PLAYLIST
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.databinding.FragmentPlaylistDetailsBinding
+import com.example.playlistmaker.media.ui.observers.TrackLongClickListener
 import com.example.playlistmaker.media.ui.stateInterfaces.TrackListState
+import com.example.playlistmaker.player.ui.PlayerFragment
+import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.OpenPlayerActivity
 import com.example.playlistmaker.search.ui.TrackAdapter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -24,6 +30,13 @@ import java.util.Locale
 import kotlin.getValue
 
 class PlaylistDetailsFragment : Fragment() {
+
+    companion object {
+        fun createArgs(playlist: String): Bundle = bundleOf(
+            ARG_PLAYLIST to playlist
+        )
+    }
+
     private lateinit var binding: FragmentPlaylistDetailsBinding
     private val vm by viewModel<PlaylistDetailsViewModel>()
     private val adapter = TrackAdapter()
@@ -48,10 +61,8 @@ class PlaylistDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setBindingData()
         setOnclickListeners()
-
         lifecycleScope.launch {
             vm.getPlaylistTracks(playlist)
         }
@@ -101,14 +112,29 @@ class PlaylistDetailsFragment : Fragment() {
                     adapter.setData(it.tracklist)
                 }
             }
-
+        }
+        adapter.longClickAction = object : TrackLongClickListener {
+            override fun onTrackLongClick() {
+                val confirmDialog = MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Хотите удалить трек?")
+                    .setNegativeButton("Нет") { dialog, which ->
+                        //
+                    }.setPositiveButton("Да") { dialog, which ->
+                        findNavController().navigateUp()
+                    }
+                confirmDialog.show()
+            }
+        }
+        adapter.openPlayerActivity = object : OpenPlayerActivity {
+            override fun openPlayerActivity(track: Track) {
+                val json = Gson().toJson(track)
+                findNavController().navigate(
+                    R.id.action_playlistDetailsFragment_to_playerFragment,
+                    PlayerFragment.createArgs(json)
+                )
+            }
         }
     }
 
-    companion object {
-        fun createArgs(playlist: String): Bundle = bundleOf(
-            ARG_PLAYLIST to playlist
-        )
 
-    }
 }

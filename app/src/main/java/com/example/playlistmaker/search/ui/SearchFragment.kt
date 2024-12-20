@@ -20,7 +20,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.ARG_TRACK
 import com.example.playlistmaker.app.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.app.SEARCH_REFRESH_RATE
 import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
@@ -28,7 +27,9 @@ import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.app.SEARCH_UI_STATE_PROGRESS
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -136,13 +137,11 @@ class SearchFragment : Fragment() {
                         delay(CLICK_DEBOUNCE_DELAY)
                         isClickAllowed = true
                     }
-                    val bundle = Bundle().apply {
-                        putParcelable(ARG_TRACK, track)
-                    }
+                    val json = Gson().toJson(track)
                     findNavController()
                         .navigate(
                             R.id.action_fragmentSingleSearch_to_playerFragment,
-                            bundle
+                            PlayerFragment.createArgs(json)
                         )
                 }
             }

@@ -10,11 +10,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.ARG_TRACK
 import com.example.playlistmaker.databinding.FragmentFavouritesBinding
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.OpenPlayerActivity
 import com.example.playlistmaker.search.ui.TrackAdapter
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,12 +38,10 @@ class FavouritesFragment : Fragment() {
         trackAdapter = TrackAdapter().apply {
             openPlayerActivity = object : OpenPlayerActivity {
                 override fun openPlayerActivity(track: Track) {
-                    val bundle = Bundle().apply {
-                        putParcelable(ARG_TRACK, track)
-                    }
+                    val json = Gson().toJson(track)
                     findNavController().navigate(
                         R.id.action_fragmentSingleMedia_to_playerFragment,
-                        bundle
+                        PlayerFragment.createArgs(json)
                     )
                 }
             }

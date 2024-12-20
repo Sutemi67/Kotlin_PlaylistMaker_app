@@ -121,7 +121,7 @@ class NewPlaylistFragment(
 
     }
 
-    //todo подумать над упрощением колбэка, может убрать совсем.
+    //TODO подумать над упрощением колбэка, может убрать совсем.
     val dialogCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             if (binding.playlistName.text?.isEmpty() == false ||
