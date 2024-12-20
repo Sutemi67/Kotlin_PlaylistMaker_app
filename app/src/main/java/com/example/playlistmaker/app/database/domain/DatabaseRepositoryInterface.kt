@@ -17,4 +17,5 @@ interface DatabaseRepositoryInterface {
     suspend fun getAllPlaylists(): Flow<List<Playlist>>
     suspend fun updatePlaylist(playlist: Playlist)
     suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>>
+    suspend fun removeTrackFromPlaylist(track: Track, playlist: Playlist)
 }

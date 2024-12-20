@@ -61,4 +61,18 @@ class DatabaseRepository(
         val tracks = converter.mapToPlaylist(playlist).tracks
         emit(tracks)
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun removeTrackFromPlaylist(
+        track: Track,
+        playlist: Playlist
+    ) {
+        val list = playlist.tracks.toMutableList()
+        if (list.remove(track)) {
+            playlist.tracks = list.toList()
+            databaseMain.playlistsDao().updatePlaylist(converter.mapToPlaylistEntity(playlist))
+            Log.d("DATABASE", "удалил трек из базы, плейлист такой - ${playlist.tracks}")
+        } else {
+            Log.d("DATABASE", "не получилось удалить трек")
+        }
+    }
 }

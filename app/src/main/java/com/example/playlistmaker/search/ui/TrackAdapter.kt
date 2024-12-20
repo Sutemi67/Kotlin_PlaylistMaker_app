@@ -31,8 +31,8 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
             holder.itemView.setOnClickListener {
                 openPlayerActivity?.openPlayerActivity(currentList[position])
             }
-            holder.itemView.setOnLongClickListener() {
-                longClickAction?.onTrackLongClick()
+            holder.itemView.setOnLongClickListener {
+                longClickAction?.onTrackLongClick(currentList[position])
                 true
             }
         } else {

@@ -72,23 +72,10 @@ class PlaylistDetailsFragment : Fragment() {
         binding.playlistTracksRecycler.adapter = adapter
         binding.detailsPlaylistName.text = playlist.name
         binding.detailsDescription.text = playlist.description
-        binding.detailsTracksCount.text = when (playlist.count % 10) {
-            0 -> "Нет треков"
-            1 -> "${playlist.count} трек"
-            in 2..4 -> "${playlist.count} трека"
-            else -> "${playlist.count} треков"
-        }
         val uri = playlist.coverUrl
         if (!uri.equals("null", ignoreCase = true)) {
             binding.detailsImageCover.setImageURI(uri?.toUri())
         }
-        val totalDuration = playlist.tracks.sumOf { it.trackTime }
-        binding.detailsSummaryDuration.text =
-            SimpleDateFormat(
-                "mm минут${if (totalDuration % 10 in 2..4 && (totalDuration < 10 || totalDuration > 20)) "ы" else ""}",
-                Locale.getDefault()
-            ).format(totalDuration)
-        Log.i("log", "$totalDuration")
     }
 
     private fun setOnclickListeners() {
@@ -105,22 +92,45 @@ class PlaylistDetailsFragment : Fragment() {
             when (it) {
                 is TrackListState.Empty -> {
                     Log.i("log", "список треков пуст")
+                    adapter.setData(it.tracklist)
+                    binding.detailsTracksCount.text = "Треков нет"
+                    binding.detailsSummaryDuration.text = "0 минут"
                 }
 
                 is TrackListState.Filled -> {
                     Log.i("log", "${it.tracklist}")
                     adapter.setData(it.tracklist)
+                    binding.detailsTracksCount.text = when (it.tracklist.size % 10) {
+                        1 -> "${it.tracklist.size} трек"
+                        in 2..4 -> "${it.tracklist.size} трека"
+                        else -> "${it.tracklist.size} треков"
+                    }
+                    val totalDuration = it.tracklist.sumOf { it.trackTime }
+                    binding.detailsSummaryDuration.text =
+                        SimpleDateFormat(
+                            "mm минут${
+                                when ((totalDuration / 1000 / 60) % 10) {
+                                    1 -> "а"
+                                    in 2..4 -> "ы"
+                                    else -> ""
+                                }
+                            }",
+                            Locale.getDefault()
+                        ).format(totalDuration)
                 }
             }
         }
         adapter.longClickAction = object : TrackLongClickListener {
-            override fun onTrackLongClick() {
+            override fun onTrackLongClick(track: Track) {
                 val confirmDialog = MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Хотите удалить трек?")
                     .setNegativeButton("Нет") { dialog, which ->
                         //
                     }.setPositiveButton("Да") { dialog, which ->
-                        findNavController().navigateUp()
+                        lifecycleScope.launch {
+                            vm.removeTrackFromPlaylist(track, playlist)
+                            vm.getPlaylistTracks(playlist)
+                        }
                     }
                 confirmDialog.show()
             }
@@ -135,6 +145,5 @@ class PlaylistDetailsFragment : Fragment() {
             }
         }
     }
-
 
 }

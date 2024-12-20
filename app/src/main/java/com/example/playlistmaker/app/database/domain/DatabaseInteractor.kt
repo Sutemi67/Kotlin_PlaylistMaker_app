@@ -30,4 +30,11 @@ class DatabaseInteractor(
     override suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>> {
         return databaseRepository.getPlaylistTracks(playlist)
     }
+
+    override suspend fun removeTrackFromPlaylist(
+        track: Track,
+        playlist: Playlist
+    ) {
+        databaseRepository.removeTrackFromPlaylist(track, playlist)
+    }
 }
