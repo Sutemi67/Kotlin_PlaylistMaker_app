@@ -48,11 +48,17 @@ class DatabaseRepository(
 
     override suspend fun getAllPlaylists(): Flow<List<Playlist>> = flow {
         val playlists = databaseMain.playlistsDao().getPlaylists()
-        emit(converter.mapToPlaylist(playlists))
+        emit(converter.mapToPlaylistsList(playlists))
     }.flowOn(Dispatchers.IO)
 
     override suspend fun updatePlaylist(playlist: Playlist) {
         val playlistEntity = converter.mapToPlaylistEntity(playlist)
         databaseMain.playlistsDao().updatePlaylist(playlistEntity)
     }
+
+    override suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>> = flow {
+        val playlist = databaseMain.playlistsDao().getPlaylist(playlistName = playlist.name)
+        val tracks = converter.mapToPlaylist(playlist).tracks
+        emit(tracks)
+    }.flowOn(Dispatchers.IO)
 }

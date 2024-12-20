@@ -5,5 +5,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface MediaInteractorInterface {
     fun getFavouritesList(): Flow<List<Track>>
-//    fun getTracksCount(): Int
 }

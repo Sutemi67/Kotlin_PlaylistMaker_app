@@ -26,4 +26,8 @@ class DatabaseInteractor(
     override suspend fun getAllPlaylists(): Flow<List<Playlist>> {
         return databaseRepository.getAllPlaylists()
     }
+
+    override suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>> {
+        return databaseRepository.getPlaylistTracks(playlist)
+    }
 }

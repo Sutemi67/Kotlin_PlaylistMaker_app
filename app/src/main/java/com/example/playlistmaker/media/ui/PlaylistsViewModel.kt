@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
+import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
 
 class PlaylistsViewModel(
     private val interactor: DatabaseInteractorInterface

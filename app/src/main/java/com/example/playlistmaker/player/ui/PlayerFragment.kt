@@ -18,7 +18,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.ARG_TRACK
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
-import com.example.playlistmaker.media.ui.PlaylistState
+import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -50,7 +50,6 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.playerToolbar.setNavigationOnClickListener {
-//            findNavController().navigateUp()
             findNavController().popBackStack()
         }
         try {

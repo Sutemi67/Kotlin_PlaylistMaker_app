@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.ui
+package com.example.playlistmaker.media.ui.stateInterfaces
 
 import com.example.playlistmaker.app.database.domain.model.Playlist
 

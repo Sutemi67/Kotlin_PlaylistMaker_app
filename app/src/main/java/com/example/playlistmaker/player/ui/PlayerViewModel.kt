@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.app.database.domain.model.Playlist
-import com.example.playlistmaker.media.ui.PlaylistState
+import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
 import com.example.playlistmaker.search.domain.SearchRepositoryInterface

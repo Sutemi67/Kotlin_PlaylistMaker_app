@@ -76,7 +76,20 @@ class DatabaseConverter {
         )
     }
 
-    fun mapToPlaylist(playlist: List<DatabaseEntityPlaylist>): List<Playlist> {
+    fun mapToPlaylist(playlist: DatabaseEntityPlaylist): Playlist {
+        val token = object : TypeToken<List<Track>>() {}.type
+        val trackList: List<Track> = Gson().fromJson(playlist.playlistTracks, token) ?: emptyList()
+        return Playlist(
+            id = playlist.id,
+            name = playlist.playlistName,
+            description = playlist.playlistDescription,
+            tracks = trackList,
+            count = trackList.size,
+            coverUrl = playlist.imagePath
+        )
+    }
+
+    fun mapToPlaylistsList(playlist: List<DatabaseEntityPlaylist>): List<Playlist> {
         return playlist.map {
             val token = object : TypeToken<List<Track>>() {}.type
             val trackList: List<Track> = Gson().fromJson(it.playlistTracks, token) ?: emptyList()
@@ -91,4 +104,6 @@ class DatabaseConverter {
             )
         }
     }
+
+
 }
