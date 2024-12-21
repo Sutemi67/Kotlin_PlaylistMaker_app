@@ -7,11 +7,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.media.ui.stateInterfaces.TrackListState
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -35,6 +38,12 @@ class PlaylistDetailsViewModel(
 
     suspend fun removeTrackFromPlaylist(track: Track, playlist: Playlist) {
         interactor.removeTrackFromPlaylist(track, playlist)
+    }
+
+    fun deletePlaylist(playlist: Playlist) {
+        viewModelScope.launch(Dispatchers.IO) {
+            interactor.removePlaylist(playlist)
+        }
     }
 
     fun onShareClick(context: Context, playlist: Playlist) {
@@ -70,7 +79,7 @@ class PlaylistDetailsViewModel(
         ContextCompat.startActivity(context, intent, null)
     }
 
-    fun showDialog(context: Context) {
+    fun showNoTracksDialog(context: Context) {
         MaterialAlertDialogBuilder(context)
             .setTitle("В плейлисте отсутствуют треки")
             .setPositiveButton("Ok") { dialog, witch ->
@@ -78,4 +87,21 @@ class PlaylistDetailsViewModel(
             }
             .show()
     }
+
+    fun showDeleteConfirmationDialog(context: Context, playlist: Playlist): Boolean {
+        var result = true
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Хотите удалить плейлист?")
+            .setPositiveButton("Да") { dialog, witch ->
+                deletePlaylist(playlist)
+                result = true
+                Log.i("log", "clicken Yes, $result")
+            }.setNegativeButton("Нет") { dialog, which ->
+                result = false
+                Log.i("log", "clicken Yes, $result")
+            }.show()
+        Log.i("log", "ending, $result")
+        return result
+    }
+
 }

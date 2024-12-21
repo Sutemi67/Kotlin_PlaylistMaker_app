@@ -174,7 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
-            android:text="название альбома"
+            android:text="Название альбома"
             app:layout_constraintStart_toEndOf="@id/bottom_menu_image"
             app:layout_constraintTop_toTopOf="@id/bottom_menu_image" />
 
@@ -186,7 +186,7 @@
             android:textColor="@color/bottom_sheet_dragline_color"
             android:layout_marginStart="8dp"
             android:layout_marginTop="1dp"
-            android:text="количество треков 32"
+            android:text="Треков нет"
             app:layout_constraintStart_toEndOf="@+id/bottom_menu_image"
             app:layout_constraintTop_toBottomOf="@id/bottom_menu_album_name"
             tools:layout_constraintStart_toEndOf="@id/bottom_menu_image" />
@@ -207,7 +207,6 @@
             android:id="@+id/bottom_menu_album_edit"
             android:layout_width="match_parent"
             android:layout_height="61dp"
-            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:padding="16dp"
             android:text="Редактировать информацию"
@@ -219,7 +218,6 @@
             android:id="@+id/bottom_menu_album_delete"
             android:layout_width="match_parent"
             android:layout_height="61dp"
-            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:padding="16dp"
             android:text="Удалить плейлист"

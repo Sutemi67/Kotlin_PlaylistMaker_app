@@ -91,9 +91,12 @@ class PlaylistDetailsFragment : Fragment() {
         binding.playlistTracksRecycler.adapter = adapter
         binding.detailsPlaylistName.text = playlist.name
         binding.detailsDescription.text = playlist.description
+        binding.bottomMenuAlbumName.text = playlist.name
+
         val uri = playlist.coverUrl
         if (!uri.equals("null", ignoreCase = true)) {
             binding.detailsImageCover.setImageURI(uri?.toUri())
+            binding.bottomMenuImage.setImageURI(uri?.toUri())
         }
     }
 
@@ -103,13 +106,30 @@ class PlaylistDetailsFragment : Fragment() {
         }
         binding.detailsShare.setOnClickListener {
             if (playlist.tracks.isEmpty()) {
-                vm.showDialog(requireContext())
+                vm.showNoTracksDialog(requireContext())
             } else {
                 vm.onShareClick(requireContext(), playlist)
             }
         }
         binding.detailsMore.setOnClickListener {
             bottomSheetMenu.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        binding.bottomMenuAlbumShare.setOnClickListener {
+            vm.onShareClick(requireContext(), playlist)
+        }
+        binding.bottomMenuAlbumEdit.setOnClickListener {
+
+        }
+        binding.bottomMenuAlbumDelete.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Хотите удалить плейлист?")
+                .setPositiveButton("Да") { dialog, witch ->
+                    vm.deletePlaylist(playlist)
+                    Log.i("log", "clicken Yes")
+                    findNavController().navigateUp()
+                }.setNegativeButton("Нет") { dialog, which ->
+                    Log.i("log", "clicken NO")
+                }.show()
         }
         vm.listState.observe(viewLifecycleOwner) {
             when (it) {
@@ -123,11 +143,14 @@ class PlaylistDetailsFragment : Fragment() {
                 is TrackListState.Filled -> {
                     Log.i("log", "${it.tracklist}")
                     adapter.setData(it.tracklist)
-                    binding.detailsTracksCount.text = when (it.tracklist.size % 10) {
+                    val tracksCount = when (it.tracklist.size % 10) {
                         1 -> "${it.tracklist.size} трек"
                         in 2..4 -> "${it.tracklist.size} трека"
                         else -> "${it.tracklist.size} треков"
                     }
+                    binding.detailsTracksCount.text = tracksCount
+                    binding.bottomMenuAlbumTracks.text = tracksCount
+
                     val totalDuration = it.tracklist.sumOf { it.trackTime }
                     binding.detailsSummaryDuration.text =
                         SimpleDateFormat(

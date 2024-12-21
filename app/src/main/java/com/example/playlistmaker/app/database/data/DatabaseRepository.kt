@@ -43,7 +43,7 @@ class DatabaseRepository(
     }
 
     override suspend fun removePlaylist(playlist: Playlist) {
-        databaseMain.playlistsDao().deletePlaylist(converter.mapToPlaylistEntity(playlist))
+        databaseMain.playlistsDao().deletePlaylist(playlist.name)
     }
 
     override suspend fun getAllPlaylists(): Flow<List<Playlist>> = flow {

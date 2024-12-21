@@ -37,4 +37,8 @@ class DatabaseInteractor(
     ) {
         databaseRepository.removeTrackFromPlaylist(track, playlist)
     }
+
+    override suspend fun removePlaylist(playlist: Playlist) {
+        databaseRepository.removePlaylist(playlist)
+    }
 }
