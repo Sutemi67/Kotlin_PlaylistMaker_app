@@ -88,20 +88,4 @@ class PlaylistDetailsViewModel(
             .show()
     }
 
-    fun showDeleteConfirmationDialog(context: Context, playlist: Playlist): Boolean {
-        var result = true
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Хотите удалить плейлист?")
-            .setPositiveButton("Да") { dialog, witch ->
-                deletePlaylist(playlist)
-                result = true
-                Log.i("log", "clicken Yes, $result")
-            }.setNegativeButton("Нет") { dialog, which ->
-                result = false
-                Log.i("log", "clicken Yes, $result")
-            }.show()
-        Log.i("log", "ending, $result")
-        return result
-    }
-
 }

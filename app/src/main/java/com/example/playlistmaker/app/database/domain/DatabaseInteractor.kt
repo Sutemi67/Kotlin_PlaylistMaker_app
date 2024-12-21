@@ -41,4 +41,8 @@ class DatabaseInteractor(
     override suspend fun removePlaylist(playlist: Playlist) {
         databaseRepository.removePlaylist(playlist)
     }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        databaseRepository.updatePlaylist(playlist)
+    }
 }

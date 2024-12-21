@@ -31,4 +31,10 @@ class NewPlaylistViewModel(
         }
     }
 
+    fun updatePlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            interactor.updatePlaylist(playlist)
+        }
+    }
+
 }

@@ -118,7 +118,11 @@ class PlaylistDetailsFragment : Fragment() {
             vm.onShareClick(requireContext(), playlist)
         }
         binding.bottomMenuAlbumEdit.setOnClickListener {
-
+            val json = Gson().toJson(playlist)
+            findNavController().navigate(
+                R.id.action_playlistDetailsFragment_to_newPlaylistFragment,
+                NewPlaylistFragment.createArgs(json)
+            )
         }
         binding.bottomMenuAlbumDelete.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())

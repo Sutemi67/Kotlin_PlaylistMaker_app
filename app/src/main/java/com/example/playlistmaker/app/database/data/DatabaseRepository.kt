@@ -52,12 +52,17 @@ class DatabaseRepository(
     }.flowOn(Dispatchers.IO)
 
     override suspend fun updatePlaylist(playlist: Playlist) {
-        val playlistEntity = converter.mapToPlaylistEntity(playlist)
-        databaseMain.playlistsDao().updatePlaylist(playlistEntity)
+        try {
+            val playlistEntity = converter.mapToPlaylistEntity(playlist)
+            databaseMain.playlistsDao().updatePlaylist2(playlistEntity)
+            Log.e("DATABASE", "обновил плейлист")
+        } catch (e: Exception) {
+            Log.e("DATABASE", "${e.stackTrace}")
+        }
     }
 
     override suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>> = flow {
-        val playlist = databaseMain.playlistsDao().getPlaylist(playlistName = playlist.name)
+        val playlist = databaseMain.playlistsDao().getPlaylist(id = playlist.id)
         val tracks = converter.mapToPlaylist(playlist).tracks
         emit(tracks)
     }.flowOn(Dispatchers.IO)

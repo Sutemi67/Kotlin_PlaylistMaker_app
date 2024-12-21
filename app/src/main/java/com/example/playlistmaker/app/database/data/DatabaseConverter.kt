@@ -68,6 +68,7 @@ class DatabaseConverter {
     fun mapToPlaylistEntity(playlist: Playlist): DatabaseEntityPlaylist {
         val trackList = Gson().toJson(playlist.tracks)
         return DatabaseEntityPlaylist(
+            id = playlist.id,
             playlistName = playlist.name,
             playlistDescription = playlist.description,
             playlistTracks = trackList,
