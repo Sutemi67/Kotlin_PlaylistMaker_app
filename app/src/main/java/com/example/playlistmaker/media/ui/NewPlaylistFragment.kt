@@ -193,7 +193,6 @@ class NewPlaylistFragment(
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-
         binding.toolbar.setNavigationOnClickListener {
             if (binding.playlistName.text?.isEmpty() == false ||
                 binding.playlistDescription.text?.isEmpty() == false ||

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.OpenPlayerActivity
 import com.example.playlistmaker.search.ui.TrackAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -36,6 +38,8 @@ class PlaylistDetailsFragment : Fragment() {
             ARG_PLAYLIST to playlist
         )
     }
+
+    private lateinit var bottomSheetMenu: BottomSheetBehavior<ConstraintLayout>
 
     private lateinit var binding: FragmentPlaylistDetailsBinding
     private val vm by viewModel<PlaylistDetailsViewModel>()
@@ -62,10 +66,25 @@ class PlaylistDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBindingData()
-        setOnclickListeners()
+        setOnclickListenersAndObservers()
         lifecycleScope.launch {
             vm.getPlaylistTracks(playlist)
         }
+        val bottomSheetTracks = BottomSheetBehavior.from(binding.detailsBottomTracks)
+        bottomSheetMenu = BottomSheetBehavior.from(binding.detailsBottomMenu)
+
+        binding.detailsMore.post {
+            val bottomPosition = binding.detailsMore.bottom
+            val screenHeight = resources.displayMetrics.heightPixels
+            val margin = ((screenHeight - bottomPosition) * 0.3).toInt()
+            bottomSheetTracks.peekHeight = screenHeight - bottomPosition - margin
+            Log.d(
+                "log",
+                "высота менюшки - ${bottomSheetTracks.peekHeight}\nвысота экрана ${screenHeight}\nвысота низа кнопки $bottomPosition\nотступ: $margin"
+            )
+        }
+        bottomSheetMenu.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetTracks.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private fun setBindingData() {
@@ -78,7 +97,7 @@ class PlaylistDetailsFragment : Fragment() {
         }
     }
 
-    private fun setOnclickListeners() {
+    private fun setOnclickListenersAndObservers() {
         binding.detailsToolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -90,7 +109,7 @@ class PlaylistDetailsFragment : Fragment() {
             }
         }
         binding.detailsMore.setOnClickListener {
-
+            bottomSheetMenu.state = BottomSheetBehavior.STATE_COLLAPSED
         }
         vm.listState.observe(viewLifecycleOwner) {
             when (it) {
