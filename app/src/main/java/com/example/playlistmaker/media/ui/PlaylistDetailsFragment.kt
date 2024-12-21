@@ -83,7 +83,11 @@ class PlaylistDetailsFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.detailsShare.setOnClickListener {
-
+            if (playlist.tracks.isEmpty()) {
+                vm.showDialog(requireContext())
+            } else {
+                vm.onShareClick(requireContext(), playlist)
+            }
         }
         binding.detailsMore.setOnClickListener {
 
