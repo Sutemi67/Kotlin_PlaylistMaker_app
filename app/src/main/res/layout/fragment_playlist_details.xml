@@ -30,7 +30,7 @@
             android:src="@drawable/img_placeholder"
             android:translationZ="-1dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.35"
+            app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/details_toolbar" />
 
@@ -41,9 +41,9 @@
             android:layout_height="28dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            tools:text="Best songs"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_image_cover" />
+            app:layout_constraintTop_toBottomOf="@+id/details_image_cover"
+            tools:text="Best songs" />
 
         <TextView
             android:id="@+id/details_description"
@@ -51,9 +51,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            tools:text="description of album"
             app:layout_constraintStart_toStartOf="@+id/details_playlist_name"
-            app:layout_constraintTop_toBottomOf="@+id/details_playlist_name" />
+            app:layout_constraintTop_toBottomOf="@+id/details_playlist_name"
+            tools:text="description of album" />
 
         <TextView
             android:id="@+id/details_summary_duration"
@@ -61,9 +61,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            tools:text="200 minutes"
             app:layout_constraintStart_toStartOf="@+id/details_description"
-            app:layout_constraintTop_toBottomOf="@+id/details_description" />
+            app:layout_constraintTop_toBottomOf="@+id/details_description"
+            tools:text="200 minutes" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -81,11 +81,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            tools:text="34 tracks"
             app:layout_constraintBottom_toBottomOf="@+id/details_summary_duration"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="@+id/details_summary_duration"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="34 tracks" />
 
         <ImageView
             android:id="@+id/details_share"
@@ -174,19 +174,19 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
-            tools:text="Название альбома"
             app:layout_constraintStart_toEndOf="@id/bottom_menu_image"
-            app:layout_constraintTop_toTopOf="@id/bottom_menu_image" />
+            app:layout_constraintTop_toTopOf="@id/bottom_menu_image"
+            tools:text="Название альбома" />
 
         <TextView
             android:id="@+id/bottom_menu_album_tracks"
             style="@style/TracksCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/bottom_sheet_dragline_color"
             android:layout_marginStart="8dp"
             android:layout_marginTop="1dp"
             android:text="@string/no_traks"
+            android:textColor="@color/bottom_sheet_dragline_color"
             app:layout_constraintStart_toEndOf="@+id/bottom_menu_image"
             app:layout_constraintTop_toBottomOf="@id/bottom_menu_album_name"
             tools:layout_constraintStart_toEndOf="@id/bottom_menu_image" />

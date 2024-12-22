@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
@@ -213,6 +214,15 @@ class PlaylistDetailsFragment : Fragment() {
                 )
             }
         }
-    }
 
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            val playlistName = bundle.getString("playlist_name")
+            val playlistDesc = bundle.getString("playlist_description")
+            val playlistCover = bundle.getString("playlist_cover")
+            binding.detailsPlaylistName.text = playlistName
+            binding.detailsDescription.text = playlistDesc
+            binding.detailsImageCover.setImageURI(playlistCover?.toUri())
+        }
+
+    }
 }

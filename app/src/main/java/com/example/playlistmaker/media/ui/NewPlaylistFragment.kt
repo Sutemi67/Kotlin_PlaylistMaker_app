@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.bundle.bundleOf
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.ARG_EDIT_PLAYLIST
@@ -140,7 +141,7 @@ class NewPlaylistFragment(
         setOnClickListenersAndBindings()
     }
 
-    //TODO подумать над упрощением колбэка, может убрать совсем.
+    //TODO подумать над упрощением колбека, может убрать совсем.
     val dialogCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             if (binding.playlistName.text?.isEmpty() == false ||
@@ -256,7 +257,15 @@ class NewPlaylistFragment(
                     coverUrl = url
                 )
                 vm.updatePlaylist(new)
-                findNavController().navigateUp()
+
+                val result = Bundle().apply {
+                    putString("playlist_name", binding.playlistName.text.toString())
+                    putString("playlist_description", binding.playlistDescription.text.toString())
+                    putString("playlist_cover", url.toString())
+                }
+                setFragmentResult("requestKey", result)
+
+                findNavController().popBackStack()
             }
         }
     }

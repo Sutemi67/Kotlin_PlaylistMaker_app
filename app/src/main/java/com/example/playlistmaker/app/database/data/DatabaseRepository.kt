@@ -36,7 +36,7 @@ class DatabaseRepository(
             val playlistEntity = converter.mapToPlaylistEntity(playlist)
             databaseMain.playlistsDao().createPlaylist(playlistEntity)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Log.e("DATABASE", "playlist exists")
             false
         }
