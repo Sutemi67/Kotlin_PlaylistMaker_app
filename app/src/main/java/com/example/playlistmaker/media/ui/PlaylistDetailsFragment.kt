@@ -1,10 +1,13 @@
 package com.example.playlistmaker.media.ui
 
+import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
@@ -76,8 +79,9 @@ class PlaylistDetailsFragment : Fragment() {
         binding.detailsMore.post {
             val bottomPosition = binding.detailsMore.bottom
             val screenHeight = resources.displayMetrics.heightPixels
-            val margin = ((screenHeight - bottomPosition) * 0.3).toInt()
-            bottomSheetTracks.peekHeight = screenHeight - bottomPosition - margin
+//            val margin = ((screenHeight - bottomPosition) * 0.3).toInt()
+            val margin = screenHeight - bottomPosition - getStatusBarHeight() * 4
+            bottomSheetTracks.peekHeight = margin
             Log.d(
                 "log",
                 "высота менюшки - ${bottomSheetTracks.peekHeight}\nвысота экрана ${screenHeight}\nвысота низа кнопки $bottomPosition\nотступ: $margin"
@@ -85,6 +89,21 @@ class PlaylistDetailsFragment : Fragment() {
         }
         bottomSheetMenu.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetTracks.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    private fun getStatusBarHeight(): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowInsets = requireActivity().window.decorView.getRootWindowInsets()
+            val insets = windowInsets.getInsets(WindowInsets.Type.systemBars())
+
+            return insets.top
+        } else {
+            val rectangle = Rect()
+            val window = requireActivity().window
+            window.decorView.getWindowVisibleDisplayFrame(rectangle)
+
+            return rectangle.top
+        }
     }
 
     private fun setBindingData() {
