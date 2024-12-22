@@ -24,6 +24,6 @@ interface DaoPlaylist {
     @Query("DELETE FROM playlist WHERE playlist_name = :name")
     suspend fun deletePlaylist(name: String)
 
-    @Query("select*from playlist where playlist_name = :id ")
-    suspend fun getPlaylist(id: Int): DatabaseEntityPlaylist
+    @Query("select*from playlist where id = :id ")
+    suspend fun getPlaylist(id: Int?): DatabaseEntityPlaylist
 }

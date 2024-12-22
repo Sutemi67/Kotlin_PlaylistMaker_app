@@ -62,7 +62,8 @@ class DatabaseRepository(
     }
 
     override suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>> = flow {
-        val playlist = databaseMain.playlistsDao().getPlaylist(id = playlist.id)
+        val playlist = databaseMain.playlistsDao().getPlaylist(playlist.id)
+        Log.d("DATABASE", "$playlist")
         val tracks = converter.mapToPlaylist(playlist).tracks
         emit(tracks)
     }.flowOn(Dispatchers.IO)
