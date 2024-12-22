@@ -41,7 +41,7 @@
             android:layout_height="28dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="Best songs"
+            tools:text="Best songs"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/details_image_cover" />
 
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="description of album"
+            tools:text="description of album"
             app:layout_constraintStart_toStartOf="@+id/details_playlist_name"
             app:layout_constraintTop_toBottomOf="@+id/details_playlist_name" />
 
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="200 minutes"
+            tools:text="200 minutes"
             app:layout_constraintStart_toStartOf="@+id/details_description"
             app:layout_constraintTop_toBottomOf="@+id/details_description" />
 
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="34 tracks"
+            tools:text="34 tracks"
             app:layout_constraintBottom_toBottomOf="@+id/details_summary_duration"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="@+id/details_summary_duration"
@@ -174,7 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
-            android:text="Название альбома"
+            tools:text="Название альбома"
             app:layout_constraintStart_toEndOf="@id/bottom_menu_image"
             app:layout_constraintTop_toTopOf="@id/bottom_menu_image" />
 
@@ -186,7 +186,7 @@
             android:textColor="@color/bottom_sheet_dragline_color"
             android:layout_marginStart="8dp"
             android:layout_marginTop="1dp"
-            android:text="Треков нет"
+            android:text="@string/no_traks"
             app:layout_constraintStart_toEndOf="@+id/bottom_menu_image"
             app:layout_constraintTop_toBottomOf="@id/bottom_menu_album_name"
             tools:layout_constraintStart_toEndOf="@id/bottom_menu_image" />
@@ -198,7 +198,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:padding="16dp"
-            android:text="Поделиться"
+            android:text="@string/share"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottom_menu_image"
             tools:layout_constraintStart_toStartOf="parent" />
@@ -209,7 +209,7 @@
             android:layout_height="61dp"
             android:gravity="center_vertical"
             android:padding="16dp"
-            android:text="Редактировать информацию"
+            android:text="@string/edit_playlist"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottom_menu_album_share"
             tools:layout_constraintStart_toStartOf="parent" />
@@ -220,7 +220,7 @@
             android:layout_height="61dp"
             android:gravity="center_vertical"
             android:padding="16dp"
-            android:text="Удалить плейлист"
+            android:text="@string/delete_playlist"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottom_menu_album_edit"
             tools:layout_constraintStart_toStartOf="parent" />
