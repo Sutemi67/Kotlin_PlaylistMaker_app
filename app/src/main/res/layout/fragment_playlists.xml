@@ -41,7 +41,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playlists_recycler"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:padding="16dp"
         tools:listitem="@layout/list_item_layout_playlist" />
 </LinearLayout>

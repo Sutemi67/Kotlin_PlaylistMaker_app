@@ -37,7 +37,6 @@ class PlaylistsFragment : Fragment() {
         val recycler = binding.playlistsRecycler
         val columnsCount = 2
         val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
-
         recycler.layoutManager = GridLayoutManager(requireContext(), columnsCount)
         recycler.addItemDecoration(GridSpacingItemDecoration(columnsCount, spacing, true))
 

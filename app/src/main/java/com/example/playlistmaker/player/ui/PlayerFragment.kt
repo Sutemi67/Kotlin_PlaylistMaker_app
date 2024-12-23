@@ -96,10 +96,9 @@ class PlayerFragment : Fragment() {
         Glide.with(requireActivity())
             .load(coverResolutionAmplifier())
             .centerCrop()
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(20))
             .placeholder(R.drawable.img_placeholder)
             .into(binding.playerCover)
-
 
         setClickListenersAndObservers()
 
