@@ -27,17 +27,9 @@ class PlaylistsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val uri = model.coverUrl
         Glide.with(itemView.context)
             .load(uri)
-            .centerCrop()
-            .transform(RoundedCorners(40))
+            .transform(RoundedCorners(20))
             .placeholder(R.drawable.img_placeholder)
             .into(cover)
-
-//        if (!uri.equals("null", ignoreCase = true)) {
-//            cover.setImageURI(uri?.toUri())
-//        } else {
-//            cover.setImageResource(R.drawable.img_placeholder)
-//        }
     }
-
 }
 
