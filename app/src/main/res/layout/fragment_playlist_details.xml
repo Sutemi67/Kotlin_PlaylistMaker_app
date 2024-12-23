@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playlist_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".media.ui.PlaylistDetailsFragment">
@@ -133,9 +134,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/list_item_layout_track" />
 
+        <ImageView
+            android:id="@+id/no_tracks_in_playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/img_nothing_found_light" />
+
+        <TextView
+            android:id="@+id/no_tracks_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Треков нет" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -224,5 +238,6 @@
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottom_menu_album_edit"
             tools:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

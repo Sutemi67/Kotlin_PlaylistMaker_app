@@ -11,6 +11,7 @@ import android.view.WindowInsets
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -135,7 +136,12 @@ class PlaylistDetailsFragment : Fragment() {
             bottomSheetMenu.state = BottomSheetBehavior.STATE_COLLAPSED
         }
         binding.bottomMenuAlbumShare.setOnClickListener {
-            vm.onShareClick(requireContext(), playlist)
+            if (playlist.tracks.isEmpty()) {
+                bottomSheetMenu.state = BottomSheetBehavior.STATE_HIDDEN
+                vm.showNoTracksDialog(requireContext())
+            } else {
+                vm.onShareClick(requireContext(), playlist)
+            }
         }
         binding.bottomMenuAlbumEdit.setOnClickListener {
             val json = Gson().toJson(playlist)
@@ -162,6 +168,9 @@ class PlaylistDetailsFragment : Fragment() {
                     adapter.setData(it.tracklist)
                     binding.detailsTracksCount.text = "Треков нет"
                     binding.detailsSummaryDuration.text = "0 минут"
+                    binding.playlistTracksRecycler.isVisible = false
+                    binding.noTracksInPlaylist.isVisible = true
+                    binding.noTracksText.isVisible = true
                 }
 
                 is TrackListState.Filled -> {
@@ -174,7 +183,9 @@ class PlaylistDetailsFragment : Fragment() {
                     }
                     binding.detailsTracksCount.text = tracksCount
                     binding.bottomMenuAlbumTracks.text = tracksCount
-
+                    binding.playlistTracksRecycler.isVisible = true
+                    binding.noTracksInPlaylist.isVisible = false
+                    binding.noTracksText.isVisible = false
                     val totalDuration = it.tracklist.sumOf { it.trackTime }
                     binding.detailsSummaryDuration.text =
                         SimpleDateFormat(

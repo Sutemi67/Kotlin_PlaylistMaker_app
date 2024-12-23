@@ -33,7 +33,6 @@ class PlaylistDetailsViewModel(
                 _listState.value = TrackListState.Filled(it)
             }
         }
-
     }
 
     suspend fun removeTrackFromPlaylist(track: Track, playlist: Playlist) {
