@@ -36,23 +36,49 @@ class DatabaseRepository(
             val playlistEntity = converter.mapToPlaylistEntity(playlist)
             databaseMain.playlistsDao().createPlaylist(playlistEntity)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Log.e("DATABASE", "playlist exists")
             false
         }
     }
 
     override suspend fun removePlaylist(playlist: Playlist) {
-        databaseMain.playlistsDao().deletePlaylist(converter.mapToPlaylistEntity(playlist))
+        databaseMain.playlistsDao().deletePlaylist(playlist.name)
     }
 
     override suspend fun getAllPlaylists(): Flow<List<Playlist>> = flow {
         val playlists = databaseMain.playlistsDao().getPlaylists()
-        emit(converter.mapToPlaylist(playlists))
+        emit(converter.mapToPlaylistsList(playlists))
     }.flowOn(Dispatchers.IO)
 
     override suspend fun updatePlaylist(playlist: Playlist) {
-        val playlistEntity = converter.mapToPlaylistEntity(playlist)
-        databaseMain.playlistsDao().updatePlaylist(playlistEntity)
+        try {
+            val playlistEntity = converter.mapToPlaylistEntity(playlist)
+            databaseMain.playlistsDao().updatePlaylist2(playlistEntity)
+            Log.e("DATABASE", "обновил плейлист")
+        } catch (e: Exception) {
+            Log.e("DATABASE", "${e.stackTrace}")
+        }
+    }
+
+    override suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>> = flow {
+        val playlist = databaseMain.playlistsDao().getPlaylist(playlist.id)
+        Log.d("DATABASE", "$playlist")
+        val tracks = converter.mapToPlaylist(playlist).tracks.reversed()
+        emit(tracks)
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun removeTrackFromPlaylist(
+        track: Track,
+        playlist: Playlist
+    ) {
+        val list = playlist.tracks.toMutableList()
+        if (list.remove(track)) {
+            playlist.tracks = list.toList()
+            databaseMain.playlistsDao().updatePlaylist(converter.mapToPlaylistEntity(playlist))
+            Log.d("DATABASE", "удалил трек из базы, плейлист такой - ${playlist.tracks}")
+        } else {
+            Log.d("DATABASE", "не получилось удалить трек")
+        }
     }
 }

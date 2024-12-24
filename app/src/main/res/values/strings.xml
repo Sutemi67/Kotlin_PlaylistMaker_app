@@ -39,5 +39,9 @@
     <string name="media_tabs">tabs of media menu</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="no_traks">Треков нет</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_playlist">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 
 </resources>

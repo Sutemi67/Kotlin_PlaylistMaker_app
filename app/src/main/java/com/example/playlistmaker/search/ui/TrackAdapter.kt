@@ -6,10 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.ListAdapter
 import com.example.playlistmaker.R
+import com.example.playlistmaker.media.ui.observers.TrackLongClickListener
 import com.example.playlistmaker.search.domain.models.Track
 
 class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()) {
     var openPlayerActivity: OpenPlayerActivity? = null
+    var longClickAction: TrackLongClickListener? = null
+
     private val difUtil = TrackDiffUtilCallback()
     private val asyncListDiffer = AsyncListDiffer(this, difUtil)
 
@@ -27,6 +30,10 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackDiffUtilCallback()
             holder.bind(currentList[position])
             holder.itemView.setOnClickListener {
                 openPlayerActivity?.openPlayerActivity(currentList[position])
+            }
+            holder.itemView.setOnLongClickListener {
+                longClickAction?.onTrackLongClick(currentList[position])
+                true
             }
         } else {
             Log.e(

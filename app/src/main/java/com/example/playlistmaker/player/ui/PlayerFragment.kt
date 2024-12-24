@@ -9,26 +9,35 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.ARG_TRACK
+import com.example.playlistmaker.app.ARG_TRACK2
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
-import com.example.playlistmaker.media.ui.PlaylistState
+import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
 import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.getValue
 
+
 class PlayerFragment : Fragment() {
+
+    companion object {
+        fun createArgs(track: String): Bundle = bundleOf(ARG_TRACK2 to track)
+    }
+
     private lateinit var binding: FragmentPlayerBinding
     private val vm by viewModel<PlayerViewModel>()
     private lateinit var playButton: ImageView
@@ -38,6 +47,14 @@ class PlayerFragment : Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var bottomSheetContainer: LinearLayout
     private val adapter = PlayerAdapter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            val token = object : TypeToken<Track>() {}.type
+            currentTrack = Gson().fromJson(it.getString(ARG_TRACK2), token)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,15 +67,7 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.playerToolbar.setNavigationOnClickListener {
-//            findNavController().navigateUp()
             findNavController().popBackStack()
-        }
-        try {
-            arguments?.getParcelable<Track>(ARG_TRACK)?.let { track ->
-                currentTrack = track
-            }
-        } catch (e: Exception) {
-            Log.e("DATABASE", e.message.toString())
         }
 
         playButton = binding.playerPlayButton
@@ -87,10 +96,9 @@ class PlayerFragment : Fragment() {
         Glide.with(requireActivity())
             .load(coverResolutionAmplifier())
             .centerCrop()
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(40))
             .placeholder(R.drawable.img_placeholder)
             .into(binding.playerCover)
-
 
         setClickListenersAndObservers()
 
@@ -209,6 +217,8 @@ class PlayerFragment : Fragment() {
             findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
     }
+
+
 }
 
 

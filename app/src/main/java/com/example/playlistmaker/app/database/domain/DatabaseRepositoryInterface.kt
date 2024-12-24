@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface DatabaseRepositoryInterface {
 
-    //tracks
+    //favourite tracks
     suspend fun addTrackToFavourites(track: Track)
     suspend fun deleteTrackFromFavourites(track: Track)
     fun getFavouritesList(): Flow<List<Track>>
@@ -16,4 +16,6 @@ interface DatabaseRepositoryInterface {
     suspend fun removePlaylist(playlist: Playlist)
     suspend fun getAllPlaylists(): Flow<List<Playlist>>
     suspend fun updatePlaylist(playlist: Playlist)
+    suspend fun getPlaylistTracks(playlist: Playlist): Flow<List<Track>>
+    suspend fun removeTrackFromPlaylist(track: Track, playlist: Playlist)
 }

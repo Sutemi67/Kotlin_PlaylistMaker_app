@@ -9,7 +9,8 @@ import com.example.playlistmaker.search.domain.models.Track
 import java.io.IOException
 
 class PlayerRepository(
-    private val player: MediaPlayer, private val database: DatabaseRepositoryInterface
+    private val player: MediaPlayer,
+    private val database: DatabaseRepositoryInterface
 ) : PlayerRepositoryInterface {
 
     override fun setPlayer(

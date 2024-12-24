@@ -4,5 +4,6 @@
     <color name="like_bg_color">#FFFFFF</color>
     <color name="toast_bg_color">@color/YP_white</color>
     <color name="bottom_sheet_color">@color/YP_black</color>
+    <color name="bottom_sheet_dragline_color">@color/YP_white</color>
 
 </resources>

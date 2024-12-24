@@ -172,4 +172,18 @@
         <item name="android:textFontWeight">400</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
+
+    <style name="playlist_header_text">
+        <item name="android:textColor">@color/YP_black</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="details_tracks_count">
+        <item name="android:textColor">@color/YP_black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
 </resources>
