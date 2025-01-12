@@ -1,7 +1,22 @@
 <resources>
+
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorError">@color/YP_black</item>
         <item name="colorAccent">@color/YP_blue</item>
         <item name="android:colorBackground">@color/YP_white</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
     </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/YP_blue</item>
+    </style>
+
+    <item name="playIcon" type="drawable">@drawable/audioplayer_button_play_light</item>
+    <item name="pauseIcon" type="drawable">@drawable/audioplayer_button_pause_light</item>
 </resources>

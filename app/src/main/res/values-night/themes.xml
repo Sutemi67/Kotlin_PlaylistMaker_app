@@ -5,4 +5,7 @@
         <item name="colorError">@color/YP_white</item>
         <item name="colorAccent">@color/YP_blue</item>
     </style>
+
+    <item name="playIcon" type="drawable">@drawable/audioplayer_button_play_dark</item>
+    <item name="pauseIcon" type="drawable">@drawable/audioplayer_button_pause_dark</item>
 </resources>

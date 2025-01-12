@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -40,7 +39,6 @@ class PlayerFragment : Fragment() {
 
     private lateinit var binding: FragmentPlayerBinding
     private val vm by viewModel<PlayerViewModel>()
-    private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currentTime: TextView
     private lateinit var currentTrack: Track
@@ -70,7 +68,6 @@ class PlayerFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        playButton = binding.playerPlayButton
         currentTime = binding.currentTime
 
         binding.ArtistName.text = currentTrack.artistName
@@ -131,22 +128,25 @@ class PlayerFragment : Fragment() {
     }
 
     private fun uiManaging(status: PlaybackStatus) {
+        Log.d("clicks", "uiManaging called with status: $status")
         when (status) {
             PlaybackStatus.Playing -> {
-                playButton.setImageResource(R.drawable.audioplayer_button_pause_light)
+                binding.playerPlayButton.setPlaybackIcon(status)
             }
 
             PlaybackStatus.Paused -> {
-                playButton.setImageResource(R.drawable.audioplayer_button_play_light)
+                binding.playerPlayButton.setPlaybackIcon(status)
+
             }
 
             PlaybackStatus.Ready -> {
-                playButton.setImageResource(R.drawable.audioplayer_button_play_light)
+                binding.playerPlayButton.setPlaybackIcon(status)
                 currentTime.text =
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
             }
 
             PlaybackStatus.Error -> {
+                binding.playerPlayButton.setPlaybackIcon(status)
                 Toast.makeText(requireContext(), "Unsuccessful loading", Toast.LENGTH_SHORT)
                     .show()
             }
@@ -199,7 +199,12 @@ class PlayerFragment : Fragment() {
             }
         }
 
-        playButton.setOnClickListener {
+//        binding.playerPlayButton.setOnPlaybackClickListener {
+//            Log.d("clicks", "нажатие на кнопку обработано")
+//            vm.playOrPauseAction()
+//        }
+        binding.playerPlayButton.setOnClickListener {
+            Log.i("clicks", "нажатие на кнопку обработано стандартно")
             vm.playOrPauseAction()
         }
         binding.playerLike.setOnClickListener {
