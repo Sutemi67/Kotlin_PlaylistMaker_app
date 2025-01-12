@@ -221,8 +221,4 @@ class PlayerFragment : Fragment() {
             findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
     }
-
-
 }
-
-
