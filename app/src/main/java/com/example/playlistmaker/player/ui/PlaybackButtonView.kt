@@ -56,6 +56,7 @@ class PlaybackButtonView @JvmOverloads constructor(
                 pauseBitmap = if (pauseIconResId != 0) {
                     AppCompatResources.getDrawable(context, pauseIconResId)?.toBitmap()
                 } else null
+
             } finally {
                 recycle()
             }

@@ -136,7 +136,6 @@ class PlayerFragment : Fragment() {
 
             PlaybackStatus.Paused -> {
                 binding.playerPlayButton.setPlaybackIcon(status)
-
             }
 
             PlaybackStatus.Ready -> {
