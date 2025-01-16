@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlin.getValue
 
 
 class PlayerFragment : Fragment() {
@@ -57,7 +56,7 @@ class PlayerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPlayerBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -198,12 +197,8 @@ class PlayerFragment : Fragment() {
             }
         }
 
-//        binding.playerPlayButton.setOnPlaybackClickListener {
-//            Log.d("clicks", "нажатие на кнопку обработано")
-//            vm.playOrPauseAction()
-//        }
-        binding.playerPlayButton.setOnClickListener {
-            Log.i("clicks", "нажатие на кнопку обработано стандартно")
+        binding.playerPlayButton.setOnPlaybackClickListener {
+            Log.d("clicks", "нажатие на кнопку обработано")
             vm.playOrPauseAction()
         }
         binding.playerLike.setOnClickListener {

@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
@@ -24,12 +26,12 @@ class PlaybackButtonView @JvmOverloads constructor(
     private var imageRect = RectF(0f, 0f, 0f, 0f)
     private var playBitmap: Bitmap? = null
     private var pauseBitmap: Bitmap? = null
-//    private var onClickListener: (() -> Unit)? = null
-//
-//    fun setOnPlaybackClickListener(listener: () -> Unit) {
-//        Log.d("clicks", "лисенер нажатия создан")
-//        onClickListener = listener
-//    }
+    private var onClickListener: (() -> Unit)? = null
+
+    fun setOnPlaybackClickListener(listener: () -> Unit) {
+        Log.d("clicks", "лисенер нажатия создан")
+        onClickListener = listener
+    }
 
     fun setPlaybackIcon(status: PlaybackStatus) {
         imageBitmap = when (status) {
@@ -74,25 +76,25 @@ class PlaybackButtonView @JvmOverloads constructor(
         }
     }
 
-//    override fun onTouchEvent(event: MotionEvent?): Boolean {
-//        when (event?.action) {
-//            MotionEvent.ACTION_DOWN -> {
-//                Log.d("clicks", "Action Down нажатие")
-//                return true
-//            }
-//
-//            MotionEvent.ACTION_UP -> {
-//                performClick()
-//                Log.d("clicks", "Action Up нажатие")
-//                return true
-//            }
-//        }
-//        return super.onTouchEvent(event)
-//    }
-//
-//    override fun performClick(): Boolean {
-//        Log.d("clicks", "нажатие на кнопку обработано в performClick")
-//        onClickListener?.invoke()
-//        return super.performClick()
-//    }
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when (event?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                Log.d("clicks", "Action Down нажатие")
+                return true
+            }
+
+            MotionEvent.ACTION_UP -> {
+                performClick()
+                Log.d("clicks", "Action Up нажатие")
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
+    override fun performClick(): Boolean {
+        Log.d("clicks", "нажатие на кнопку обработано в performClick")
+        onClickListener?.invoke()
+        return super.performClick()
+    }
 }
