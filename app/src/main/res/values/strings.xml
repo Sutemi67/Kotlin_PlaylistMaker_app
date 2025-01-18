@@ -47,5 +47,7 @@
     <string name="description">Описание</string>
     <string name="name_">Название*</string>
     <string name="image_cover">image_cover</string>
+    <string name="options_menu">options_menu</string>
+    <string name="share_button">share_button</string>
 
 </resources>
