@@ -58,7 +58,7 @@ class DatabaseConverter {
                 it.country,
                 it.collectionName,
                 it.primaryGenreName,
-                it.releaseDate.take(4),
+                it.releaseDate?.take(4) ?: "-",
                 it.isFavourite,
                 it.latestTimeAdded
             )

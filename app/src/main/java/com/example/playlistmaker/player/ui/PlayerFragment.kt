@@ -101,7 +101,12 @@ class PlayerFragment : Fragment() {
         adapter.addTrackInPlaylist = object : AddingTrackInPlaylistInterface {
             override fun addTrackInPlaylist(playlist: Playlist) {
                 vm.addInPlaylist(currentTrack, playlist)
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                vm.addingStatus.observe(viewLifecycleOwner) {
+                    if (it.state) {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    }
+                }
+
             }
         }
     }
