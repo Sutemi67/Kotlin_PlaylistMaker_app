@@ -93,21 +93,25 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="16dp"
+            android:contentDescription="@string/share_button"
             android:padding="4dp"
             android:src="@drawable/ic_share"
             app:layout_constraintStart_toStartOf="@+id/details_summary_duration"
-            app:layout_constraintTop_toBottomOf="@+id/details_summary_duration" />
+            app:layout_constraintTop_toBottomOf="@+id/details_summary_duration"
+            app:tint="@color/YP_black" />
 
         <ImageView
             android:id="@+id/details_more"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="16dp"
+            android:contentDescription="@string/options_menu"
             android:padding="4dp"
             android:src="@drawable/ic_more"
             app:layout_constraintBottom_toBottomOf="@+id/details_share"
             app:layout_constraintStart_toEndOf="@+id/details_share"
-            app:layout_constraintTop_toTopOf="@+id/details_share" />
+            app:layout_constraintTop_toTopOf="@+id/details_share"
+            app:tint="@color/YP_black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,7 +125,8 @@
         android:visibility="visible"
         app:behavior_hideable="false"
         app:behavior_peekHeight="350dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
 
         <View
             android:layout_width="50dp"
@@ -136,7 +141,8 @@
             android:layout_marginTop="12dp"
             android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_item_layout_track" />
+            tools:listitem="@layout/list_item_layout_track"
+            tools:visiblity="invisible" />
 
         <ImageView
             android:id="@+id/no_tracks_in_playlist"
@@ -160,7 +166,8 @@
         android:orientation="vertical"
         android:visibility="visible"
         app:behavior_hideable="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
 
         <View
             android:layout_width="50dp"

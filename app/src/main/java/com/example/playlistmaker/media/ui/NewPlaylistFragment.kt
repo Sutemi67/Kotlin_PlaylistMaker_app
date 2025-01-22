@@ -38,7 +38,7 @@ import java.io.FileOutputStream
 class NewPlaylistFragment(
 ) : Fragment() {
     companion object {
-        fun createArgs(playlist: String): Bundle? = bundleOf(
+        fun createArgs(playlist: String): Bundle = bundleOf(
             ARG_EDIT_PLAYLIST to playlist
         )
     }
@@ -62,7 +62,7 @@ class NewPlaylistFragment(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNewPlaylistBinding.inflate(layoutInflater, container, false)
         Log.i("log", "$playlist")
         return binding.root
@@ -137,12 +137,12 @@ class NewPlaylistFragment(
         binding.playlistName.addTextChangedListener(playlistNameTextWatcher)
         binding.playlistDescription.addTextChangedListener(playlistDescriptionTextWatcher)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this, dialogCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, dialogCallback)
         setOnClickListenersAndBindings()
     }
 
     //TODO подумать над упрощением колбека, может убрать совсем.
-    val dialogCallback = object : OnBackPressedCallback(true) {
+    private val dialogCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             if (binding.playlistName.text?.isEmpty() == false ||
                 binding.playlistDescription.text?.isEmpty() == false ||
@@ -245,8 +245,7 @@ class NewPlaylistFragment(
             binding.createButton.text = "Сохранить"
             binding.toolbar.title = "Редактировать"
             binding.createButton.setOnClickListener {
-                var url = ""
-                url = if (coverUri != null) {
+                val url: String = if (coverUri != null) {
                     coverUri!!.toString()
                 } else {
                     playlist!!.coverUrl.toString()
