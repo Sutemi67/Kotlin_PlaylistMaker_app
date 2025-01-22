@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".app.App"
@@ -25,7 +26,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <receiver
+            android:name=".app.LostConnectionBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.Connectivity_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
