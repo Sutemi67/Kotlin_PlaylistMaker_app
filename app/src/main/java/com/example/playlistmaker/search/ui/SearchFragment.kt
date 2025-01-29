@@ -205,13 +205,6 @@ class SearchFragment : Fragment() {
         super.onResume()
         adapter.setData(vm.getHistory())
         searchAction()
-
-//        ContextCompat.registerReceiver(
-//            requireContext(),
-//            br,
-//            IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"),
-//            ContextCompat.RECEIVER_EXPORTED
-//        )
         requireActivity().registerReceiver(br, IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
     }
 

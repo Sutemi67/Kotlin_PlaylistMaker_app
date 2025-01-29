@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 internal class LostConnectionBroadcastReceiver(
     private val rootView: View
 ) : BroadcastReceiver() {
+
     override fun onReceive(p0: Context?, p1: Intent?) {
         if (p1?.action == "android.net.conn.CONNECTIVITY_CHANGE") {
             val connectivityManager =
@@ -19,20 +20,22 @@ internal class LostConnectionBroadcastReceiver(
                 connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
 
             if (networkCapabilities != null) {
-                // Сеть доступна
+                //
                 if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                    // делаем дела когда доступна
+                    //
                 } else {
-                    // есть сеть, но нет интернета
                     Snackbar.make(
                         rootView,
-                        "Отсутствует интернет в данной сети",
+                        "Пропал интернет, проверьте интернет-соединение",
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
             } else {
-                // нет доступных сетей
-                Snackbar.make(rootView, "Нет доступных сетей", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    rootView,
+                    "Устройство не подключено к сети",
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
     }

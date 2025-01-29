@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.ui
 
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.ARG_TRACK2
+import com.example.playlistmaker.app.LostConnectionBroadcastReceiver
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
@@ -44,6 +46,7 @@ class PlayerFragment : Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var bottomSheetContainer: LinearLayout
     private val adapter = PlayerAdapter()
+    private val br by lazy { LostConnectionBroadcastReceiver(requireView()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,9 +69,7 @@ class PlayerFragment : Fragment() {
         binding.playerToolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-
         currentTime = binding.currentTime
-
         binding.ArtistName.text = currentTrack.artistName
         binding.TrackName.text = currentTrack.trackName
         binding.collectionName.text = currentTrack.collectionName
@@ -110,22 +111,6 @@ class PlayerFragment : Fragment() {
             }
         }
     }
-
-    override fun onPause() {
-        super.onPause()
-        vm.pausing()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        vm.reset()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        vm.reset()
-    }
-
 
     private fun coverResolutionAmplifier(): String? {
         return currentTrack.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
@@ -221,4 +206,29 @@ class PlayerFragment : Fragment() {
             findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
     }
+
+    //region Other fragment-lifecycle methods
+    override fun onPause() {
+        super.onPause()
+        vm.pausing()
+        requireActivity().unregisterReceiver(br)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(
+            br, IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        vm.reset()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        vm.reset()
+    }
+//endregion
 }
