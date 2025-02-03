@@ -19,6 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.PlaylistMaker"
         tools:targetApi="31">
+
+
         <activity
             android:name=".main.ui.SingleActivity"
             android:exported="true"
@@ -29,6 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <receiver
             android:name=".app.LostConnectionBroadcastReceiver"
             android:exported="true">
@@ -36,6 +40,13 @@
                 <action android:name="android.net.conn.Connectivity_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".app.PlayerService"
+            android:enabled="true"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>

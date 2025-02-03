@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.data
+package com.example.playlistmaker.media.ui.stateInterfaces
 
 sealed interface PlaybackStatus {
     data object Playing : PlaybackStatus

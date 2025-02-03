@@ -1,7 +1,12 @@
 package com.example.playlistmaker.player.ui
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -18,10 +24,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.ARG_TRACK2
 import com.example.playlistmaker.app.LostConnectionBroadcastReceiver
+import com.example.playlistmaker.app.PlayerService
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.media.ui.stateInterfaces.PlayerState
 import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
-import com.example.playlistmaker.player.data.PlaybackStatus
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
@@ -48,12 +55,37 @@ class PlayerFragment : Fragment() {
     private val adapter = PlayerAdapter()
     private val br by lazy { LostConnectionBroadcastReceiver(requireView()) }
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            bindMusicService()
+        } else {
+            Toast.makeText(requireContext(), "Can't bind service!", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as PlayerService.PlayerServiceBinder
+            vm.setAudioPlayerControl(binder.getService())
+            Log.i("MusicService", "Service connected")
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            vm.removeAudioPlayerControl()
+            Log.e("MusicService", "service disconnected")
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val token = object : TypeToken<Track>() {}.type
             currentTrack = Gson().fromJson(it.getString(ARG_TRACK2), token)
         }
+        bindMusicService()
     }
 
     override fun onCreateView(
@@ -107,51 +139,37 @@ class PlayerFragment : Fragment() {
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     }
                 }
-
             }
         }
+    }
+
+    private fun bindMusicService() {
+        val intent = Intent(requireContext(), PlayerService::class.java).apply {
+            putExtra("song_url", currentTrack.previewUrl)
+        }
+        requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        Log.d("MusicService", "bind service")
+    }
+
+    private fun unbindMusicService() {
+        requireContext().unbindService(serviceConnection)
+        Log.e("MusicService", "unbind service")
+
     }
 
     private fun coverResolutionAmplifier(): String? {
         return currentTrack.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
     }
 
-    private fun uiManaging(status: PlaybackStatus) {
-        Log.d("clicks", "uiManaging called with status: $status")
-        when (status) {
-            PlaybackStatus.Playing -> {
-                binding.playerPlayButton.setPlaybackIcon(status)
-            }
-
-            PlaybackStatus.Paused -> {
-                binding.playerPlayButton.setPlaybackIcon(status)
-            }
-
-            PlaybackStatus.Ready -> {
-                binding.playerPlayButton.setPlaybackIcon(status)
-                currentTime.text =
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
-            }
-
-            PlaybackStatus.Error -> {
-                binding.playerPlayButton.setPlaybackIcon(status)
-                Toast.makeText(requireContext(), "Unsuccessful loading", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
+    private fun updateButtonAndProgress(state: PlayerState) {
+        binding.playerPlayButton.setPlaybackIcon(state)
+        binding.currentTime.text = state.progress
     }
 
     private fun setClickListenersAndObservers() {
 
-        vm.setPlayer(
-            previewUrl = previewUrl,
-            context = requireContext(),
-        )
         vm.setFavouriteState(currentTrack)
 
-        vm.getPlaybackLiveData().observe(viewLifecycleOwner) {
-            uiManaging(it)
-        }
         vm.addingStatus.observe(viewLifecycleOwner) {
             if (it.state) Toast.makeText(
                 requireContext(),
@@ -163,9 +181,6 @@ class PlayerFragment : Fragment() {
                 "Трек уже добавлен в плейлист ${it.playlist.name}",
                 Toast.LENGTH_SHORT
             ).show()
-        }
-        vm.getCounterText().observe(viewLifecycleOwner) {
-            currentTime.text = it
         }
         vm.getLikeState().observe(viewLifecycleOwner) {
             if (it) {
@@ -188,13 +203,14 @@ class PlayerFragment : Fragment() {
         }
 
         binding.playerPlayButton.setOnPlaybackClickListener {
-            Log.d("clicks", "нажатие на кнопку обработано")
-            vm.playOrPauseAction()
+            vm.onPlayerButtonClicked()
         }
+
         binding.playerLike.setOnClickListener {
             vm.toggleFavourite(currentTrack)
             currentTrack.isFavourite = !currentTrack.isFavourite
         }
+
         binding.playerAddPlaylistButton.setOnClickListener {
             lifecycleScope.launch {
                 Log.i("DATABASE", "пошел запрос списка")
@@ -202,15 +218,19 @@ class PlayerFragment : Fragment() {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
+
         binding.newPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+        }
+        vm.observePlayerState().observe(viewLifecycleOwner) {
+            updateButtonAndProgress(it)
+            Log.i("MusicService", "статус - $it")
         }
     }
 
     //region Other fragment-lifecycle methods
     override fun onPause() {
         super.onPause()
-        vm.pausing()
         requireActivity().unregisterReceiver(br)
     }
 
@@ -222,13 +242,12 @@ class PlayerFragment : Fragment() {
     }
 
     override fun onDestroy() {
+        unbindMusicService()
         super.onDestroy()
-        vm.reset()
     }
 
     override fun onStop() {
         super.onStop()
-        vm.reset()
     }
 //endregion
 }
