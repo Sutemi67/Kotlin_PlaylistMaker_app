@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
@@ -35,8 +34,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class PlayerFragment : Fragment() {
@@ -48,7 +45,6 @@ class PlayerFragment : Fragment() {
     private lateinit var binding: FragmentPlayerBinding
     private val vm by viewModel<PlayerViewModel>()
     private lateinit var previewUrl: String
-    private lateinit var currentTime: TextView
     private lateinit var currentTrack: Track
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var bottomSheetContainer: LinearLayout
@@ -101,7 +97,6 @@ class PlayerFragment : Fragment() {
         binding.playerToolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        currentTime = binding.currentTime
         binding.ArtistName.text = currentTrack.artistName
         binding.TrackName.text = currentTrack.trackName
         binding.collectionName.text = currentTrack.collectionName
@@ -109,7 +104,6 @@ class PlayerFragment : Fragment() {
         binding.playerPrimaryGenre.text = currentTrack.primaryGenreName
         binding.releaseDate.text = currentTrack.releaseDate
         previewUrl = currentTrack.previewUrl.toString()
-        val getDuration = currentTrack.trackTime
 
         bottomSheetContainer = binding.bottomSheet
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
@@ -117,10 +111,6 @@ class PlayerFragment : Fragment() {
         }
 
         binding.bottomList.adapter = adapter
-
-        currentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0L)
-        binding.playerDuration.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(getDuration)
 
         Glide.with(requireActivity())
             .load(coverResolutionAmplifier())
@@ -154,7 +144,6 @@ class PlayerFragment : Fragment() {
     private fun unbindMusicService() {
         requireContext().unbindService(serviceConnection)
         Log.e("MusicService", "unbind service")
-
     }
 
     private fun coverResolutionAmplifier(): String? {
