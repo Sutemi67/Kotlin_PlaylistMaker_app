@@ -7,4 +7,6 @@ interface PlayerControlsInterface {
     fun getPlayerState(): StateFlow<PlayerState>
     fun startPlayer()
     fun pausePlayer()
+    fun startForeground()
+    fun stopForeground()
 }

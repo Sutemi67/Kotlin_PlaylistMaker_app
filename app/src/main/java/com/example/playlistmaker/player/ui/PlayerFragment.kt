@@ -1,10 +1,12 @@
 package com.example.playlistmaker.player.ui
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -57,7 +59,7 @@ class PlayerFragment : Fragment() {
         if (isGranted) {
             bindMusicService()
         } else {
-            Toast.makeText(requireContext(), "Can't bind service!", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Can't show notification!", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -81,7 +83,11 @@ class PlayerFragment : Fragment() {
             val token = object : TypeToken<Track>() {}.type
             currentTrack = Gson().fromJson(it.getString(ARG_TRACK2), token)
         }
-        bindMusicService()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(POST_NOTIFICATIONS)
+        } else {
+            bindMusicService()
+        }
     }
 
     override fun onCreateView(
@@ -136,6 +142,8 @@ class PlayerFragment : Fragment() {
     private fun bindMusicService() {
         val intent = Intent(requireContext(), PlayerService::class.java).apply {
             putExtra("song_url", currentTrack.previewUrl)
+            putExtra("artist_name", currentTrack.artistName)
+            putExtra("track_name", currentTrack.trackName)
         }
         requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         Log.d("MusicService", "bind service")
@@ -171,6 +179,7 @@ class PlayerFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+
         vm.getLikeState().observe(viewLifecycleOwner) {
             if (it) {
                 binding.playerLike.setImageResource(R.drawable.like_button_active)
@@ -178,6 +187,7 @@ class PlayerFragment : Fragment() {
                 binding.playerLike.setImageResource(R.drawable.like_button)
             }
         }
+
         vm.listState.observe(viewLifecycleOwner) {
             when (it) {
                 is PlaylistState.EmptyList -> {
@@ -211,6 +221,7 @@ class PlayerFragment : Fragment() {
         binding.newPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
+
         vm.observePlayerState().observe(viewLifecycleOwner) {
             updateButtonAndProgress(it)
             Log.i("MusicService", "статус - $it")

@@ -45,5 +45,6 @@ class SingleActivity : AppCompatActivity() {
             }
         }
         vm.setThemeValue()
+
     }
 }
