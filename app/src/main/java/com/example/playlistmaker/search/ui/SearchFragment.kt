@@ -1,6 +1,7 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Context
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.app.CLICK_DEBOUNCE_DELAY
+import com.example.playlistmaker.app.LostConnectionBroadcastReceiver
 import com.example.playlistmaker.app.SEARCH_REFRESH_RATE
 import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
 import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
@@ -47,6 +49,7 @@ class SearchFragment : Fragment() {
     private lateinit var reloadButton: Button
 
     private val vm by viewModel<SearchViewModel>()
+    private val br by lazy { LostConnectionBroadcastReceiver(requireView()) }
 
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
@@ -148,12 +151,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        adapter.setData(vm.getHistory())
-        searchAction()
-    }
-
     private fun searchAction() {
         val input = binding.searchInputText.text
         if (input.isNullOrEmpty()) return
@@ -202,6 +199,18 @@ class SearchFragment : Fragment() {
                 binding.historyLayout.isVisible = false
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.setData(vm.getHistory())
+        searchAction()
+        requireActivity().registerReceiver(br, IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().unregisterReceiver(br)
     }
 }
 

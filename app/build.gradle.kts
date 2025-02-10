@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.navigation.dynamic.features.fragment)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

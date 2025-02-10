@@ -13,7 +13,7 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import com.example.playlistmaker.R
-import com.example.playlistmaker.player.data.PlaybackStatus
+import com.example.playlistmaker.media.ui.stateInterfaces.PlayerState
 
 class PlaybackButtonView @JvmOverloads constructor(
     context: Context,
@@ -33,9 +33,9 @@ class PlaybackButtonView @JvmOverloads constructor(
         onClickListener = listener
     }
 
-    fun setPlaybackIcon(status: PlaybackStatus) {
+    fun setPlaybackIcon(status: PlayerState) {
         imageBitmap = when (status) {
-            PlaybackStatus.Playing -> pauseBitmap
+            is PlayerState.Playing -> pauseBitmap
             else -> playBitmap
         }
         invalidate()

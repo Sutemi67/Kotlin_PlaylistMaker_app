@@ -1,5 +1,6 @@
 package com.example.playlistmaker.app.di
 
+import com.example.playlistmaker.app.PlayerService
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
 import com.example.playlistmaker.media.ui.FavouritesViewModel
 import com.example.playlistmaker.media.ui.NewPlaylistViewModel
@@ -20,4 +21,6 @@ val appModule = module {
     viewModel { NewPlaylistViewModel(get()) }
     viewModel { PlaylistsViewModel(get()) }
     viewModel { PlaylistDetailsViewModel(get()) }
+
+    single<PlayerService> { PlayerService() }
 }
