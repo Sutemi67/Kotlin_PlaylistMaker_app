@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -16,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -32,6 +34,7 @@ import com.example.playlistmaker.media.ui.stateInterfaces.PlayerState
 import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -84,7 +87,18 @@ class PlayerFragment : Fragment() {
             currentTrack = Gson().fromJson(it.getString(ARG_TRACK2), token)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionLauncher.launch(POST_NOTIFICATIONS)
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_DENIED
+            ) {
+                if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) == true) {
+                    Log.e("MusicService", "показываю вьюху-обоснование")
+                    showPermissionInfoDialog()
+                }
+            } else {
+                bindMusicService()
+            }
         } else {
             bindMusicService()
         }
@@ -152,6 +166,16 @@ class PlayerFragment : Fragment() {
     private fun unbindMusicService() {
         requireContext().unbindService(serviceConnection)
         Log.e("MusicService", "unbind service")
+    }
+
+    private fun showPermissionInfoDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Нужно ваше разрешение на уведомления")
+            .setMessage("Без разрешения на уведомления мы не сможем запустить проигрывание треков, таково задание :(")
+            .setPositiveButton("Ну ок") { dialog, which ->
+                Log.e("MusicService", "запрашиваю разрешение")
+                requestPermissionLauncher.launch(POST_NOTIFICATIONS)
+            }.show()
     }
 
     private fun coverResolutionAmplifier(): String? {
@@ -231,6 +255,7 @@ class PlayerFragment : Fragment() {
     //region Other fragment-lifecycle methods
     override fun onPause() {
         super.onPause()
+        vm.startForegroundPlaying()
         requireActivity().unregisterReceiver(br)
     }
 
@@ -239,14 +264,21 @@ class PlayerFragment : Fragment() {
         requireActivity().registerReceiver(
             br, IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
         )
+        vm.stopForegroundPlaying()
     }
 
     override fun onDestroy() {
-        unbindMusicService()
+        try {
+            unbindMusicService()
+        } catch (e: Exception) {
+            Log.e("MusicService", "service was not bound.\n${e.message}")
+        }
+
         super.onDestroy()
     }
 
     override fun onStop() {
+        vm.startForegroundPlaying()
         super.onStop()
     }
 //endregion

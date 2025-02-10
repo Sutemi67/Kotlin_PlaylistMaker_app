@@ -134,7 +134,7 @@ class PlayerService() : Service(), PlayerControlsInterface {
         Log.d(LOG_TAG, "Media Player started")
         mediaPlayer?.start()
         startTimer()
-        startForeground()
+//        startForeground()
     }
 
     override fun pausePlayer() {

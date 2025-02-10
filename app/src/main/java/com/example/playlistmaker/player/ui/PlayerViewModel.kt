@@ -88,4 +88,14 @@ class PlayerViewModel(
             )
         }
     }
+
+    fun startForegroundPlaying() {
+        if (playerState.value is PlayerState.Playing) {
+            playerControls?.startForeground()
+        }
+    }
+
+    fun stopForegroundPlaying() {
+        playerControls?.stopForeground()
+    }
 }
