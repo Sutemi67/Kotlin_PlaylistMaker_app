@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -32,10 +33,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    composeCompiler {
+        enableStrongSkippingMode = true
+    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
+//    composeCompiler {
+//        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+//        stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+//    }
     buildFeatures {
+        compose = true
         viewBinding = true
     }
 }
@@ -72,5 +81,11 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(kotlin("reflect"))
 
-
+    //Jetpack Compose
+    val composeBom = platform("androidx.compose:compose-bom:2025.02.00")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation(libs.material3)
+    implementation(libs.ui.tooling.preview)
+    debugImplementation(libs.ui.tooling)
 }
