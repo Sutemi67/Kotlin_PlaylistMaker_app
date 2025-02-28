@@ -33,16 +33,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    composeCompiler {
-        enableStrongSkippingMode = true
-    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
-//    composeCompiler {
-//        reportsDestination = layout.buildDirectory.dir("compose_compiler")
-//        stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
-//    }
     buildFeatures {
         compose = true
         viewBinding = true
@@ -56,7 +49,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.koin.android)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.navigation.dynamic.features.fragment)
@@ -67,6 +59,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     annotationProcessor(libs.compiler)
+
+    //Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.viewmodel.navigation)
 
     //Network
     implementation(libs.retrofit)
@@ -88,5 +86,5 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.ui.tooling.preview)
     debugImplementation(libs.ui.tooling)
-    implementation (libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
 }
