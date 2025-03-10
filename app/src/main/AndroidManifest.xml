@@ -19,19 +19,27 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.PlaylistMaker"
         tools:targetApi="31">
-
-
         <activity
-            android:name=".main.ui.SingleActivity"
+            android:name=".main.ui.MainComposeActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:label="@string/title_activity_main_compose"
+            android:theme="@style/Base.Theme.PlaylistMaker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".main.ui.SingleActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
 
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
 
         <receiver
             android:name=".app.LostConnectionBroadcastReceiver"
@@ -46,8 +54,6 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
-
-
     </application>
 
 </manifest>

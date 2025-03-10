@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.playlistmaker.R
-import com.example.playlistmaker.compose.styles.mediumTextStyle
+import com.example.playlistmaker.main.ui.ui.theme.Typography
 
 @Composable
 fun AppTopBar(
@@ -40,7 +40,7 @@ fun AppTopBar(
         }
         Text(
             text = text,
-            style = mediumTextStyle,
+            style = Typography.bodyMedium,
             modifier = Modifier.padding(start = 10.dp)
         )
     }

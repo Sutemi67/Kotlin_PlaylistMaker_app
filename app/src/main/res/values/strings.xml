@@ -49,5 +49,6 @@
     <string name="image_cover">image_cover</string>
     <string name="options_menu">options_menu</string>
     <string name="share_button">share_button</string>
+    <string name="title_activity_main_compose">MainComposeActivity</string>
 
 </resources>
