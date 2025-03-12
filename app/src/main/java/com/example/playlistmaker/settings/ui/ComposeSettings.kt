@@ -1,5 +1,6 @@
 package com.example.playlistmaker.settings.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -23,35 +24,35 @@ import androidx.compose.ui.unit.dp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
+import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ComposeSettings(
-    vm: SingleActivityViewModel = koinViewModel(),
+    singleActivityViewModel: SingleActivityViewModel,
+    settingsViewModel: FragmentSettingsViewModel,
     onBackClick: () -> Unit
 ) {
-    Scaffold(topBar = {
-        AppTopBar(false, "Настройки") {
-            onBackClick
-        }
-    }) { paddingValues ->
+    Scaffold(
+        topBar = { AppTopBar(false, "Настройки") { onBackClick() } }
+    ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            SwitcherRow(vm)
+            SwitcherRow(vm = singleActivityViewModel)
             TextIconRow(
                 text = "Поделиться приложением",
                 icon = painterResource(R.drawable.ic_share),
-                onClick = { }
+                onClick = { settingsViewModel.onShareClick() }
             )
             TextIconRow(
                 text = "Написать в поддержку",
                 icon = painterResource(R.drawable.ic_support),
-                onClick = { }
+                onClick = { settingsViewModel.onLinkClick() }
             )
             TextIconRow(
                 text = "Пользовательское соглашение",
                 icon = painterResource(R.drawable.ic_next),
-                onClick = { }
+                onClick = { settingsViewModel.onAgreementClick() }
             )
         }
     }
@@ -78,29 +79,29 @@ private fun TextIconRow(text: String, icon: Painter, onClick: () -> Unit) {
 private fun SwitcherRow(
     vm: SingleActivityViewModel,
 ) {
-    var isDarkTheme = true
-
-    LaunchedEffect(Unit) {
-        vm.result.collect { data ->
-            isDarkTheme = data
-        }
-    }
+    val darkModeState = vm.viewStates().collectAsState()
 
     Row(
-        modifier = rowModifier.clickable(enabled = true, onClick = { vm.toggleTheme() }),
+        modifier = rowModifier
+            .clickable(
+                onClick = { }
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text("Темная тема", modifier = Modifier.padding(5.dp), style = Typography.bodyMedium)
         Switch(
-            checked = isDarkTheme,
+            checked = darkModeState.value,
             onCheckedChange = { vm.toggleTheme() }
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun TextIconRowPreview() {
-    TextIconRow("dfgsdg", painterResource(R.drawable.ic_next)) { }
+private fun TextIconRowPreview() {
+    PlaylistMakerTheme {
+        SwitcherRow(vm = koinViewModel())
+    }
 }

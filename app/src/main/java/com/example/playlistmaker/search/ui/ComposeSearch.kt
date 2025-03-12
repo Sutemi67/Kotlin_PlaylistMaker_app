@@ -51,7 +51,7 @@ fun ComposeSearch(
             if (true) {//todo написать условие полноты списка
                 SearchContent(1)
             }
-            ElevatedButton(onClick = toSettingsClick) { }
+            ElevatedButton(onClick = toSettingsClick) { Text ( "перейти в настройки" ) }
         }
     }
 }

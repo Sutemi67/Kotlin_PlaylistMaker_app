@@ -34,7 +34,7 @@ fun AppTopBar(
                 painter = painterResource(id = R.drawable.ic_back_arrow),
                 contentDescription = "back icon",
                 modifier = Modifier
-                    .clickable { onClick }
+                    .clickable { onClick() }
                     .padding(horizontal = 10.dp)
             )
         }
