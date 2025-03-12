@@ -14,7 +14,6 @@ val Typography = Typography(
     bodySmall = TextStyle(
         textAlign = TextAlign.Start,
         fontSize = 16.sp,
-        color = yp_black,
         fontWeight = FontWeight(400),
         fontFamily = FontFamily(Font(R.font.ys_display_regular))
     ),

@@ -43,7 +43,7 @@ fun BottomNavBar(navController: NavHostController) {
                 label = { Text(text = item.name) },
                 selected = currentRoute == item.route,
                 onClick = {
-                    if (currentRoute != item.route) {
+//                    if (currentRoute != item.route) {
                         navController.navigate(item.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
@@ -51,7 +51,7 @@ fun BottomNavBar(navController: NavHostController) {
                             launchSingleTop = true
                             restoreState = true
                         }
-                    }
+//                    }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,

@@ -84,12 +84,12 @@ private fun SwitcherRow(
     Row(
         modifier = rowModifier
             .clickable(
-                onClick = { }
+                onClick = { vm.toggleTheme() }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text("Темная тема", modifier = Modifier.padding(5.dp), style = Typography.bodyMedium)
+        Text("Темная тема", modifier = Modifier.padding(5.dp), style = Typography.bodySmall)
         Switch(
             checked = darkModeState.value,
             onCheckedChange = { vm.toggleTheme() }

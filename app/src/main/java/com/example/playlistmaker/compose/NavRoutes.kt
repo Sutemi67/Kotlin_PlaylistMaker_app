@@ -35,6 +35,6 @@ sealed class NavRoutes(
     )
 
     companion object {
-        val items by lazy { listOf(Search, Settings, Media) }
+        val items by lazy { listOf(Search, Media, Settings) }
     }
 }

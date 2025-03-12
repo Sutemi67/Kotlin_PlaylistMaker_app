@@ -30,7 +30,9 @@ fun ComposeSearch(
 ) {
     var inputText by remember { mutableStateOf("") }
 
-    Scaffold(topBar = { AppTopBar(false, "Поиск") {} }) { paddingValues ->
+    Scaffold(
+        topBar = { AppTopBar(false, "Поиск") {} }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

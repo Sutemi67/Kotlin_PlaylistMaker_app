@@ -1,10 +1,18 @@
 package com.example.playlistmaker.main.navigation
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -39,6 +47,7 @@ fun PlaylistMakerApp() {
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PlaylistMakerScreen(
     navController: NavHostController,
@@ -46,28 +55,34 @@ fun PlaylistMakerScreen(
     settingsViewModel: FragmentSettingsViewModel
 ) {
 
-    val currentBackStack by navController.currentBackStackEntryAsState()
-    val currentDestination = currentBackStack?.destination
+//    val currentBackStack by navController.currentBackStackEntryAsState()
+//    val currentDestination = currentBackStack?.destination
+
+//    val systemBarsPadding = WindowInsets.systemBars
+//        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+//        .asPaddingValues()
 
     Scaffold(
-        topBar = {
-            AppTopBar(
-                isIconNeeded = when (currentDestination?.route) {
-                    NavRoutes.Search.route -> NavRoutes.Search.isIcon
-                    NavRoutes.Settings.route -> NavRoutes.Settings.isIcon
-                    else -> false
-                },
-                text = when (currentDestination?.route) {
-                    NavRoutes.Search.route -> NavRoutes.Search.name
-                    NavRoutes.Settings.route -> NavRoutes.Settings.name
-                    else -> ""
-                },
-                onClick = { navController.popBackStack() })
-        },
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars),
+//        topBar = {
+//            AppTopBar(
+//                isIconNeeded = when (currentDestination?.route) {
+//                    NavRoutes.Search.route -> NavRoutes.Search.isIcon
+//                    NavRoutes.Settings.route -> NavRoutes.Settings.isIcon
+//                    else -> false
+//                },
+//                text = when (currentDestination?.route) {
+//                    NavRoutes.Search.route -> NavRoutes.Search.name
+//                    NavRoutes.Settings.route -> NavRoutes.Settings.name
+//                    else -> ""
+//                },
+//                onClick = { navController.popBackStack() })
+//        },
         bottomBar = { BottomNavBar(navController) }
-    ) { innerPadding ->
+    ) {
         NavGraph(
-            innerPadding = innerPadding,
             navController = navController,
             activityViewModel = activityViewModel,
             settingsViewModel = settingsViewModel
