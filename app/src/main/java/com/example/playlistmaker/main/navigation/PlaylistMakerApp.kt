@@ -1,26 +1,20 @@
 package com.example.playlistmaker.main.navigation
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.playlistmaker.app.MusicServiceConnection
-import com.example.playlistmaker.app.PlayerService
 import com.example.playlistmaker.compose.BottomNavBar
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
@@ -39,21 +33,6 @@ fun PlaylistMakerApp() {
     val context = LocalContext.current
     val navController = rememberNavController()
     val darkModeState: Boolean by activityViewModel.viewStates().collectAsState()
-
-    val serviceConnection = remember { MusicServiceConnection(playerViewModel) }
-    val playerState by playerViewModel.observePlayerState().observeAsState()
-
-
-    LaunchedEffect(Unit) {
-        val intent = Intent(context, PlayerService::class.java).apply {
-            putExtra("song_url", SONG_URL)
-        }
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-
-        onDispose {
-            context.unbindService(serviceConnection)
-        }
-    }
 
     PlaylistMakerTheme(
         darkTheme = darkModeState

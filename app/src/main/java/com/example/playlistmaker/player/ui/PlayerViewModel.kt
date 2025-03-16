@@ -11,6 +11,9 @@ import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
 import com.example.playlistmaker.player.domain.PlayerInteractorInterface
 import com.example.playlistmaker.search.domain.SearchRepositoryInterface
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -27,14 +30,20 @@ class PlayerViewModel(
     val addingStatus: LiveData<TrackToPlaylistState> = _addingStatus
 
     private var playerControls: PlayerControlsInterface? = null
+
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Loading())
     fun observePlayerState(): LiveData<PlayerState> = playerState
+
+    //for compose
+    private val _playerStateAsState = MutableStateFlow<PlayerState>(PlayerState.Loading())
+    val playerStateAsState: StateFlow<PlayerState> = _playerStateAsState.asStateFlow()
 
     fun setAudioPlayerControl(playerControl: PlayerControlsInterface) {
         playerControls = playerControl
         viewModelScope.launch {
             playerControls?.getPlayerState()?.collect {
                 playerState.postValue(it)
+                _playerStateAsState.value = it
             }
         }
     }
