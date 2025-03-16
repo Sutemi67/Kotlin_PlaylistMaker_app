@@ -1,6 +1,7 @@
 package com.example.playlistmaker.compose
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -33,8 +34,14 @@ sealed class NavRoutes(
         isIcon = false,
         icon = Icons.Default.PlayArrow
     )
+    object Player : NavRoutes(
+        name = "",
+        route = "player/{trackJson}",
+        isIcon = true,
+        icon = Icons.AutoMirrored.Filled.ArrowBack
+    )
 
     companion object {
-        val items by lazy { listOf(Search, Media, Settings) }
+        val items by lazy { listOf(Search, Media, Settings, Player) }
     }
 }

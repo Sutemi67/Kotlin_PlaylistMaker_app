@@ -54,32 +54,10 @@ fun PlaylistMakerScreen(
     activityViewModel: SingleActivityViewModel,
     settingsViewModel: FragmentSettingsViewModel
 ) {
-
-//    val currentBackStack by navController.currentBackStackEntryAsState()
-//    val currentDestination = currentBackStack?.destination
-
-//    val systemBarsPadding = WindowInsets.systemBars
-//        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-//        .asPaddingValues()
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars),
-//        topBar = {
-//            AppTopBar(
-//                isIconNeeded = when (currentDestination?.route) {
-//                    NavRoutes.Search.route -> NavRoutes.Search.isIcon
-//                    NavRoutes.Settings.route -> NavRoutes.Settings.isIcon
-//                    else -> false
-//                },
-//                text = when (currentDestination?.route) {
-//                    NavRoutes.Search.route -> NavRoutes.Search.name
-//                    NavRoutes.Settings.route -> NavRoutes.Settings.name
-//                    else -> ""
-//                },
-//                onClick = { navController.popBackStack() })
-//        },
         bottomBar = { BottomNavBar(navController) }
     ) {
         NavGraph(

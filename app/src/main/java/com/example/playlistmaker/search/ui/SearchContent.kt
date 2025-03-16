@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.playlistmaker.compose.Errors
+import com.example.playlistmaker.compose.ThemePreviews
+import com.example.playlistmaker.media.ui.PlaceholderError
 
 @Composable
 fun SearchContent(answerCode: Int) {
@@ -29,15 +31,15 @@ fun SearchContent(answerCode: Int) {
                 Text("Очистить историю")
             }
         } else if (answerCode == 200) {
-            PlaceholderNothingFound()
+            PlaceholderError(Errors.SearchNothingFound)
         } else {
 
         }
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun Kkdd() {
-    SearchContent(1)
+    SearchContent(0)
 }

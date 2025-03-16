@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.playlistmaker.R
+import com.example.playlistmaker.compose.ThemePreviews
 import com.example.playlistmaker.compose.UniversalButton
 
 @Composable
@@ -30,7 +30,7 @@ fun PlaceholderNoConnection() {
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun Kkdddd() {
     PlaceholderNoConnection()

@@ -29,7 +29,7 @@ import com.example.playlistmaker.main.ui.ui.theme.Typography
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ComposeSettings(
+fun ComposeSettingsScreen(
     singleActivityViewModel: SingleActivityViewModel,
     settingsViewModel: FragmentSettingsViewModel,
     onBackClick: () -> Unit

@@ -2,14 +2,16 @@ package com.example.playlistmaker.main.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
-import com.example.playlistmaker.search.ui.ComposeSearch
-import com.example.playlistmaker.settings.ui.ComposeSettings
+import com.example.playlistmaker.media.ui.ComposableMediaScreen
+import com.example.playlistmaker.media.ui.JsonConverter
+import com.example.playlistmaker.player.ui.ComposePlayerScreen
+import com.example.playlistmaker.search.ui.ComposeSearchScreen
+import com.example.playlistmaker.settings.ui.ComposeSettingsScreen
 import com.example.playlistmaker.settings.ui.FragmentSettingsViewModel
 
 @Composable
@@ -22,31 +24,27 @@ fun NavGraph(
     ) {
         NavHost(
             navController = navController,
-            startDestination = NavRoutes.Search.route
+            startDestination = NavRoutes.Media.route
         ) {
             composable(route = NavRoutes.Search.route) {
-                ComposeSearch {
-                    navController.navigate(route = NavRoutes.Settings.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+                ComposeSearchScreen(navController = navController)
             }
             composable(route = NavRoutes.Media.route) {
-                ComposeSettings(
+                ComposableMediaScreen(navController)
+            }
+            composable(route = NavRoutes.Settings.route) {
+                ComposeSettingsScreen(
                     singleActivityViewModel = activityViewModel,
                     settingsViewModel = settingsViewModel,
                     onBackClick = { navController.popBackStack() }
                 )
             }
-            composable(route = NavRoutes.Settings.route) {
-                ComposeSettings(
-                    singleActivityViewModel = activityViewModel,
-                    settingsViewModel = settingsViewModel,
-                    onBackClick = { navController.popBackStack() }
+            composable(route = NavRoutes.Player.route) { backStackEntry ->
+                val jsonTrack = backStackEntry.arguments?.getString("trackJson") ?: ""
+                val track = JsonConverter.jsonToTrack(jsonTrack)
+                ComposePlayerScreen(
+                    screenSettings = NavRoutes.Player,
+                    track = track
                 )
             }
         }
