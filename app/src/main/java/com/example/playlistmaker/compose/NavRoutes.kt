@@ -36,12 +36,12 @@ sealed class NavRoutes(
     )
     object Player : NavRoutes(
         name = "",
-        route = "player/{trackJson}",
+        route = "player",
         isIcon = true,
         icon = Icons.AutoMirrored.Filled.ArrowBack
     )
 
     companion object {
-        val items by lazy { listOf(Search, Media, Settings, Player) }
+        val bottomMenuItems by lazy { listOf(Search, Media, Settings) }
     }
 }

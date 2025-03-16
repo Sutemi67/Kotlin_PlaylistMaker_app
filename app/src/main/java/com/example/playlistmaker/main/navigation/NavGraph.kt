@@ -3,22 +3,27 @@ package com.example.playlistmaker.main.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
 import com.example.playlistmaker.media.ui.ComposableMediaScreen
 import com.example.playlistmaker.media.ui.JsonConverter
 import com.example.playlistmaker.player.ui.ComposePlayerScreen
+import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.search.ui.ComposeSearchScreen
 import com.example.playlistmaker.settings.ui.ComposeSettingsScreen
 import com.example.playlistmaker.settings.ui.FragmentSettingsViewModel
+import java.net.URLDecoder
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     activityViewModel: SingleActivityViewModel,
-    settingsViewModel: FragmentSettingsViewModel
+    settingsViewModel: FragmentSettingsViewModel,
+    playerViewModel: PlayerViewModel
 ) {
     Box(
     ) {
@@ -39,12 +44,18 @@ fun NavGraph(
                     onBackClick = { navController.popBackStack() }
                 )
             }
-            composable(route = NavRoutes.Player.route) { backStackEntry ->
-                val jsonTrack = backStackEntry.arguments?.getString("trackJson") ?: ""
+            composable(
+                route = "${NavRoutes.Player.route}/{trackJson}",
+                arguments = listOf(navArgument("trackJson") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val encodedJson = backStackEntry.arguments?.getString("trackJson") ?: ""
+                val jsonTrack = URLDecoder.decode(encodedJson, "UTF-8")
                 val track = JsonConverter.jsonToTrack(jsonTrack)
                 ComposePlayerScreen(
+                    viewModel = playerViewModel,
                     screenSettings = NavRoutes.Player,
-                    track = track
+                    track = track,
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         }

@@ -35,7 +35,7 @@ fun ComposeSettingsScreen(
     onBackClick: () -> Unit
 ) {
     Scaffold(
-        topBar = { AppTopBar(false, "Настройки") { onBackClick() } }
+        topBar = { AppTopBar(true, "Настройки") { onBackClick() } }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             SwitcherRow(vm = singleActivityViewModel)

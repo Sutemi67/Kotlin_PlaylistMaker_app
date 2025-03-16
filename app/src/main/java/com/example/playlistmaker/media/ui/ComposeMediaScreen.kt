@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
@@ -43,11 +43,12 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComposableMediaScreen(
-    navController: NavController
+    navController: NavHostController
 ) {
     val scope = rememberCoroutineScope()
     val titles = listOf("Избранные треки", "Плейлисты")
@@ -86,7 +87,7 @@ fun ComposableMediaScreen(
 @Composable
 fun FavouritesTracksScreen(
     viewModel: FavouritesViewModel = koinViewModel(),
-    navController: NavController
+    navController: NavHostController
 ) {
     val tracks = viewModel.favouriteTracks.collectAsState().value
 
@@ -128,7 +129,7 @@ object JsonConverter {
 
 @Composable
 fun TrackElement(
-    navController: NavController,
+    navController: NavHostController,
     track: Track
 ) {
     Row(
@@ -136,8 +137,9 @@ fun TrackElement(
             .fillMaxWidth()
             .clickable {
                 val jsonTrack = JsonConverter.trackToJson(track)
+                val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
                 navController.navigate(
-                    route = NavRoutes.Player.route.replace("{trackJson}", jsonTrack)
+                    route = "${NavRoutes.Player.route}/$encodedJson"
                 )
             }
             .height(60.dp),

@@ -29,8 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppTopBar
@@ -47,7 +48,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ComposeSearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
-    navController: NavController
+    navController: NavHostController
 ) {
     var inputText by remember { mutableStateOf("") }
     var trackList: List<Track> by remember { mutableStateOf(emptyList()) }
@@ -121,9 +122,21 @@ fun ComposeSearchScreen(
                 contentAlignment = Alignment.TopCenter
             ) {
                 if (trackList.isNotEmpty()) {
-                    LazyColumn {
-                        items(trackList.size) { index ->
-                            TrackElement(navController = navController, track = trackList[index])
+                    Column {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            text = "Вы искали",
+                            textAlign = TextAlign.Center
+                        )
+                        LazyColumn {
+                            items(trackList.size) { index ->
+                                TrackElement(
+                                    navController = navController,
+                                    track = trackList[index]
+                                )
+                            }
                         }
                     }
                 }

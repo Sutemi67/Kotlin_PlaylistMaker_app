@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.ui
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,25 +20,28 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.compose.ThemePreviews
-import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 import com.example.playlistmaker.search.domain.models.Track
 
 @Composable
 fun ComposePlayerScreen(
+    viewModel: PlayerViewModel,
     screenSettings: NavRoutes,
-    track: Track
+    track: Track,
+    onBackClick: () -> Unit
 ) {
-//    val state = rememberScrollableState { }
+    val state = rememberScrollState()
+
     Scaffold(
         topBar = {
             AppTopBar(
                 isIconNeeded = screenSettings.isIcon,
                 text = screenSettings.name,
-                onClick = {}
+                onClick = { onBackClick() }
             )
         }
     ) { padding ->
@@ -44,25 +49,17 @@ fun ComposePlayerScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-//                .scrollable(state, orientation = Orientation.Vertical)
+                .verticalScroll(state)
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .padding(5.dp),
-                painter = painterResource(R.drawable.img_placeholder),
+                    .aspectRatio(1f),
+                model = track.artworkUrl100,
                 contentDescription = null,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.img_placeholder)
             )
-//            AsyncImage(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(5.dp),
-//                model = null,
-//                contentDescription = null,
-//                placeholder = painterResource(R.drawable.img_placeholder)
-//            )
             Text(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
                 text = track.trackName
@@ -81,9 +78,11 @@ fun ComposePlayerScreen(
                     contentDescription = null
                 )
                 Icon(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                        .clickable { viewModel.onPlayerButtonClicked() },
                     painter = painterResource(R.drawable.playIcon),
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Icon(
                     painter = if (!track.isFavourite)
@@ -122,23 +121,4 @@ private fun TextRow(leftText: String, rightText: String) {
 @ThemePreviews
 @Composable
 private fun PlayerPreview() {
-    PlaylistMakerTheme {
-        ComposePlayerScreen(
-            screenSettings = NavRoutes.Player,
-            Track(
-                trackId = 2,
-                previewUrl = null,
-                trackName = "Ghbsdfff sdfssdfsdfsdfdfgdfgdfgdfgdfgdfgdfgsdfsdfsdfdf",
-                artistName = "dDsfsd DSd",
-                trackTime = 2412424,
-                artworkUrl100 = null,
-                country = "US",
-                collectionName = "dfsdf",
-                primaryGenreName = "rap",
-                releaseDate = null,
-                isFavourite = false,
-                latestTimeAdded = 234234
-            )
-        )
-    }
 }
