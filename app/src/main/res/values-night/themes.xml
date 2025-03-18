@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <item name="colorError">@color/YP_white</item>
-        <item name="colorAccent">@color/YP_blue</item>
+        <!--        <item name="colorError">@color/YP_white</item>-->
+        <!--        <item name="colorAccent">@color/YP_blue</item>-->
     </style>
 
     <item name="playIcon" type="drawable">@drawable/audioplayer_button_play_dark</item>

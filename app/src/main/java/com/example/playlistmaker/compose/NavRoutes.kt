@@ -40,6 +40,12 @@ sealed class NavRoutes(
         isIcon = true,
         icon = Icons.AutoMirrored.Filled.ArrowBack
     )
+    object NewPlaylistPage : NavRoutes(
+        name = "",
+        route = "new_playlist",
+        isIcon = true,
+        icon = Icons.AutoMirrored.Filled.ArrowBack
+    )
 
     companion object {
         val bottomMenuItems by lazy { listOf(Search, Media, Settings) }

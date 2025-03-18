@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.playlistmaker.R
+import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.ThemePreviews
-import com.example.playlistmaker.compose.UniversalButton
 
 @Composable
 fun PlaceholderNoConnection() {
@@ -26,7 +26,7 @@ fun PlaceholderNoConnection() {
         )
         Text("Проблемы со связью")
         Text("Загрузка не удалась. Проверьте ваше подключение к интернету")
-        UniversalButton("Обновить") { }
+        AppBaseButton("Обновить") { }
     }
 }
 

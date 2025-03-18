@@ -44,3 +44,11 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
 )
+
+val playlistInfo = TextStyle(
+    textAlign = TextAlign.Start,
+    fontSize = 12.sp,
+    fontWeight = FontWeight(400),
+    fontFamily = FontFamily(Font(R.font.ys_display_regular)),
+    letterSpacing = 0.4.sp
+)

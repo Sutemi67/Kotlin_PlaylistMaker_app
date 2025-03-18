@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -53,14 +52,15 @@ fun BottomNavBar(navController: NavHostController) {
                     selectedTextColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                     unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                    indicatorColor = MaterialTheme.colorScheme.surface
-                )
+                    indicatorColor = MaterialTheme.colorScheme.surface,
+
+                    ),
             )
         }
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun Fhdsf() {
     BottomNavBar(NavHostController(LocalContext.current))

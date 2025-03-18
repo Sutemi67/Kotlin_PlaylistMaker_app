@@ -2,41 +2,60 @@ package com.example.playlistmaker.main.ui.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+
+private val darkScheme = darkColorScheme(
+    primary = yp_primary_light,
+    background = yp_bg_dark,       // Темный фон
+    onBackground = Color(0xFFFFFFFF),     // Белый текст на фоне
+    surface = yp_surface_dark,          // Темные поверхности
+    onSurface = Color(0xFFFFFFFF),        // Белый текст на поверхностях
+    surfaceVariant = Color(0xFF404040),   // Вариант поверхности
+    onSurfaceVariant = Color(0xFFCCCCCC), // Серый текст
+    error = Color(0xFFCF6679),
+    primaryContainer = yp_primary_container_dark,
+    secondaryContainer = Color(0xFFFFFFFF),
+    onPrimaryContainer = yp_onPrimary_container_dark
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val lightScheme = lightColorScheme(
+    primary = yp_primary_light,
+    background = yp_bg_light,       // Светлый фон
+    onBackground = Color(0xFF000000),     // Черный текст на фоне
+    surface = yp_surface_light,          // Светлые поверхности
+    onSurface = Color(0xFF000000),        // Черный текст на поверхностях
+    surfaceVariant = Color(0xFFE0E0E0),   // Вариант поверхности
+    onSurfaceVariant = Color(0xFF616161), // Серый текст
+    error = Color(0xFFB00020),
+    primaryContainer = yp_primary_container_light,
+    secondaryContainer = Color(0xFF000000),
+    onPrimaryContainer = yp_onPrimary_container_light
 )
+
+@Composable
+fun customButtonColors(): ButtonColors {
+    return ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+        disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
 
 @Composable
 fun PlaylistMakerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -45,9 +64,11 @@ fun PlaylistMakerTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> darkScheme
+        else -> lightScheme
     }
+
+
 
     MaterialTheme(
         colorScheme = colorScheme,

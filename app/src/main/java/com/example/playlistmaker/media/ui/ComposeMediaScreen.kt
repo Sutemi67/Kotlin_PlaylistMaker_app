@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
@@ -36,11 +35,12 @@ import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.Errors
+import com.example.playlistmaker.compose.JsonConverter
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.compose.ThemePreviews
+import com.example.playlistmaker.compose.formatTime
 import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 import com.example.playlistmaker.search.domain.models.Track
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import java.net.URLEncoder
@@ -77,7 +77,7 @@ fun ComposableMediaScreen(
             ) { page ->
                 when (page) {
                     0 -> FavouritesTracksScreen(navController = navController)
-                    1 -> PlaylistsScreen()
+                    1 -> PlaylistsScreen(navController)
                 }
             }
         }
@@ -110,22 +110,8 @@ fun FavouritesTracksScreen(
     }
 }
 
-@Composable
-fun PlaylistElement() {
 
-}
 
-object JsonConverter {
-    private val gson = Gson()
-
-    fun trackToJson(track: Track): String {
-        return gson.toJson(track)
-    }
-
-    fun jsonToTrack(json: String): Track {
-        return gson.fromJson(json, Track::class.java)
-    }
-}
 
 @Composable
 fun TrackElement(
@@ -196,28 +182,6 @@ fun TrackElement(
     }
 }
 
-fun formatTime(millis: Int): String {
-    val minutes = millis / 1000 / 60
-    val seconds = millis / 1000 % 60
-    return String.format("%02d:%02d", minutes, seconds)
-}
-
-@Composable
-fun PlaylistsScreen() {
-    if (true) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            FilledTonalButton(
-                onClick = {}
-            ) { Text(text = "Создать плейлист") }
-            PlaceholderError(Errors.NoPlaylists)
-        }
-    }
-}
-
 @Composable
 fun PlaceholderError(error: Errors) {
 
@@ -259,23 +223,6 @@ fun PlaceholderError(error: Errors) {
     }
 }
 
-
-//@ThemePreviews
-//@Composable
-//fun PlaylistScreenPreview() {
-//    PlaylistMakerTheme {
-//        PlaylistsScreen()
-//    }
-//}
-
-//@ThemePreviews
-//@Composable
-//fun OOsdd() {
-//    PlaylistMakerTheme {
-//        ComposableMediaScreen()
-//    }
-//}
-
 @ThemePreviews
 @Composable
 fun TrackElementPreview() {
@@ -288,7 +235,8 @@ fun TrackElementPreview() {
                 trackName = "Ghbsdfff sdfssdfsdfsdfdfgdfgdfgdfgdfgdfgdfgsdfsdfsdfdf",
                 artistName = "dDsfsd DSd",
                 trackTime = 2412424,
-                artworkUrl100 = null,
+                artworkUrl100 = painterResource(R.drawable.img_placeholder).toString(),
+//                artworkUrl100 = null,
                 country = "US",
                 collectionName = "dfsdf",
                 primaryGenreName = "rap",

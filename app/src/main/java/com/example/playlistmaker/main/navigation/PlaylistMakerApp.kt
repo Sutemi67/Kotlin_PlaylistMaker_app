@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,12 +38,14 @@ fun PlaylistMakerApp() {
     PlaylistMakerTheme(
         darkTheme = darkModeState
     ) {
-        PlaylistMakerScreen(
-            playerViewModel = playerViewModel,
-            navController = navController,
-            activityViewModel = activityViewModel,
-            settingsViewModel = settingsViewModel
-        )
+        Surface() {
+            PlaylistMakerScreen(
+                playerViewModel = playerViewModel,
+                navController = navController,
+                activityViewModel = activityViewModel,
+                settingsViewModel = settingsViewModel
+            )
+        }
     }
 }
 
