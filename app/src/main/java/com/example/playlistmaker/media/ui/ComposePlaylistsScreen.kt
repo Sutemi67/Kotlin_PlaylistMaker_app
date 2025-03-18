@@ -39,7 +39,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun PlaylistsScreen(
     navHostController: NavHostController,
     playlistsViewModel: PlaylistsViewModel = koinViewModel(),
-    newPlaylistViewModel: NewPlaylistViewModel = koinViewModel()
 ) {
     val playerState by playlistsViewModel.playlistState.collectAsState()
     Column(

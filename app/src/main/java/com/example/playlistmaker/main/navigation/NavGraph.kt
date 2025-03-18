@@ -60,7 +60,7 @@ fun NavGraph(
                 )
             }
             composable(route = NavRoutes.NewPlaylistPage.route) {
-                NewPlaylistPage()
+                NewPlaylistPage(onBackClick = { navController.popBackStack() })
             }
         }
     }

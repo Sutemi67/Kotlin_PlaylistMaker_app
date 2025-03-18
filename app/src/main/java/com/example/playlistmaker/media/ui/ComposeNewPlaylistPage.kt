@@ -31,7 +31,9 @@ import com.example.playlistmaker.compose.ThemePreviews
 import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 
 @Composable
-fun NewPlaylistPage() {
+fun NewPlaylistPage(
+    onBackClick: () -> Unit
+) {
     var nameText by remember { mutableStateOf("") }
     var descriptionText by remember { mutableStateOf("") }
 
@@ -40,7 +42,7 @@ fun NewPlaylistPage() {
             AppTopBar(
                 isIconNeeded = true,
                 text = "Новый плейлист",
-                onClick = {},
+                onClick = onBackClick,
             )
         }) { padding ->
         Column(
@@ -92,7 +94,7 @@ fun NewPlaylistPage() {
 private fun PlaylistPreviewPage() {
     PlaylistMakerTheme {
         Surface() {
-            NewPlaylistPage()
+            NewPlaylistPage() {}
         }
     }
 }

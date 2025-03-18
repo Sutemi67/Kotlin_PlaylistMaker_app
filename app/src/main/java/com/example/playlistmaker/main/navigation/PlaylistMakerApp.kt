@@ -65,7 +65,9 @@ fun PlaylistMakerScreen(
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars),
         bottomBar = {
-            if (currentDestination != "${NavRoutes.Player.route}/{trackJson}") {
+            if (currentDestination != "${NavRoutes.Player.route}/{trackJson}" &&
+                currentDestination != NavRoutes.NewPlaylistPage.route
+            ) {
                 BottomNavBar(navController)
             }
         }
