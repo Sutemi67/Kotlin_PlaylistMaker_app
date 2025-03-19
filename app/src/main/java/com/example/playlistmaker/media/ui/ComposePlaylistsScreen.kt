@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,13 +29,13 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.Errors
+import com.example.playlistmaker.compose.JsonConverter
 import com.example.playlistmaker.compose.NavRoutes
-import com.example.playlistmaker.compose.ThemePreviews
-import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import com.example.playlistmaker.main.ui.ui.theme.playlistInfo
 import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
 import org.koin.compose.viewmodel.koinViewModel
+import java.net.URLEncoder
 
 @Composable
 fun PlaylistsScreen(
@@ -73,7 +72,7 @@ fun PlaylistsScreen(
                     contentPadding = PaddingValues(16.dp)
                 ) {
                     items(list.size) { index ->
-                        PlaylistElement(list[index])
+                        PlaylistElement(list[index], navHostController)
                     }
                 }
             }
@@ -82,11 +81,16 @@ fun PlaylistsScreen(
 }
 
 @Composable
-fun PlaylistElement(playlist: Playlist) {
+fun PlaylistElement(
+    playlist: Playlist,
+    navHostController: NavHostController
+) {
     val imageUri = playlist.coverUrl?.toUri()
     Column(
-        modifier = Modifier.clickable() {
-
+        modifier = Modifier.clickable {
+            val jsonPlaylist = JsonConverter.playlistToJson(playlist)
+            val encodedJson = URLEncoder.encode(jsonPlaylist, "UTF-8")
+            navHostController.navigate(route = "${NavRoutes.PlaylistDetails.route}/$encodedJson")
         },
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.Start
@@ -115,22 +119,23 @@ fun PlaylistElement(playlist: Playlist) {
     }
 }
 
-@ThemePreviews
-
-@Composable
-private fun PlaylistPreview() {
-    PlaylistMakerTheme {
-        Surface {
-            PlaylistElement(
-                playlist = Playlist(
-                    id = 2,
-                    name = "My playlist",
-                    description = "Discription od a playlist",
-                    coverUrl = "https://cs15.pikabu.ru/video/2024/06/14/1718364391216151475_375a057d_1168x864.jpg",
-                    tracks = emptyList(),
-                    count = 3
-                )
-            )
-        }
-    }
-}
+//@ThemePreviews
+//
+//@Composable
+//private fun PlaylistPreview() {
+//    PlaylistMakerTheme {
+//        Surface {
+//            PlaylistElement(
+//                playlist = Playlist(
+//                    id = 2,
+//                    name = "My playlist",
+//                    description = "Discription od a playlist",
+//                    coverUrl = "https://cs15.pikabu.ru/video/2024/06/14/1718364391216151475_375a057d_1168x864.jpg",
+//                    tracks = emptyList(),
+//                    count = 3
+//                ),
+//                navHostController = r
+//            )
+//        }
+//    }
+//}

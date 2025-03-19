@@ -16,13 +16,14 @@ import androidx.compose.ui.platform.LocalContext
 
 private val darkScheme = darkColorScheme(
     primary = yp_primary_light,
+    onPrimary = Color(0xFFFFFFFF),
     background = yp_bg_dark,       // Темный фон
     onBackground = Color(0xFFFFFFFF),     // Белый текст на фоне
     surface = yp_surface_dark,          // Темные поверхности
     onSurface = Color(0xFFFFFFFF),        // Белый текст на поверхностях
     surfaceVariant = Color(0xFFAEAFB4),   // Вариант поверхности
     onSurfaceVariant = Color(0xFFFFFFFF), // Серый текст
-    error = Color(0xFFCF6679),
+    error = Color(0xFFF56B6C),
     primaryContainer = yp_primary_container_dark,
     secondaryContainer = Color(0xFFFFFFFF),
     onPrimaryContainer = yp_onPrimary_container_dark
@@ -30,16 +31,17 @@ private val darkScheme = darkColorScheme(
 
 private val lightScheme = lightColorScheme(
     primary = yp_primary_light,
+    onPrimary = Color(0xFFFFFFFF),
     background = yp_bg_light,       // Светлый фон
     onBackground = Color(0xFF000000),     // Черный текст на фоне
     surface = yp_surface_light,          // Светлые поверхности
     onSurface = Color(0xFF000000),        // Черный текст на поверхностях
     surfaceVariant = Color(0xFFAEAFB4),   // Вариант поверхности
     onSurfaceVariant = Color(0xFFFFFFFF), // Серый текст
-    error = Color(0xFFB00020),
+    error = Color(0xFFF56B6C),
     primaryContainer = yp_primary_container_light,
     secondaryContainer = Color(0xFF000000),
-    onPrimaryContainer = yp_onPrimary_container_light
+    onPrimaryContainer = yp_onPrimary_container_light,
 )
 
 @Composable

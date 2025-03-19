@@ -32,6 +32,11 @@ val Typography = Typography(
         fontWeight = FontWeight(400),
         fontSize = 18.sp
     ),
+    titleSmall = TextStyle(
+        fontFamily = FontFamily(Font(R.font.ys_display_regular)),
+        fontWeight = FontWeight(400),
+        fontSize = 13.sp
+    )
 )
 
 val playlistInfo = TextStyle(

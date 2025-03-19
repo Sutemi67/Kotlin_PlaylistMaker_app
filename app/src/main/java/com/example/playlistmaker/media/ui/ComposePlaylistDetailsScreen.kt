@@ -1,6 +1,6 @@
 package com.example.playlistmaker.media.ui
 
-import androidx.compose.foundation.Image
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,50 +16,52 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.compose.AppTopBar
-import com.example.playlistmaker.compose.ThemePreviews
-import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PlaylistDetailsScreen(
-//    playlist: Playlist
+    playlist: Playlist,
+    navHostController: NavHostController
 ) {
     Scaffold(
-        topBar = { AppTopBar(isIconNeeded = true, text = "", onClick = {}) }
-    ) { paddings ->
-        Column(modifier = Modifier.padding(paddings)) {
-//            AsyncImage(
-//                model = playlist.coverUrl,
-//                contentDescription = "Обложка плейлиста",
-//                modifier = Modifier
-//                    .size(160.dp)
-//                    .aspectRatio(1f)
-//                    .clip(RoundedCornerShape(5.dp)),
-//                contentScale = ContentScale.Crop,
-//                placeholder = painterResource(R.drawable.img_placeholder),
-//                error = painterResource(R.drawable.img_placeholder)
-//
-//            )
-            Image(
+        topBar = {
+            AppTopBar(
+                isIconNeeded = true,
+                text = "",
+                onClick = { navHostController.popBackStack() })
+        }
+    ) {
+        Column(
+//            modifier = Modifier.padding(paddings)
+        ) {
+            AsyncImage(
+                model = playlist.coverUrl,
+                contentDescription = "Обложка плейлиста",
                 modifier = Modifier
                     .padding(bottom = 20.dp)
                     .fillMaxWidth()
                     .aspectRatio(1f),
-                painter = painterResource(R.drawable.img_placeholder),
-                contentDescription = null
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.img_placeholder),
+                error = painterResource(R.drawable.img_placeholder)
             )
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                text = "Playlist name",
+                text = playlist.name,
                 style = Typography.titleLarge
             )
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                text = "Playlist description",
+                text = playlist.description ?: "",
                 style = Typography.titleMedium
             )
             Row(
@@ -76,7 +78,7 @@ fun PlaylistDetailsScreen(
                     contentDescription = null
                 )
                 Text(
-                    text = "88 tracks",
+                    text = "${playlist.count} tracks",
                     style = Typography.titleMedium
                 )
             }
@@ -103,16 +105,15 @@ fun PlaylistDetailsScreen(
                     contentDescription = null
                 )
             }
-
         }
     }
 }
 
 
-@ThemePreviews
-@Composable
-fun PlaylistDetailsScreenPreview() {
-    PlaylistMakerTheme {
-        PlaylistDetailsScreen()
-    }
-}
+//@ThemePreviews
+//@Composable
+//fun PlaylistDetailsScreenPreview() {
+//    PlaylistMakerTheme {
+//        PlaylistDetailsScreen()
+//    }
+//}

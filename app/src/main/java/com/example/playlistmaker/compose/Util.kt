@@ -3,11 +3,12 @@ package com.example.playlistmaker.compose
 import android.content.res.Configuration
 import android.content.res.Resources
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Light theme", showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark theme",showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark theme", showBackground = true)
 annotation class ThemePreviews
 
 enum class Errors {
@@ -32,6 +33,14 @@ object JsonConverter {
 
     fun jsonToTrack(json: String): Track {
         return gson.fromJson(json, Track::class.java)
+    }
+
+    fun playlistToJson(playlist: Playlist): String {
+        return gson.toJson(playlist)
+    }
+
+    fun jsonToPlaylist(json: String): Playlist {
+        return gson.fromJson(json, Playlist::class.java)
     }
 }
 

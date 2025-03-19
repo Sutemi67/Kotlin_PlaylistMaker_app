@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,6 +35,9 @@ import com.example.playlistmaker.app.PlayerService
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.compose.ThemePreviews
+import com.example.playlistmaker.main.ui.ui.theme.Typography
+import com.example.playlistmaker.main.ui.ui.theme.likeFillColor
+import com.example.playlistmaker.main.ui.ui.theme.yp_lightGray
 import com.example.playlistmaker.media.ui.stateInterfaces.PlayerState
 import com.example.playlistmaker.search.domain.models.Track
 
@@ -59,7 +63,6 @@ fun ComposePlayerScreen(
             context.unbindService(serviceConnection)
         }
     }
-
     Scaffold(
         topBar = {
             AppTopBar(
@@ -75,60 +78,78 @@ fun ComposePlayerScreen(
                 .padding(padding)
                 .verticalScroll(state)
         ) {
-            AsyncImage(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                model = track.artworkUrl100,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.img_placeholder)
-            )
-            Text(
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
-                text = track.trackName
-            )
-            Text(
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                text = track.artistName
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 26.dp)
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.add_playlist_button),
-                    contentDescription = null
-                )
-                Icon(
+                AsyncImage(
                     modifier = Modifier
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                        .clickable { viewModel.onPlayerButtonClicked() },
-                    painter = if (playerState is PlayerState.Playing)
-                        painterResource(R.drawable.pauseIcon)
-                    else painterResource(
-                        R.drawable.playIcon
-                    ),
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    model = track.artworkUrl100,
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.img_placeholder)
                 )
-                Icon(
-                    painter = if (!track.isFavourite)
-                        painterResource(R.drawable.like_button)
-                    else painterResource(R.drawable.like_button_active),
-                    contentDescription = null
+                Text(
+                    modifier = Modifier.padding(top = 26.dp),
+                    text = track.trackName
+                )
+                Text(
+                    modifier = Modifier.padding(top = 12.dp),
+                    text = track.artistName
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 28.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.clickable { },
+                        painter = painterResource(R.drawable.add_playlist_button),
+                        contentDescription = null,
+                        tint = yp_lightGray
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp, vertical = 5.dp)
+                            .clickable { viewModel.onPlayerButtonClicked() },
+                        painter = if (playerState is PlayerState.Playing)
+                            painterResource(R.drawable.pauseIcon)
+                        else painterResource(
+                            R.drawable.playIcon
+                        ),
+                        contentDescription = null,
+                    )
+                    Icon(
+                        painter = if (!track.isFavourite) painterResource(R.drawable.like_button)
+                        else painterResource(R.drawable.like_button_active),
+                        contentDescription = null,
+                        tint = if (track.isFavourite) likeFillColor else yp_lightGray
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    text = track.trackTime.toString(),
+                    textAlign = TextAlign.Center
                 )
             }
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = track.trackTime.toString(),
-                textAlign = TextAlign.Center
-            )
-            TextRow("Длительность", track.trackTime.toString())
-            TextRow("Альбом", track.collectionName)
-            TextRow("Год", track.releaseDate ?: "-")
-            TextRow("Жанр", track.primaryGenreName)
-            TextRow("Страна", track.country)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 30.dp)
+            ) {
+                TextRow("Длительность", track.trackTime.toString())
+                TextRow("Альбом", track.collectionName)
+                TextRow("Год", track.releaseDate ?: "-")
+                TextRow("Жанр", track.primaryGenreName)
+                TextRow("Страна", track.country)
+            }
         }
     }
 }
@@ -138,15 +159,27 @@ private fun TextRow(leftText: String, rightText: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 7.dp),
+            .height(32.dp),
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(leftText)
-        Text(rightText)
+        Text(
+            text = leftText,
+            color = yp_lightGray,
+            style = Typography.titleSmall
+        )
+        Text(
+            text = rightText,
+            style = Typography.titleSmall
+        )
     }
 }
 
 @ThemePreviews
 @Composable
 private fun PlayerPreview() {
+    Column {
+        TextRow("Жанр", "Rapa")
+        TextRow("Страна", "USA")
+    }
 }

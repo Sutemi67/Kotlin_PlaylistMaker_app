@@ -68,8 +68,17 @@ fun NavGraph(
                     navHostController = navController
                 )
             }
-            composable(route = NavRoutes.PlaylistDetails.route) {
-                PlaylistDetailsScreen()
+            composable(
+                route = "${NavRoutes.PlaylistDetails.route}/{playlistJson}",
+                arguments = listOf(navArgument("playlistJson") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val encodedJson = backStackEntry.arguments?.getString("playlistJson") ?: ""
+                val jsonPlaylist = URLDecoder.decode(encodedJson, "UTF-8")
+                val playlist = JsonConverter.jsonToPlaylist(jsonPlaylist)
+                PlaylistDetailsScreen(
+                    navHostController = navController,
+                    playlist = playlist
+                )
             }
         }
     }
