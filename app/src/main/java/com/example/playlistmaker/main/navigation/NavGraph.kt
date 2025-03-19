@@ -12,6 +12,8 @@ import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
 import com.example.playlistmaker.media.ui.ComposableMediaScreen
 import com.example.playlistmaker.media.ui.NewPlaylistPage
+import com.example.playlistmaker.media.ui.NewPlaylistViewModel
+import com.example.playlistmaker.media.ui.PlaylistDetailsScreen
 import com.example.playlistmaker.player.ui.ComposePlayerScreen
 import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.search.ui.ComposeSearchScreen
@@ -24,7 +26,8 @@ fun NavGraph(
     navController: NavHostController,
     activityViewModel: SingleActivityViewModel,
     settingsViewModel: FragmentSettingsViewModel,
-    playerViewModel: PlayerViewModel
+    playerViewModel: PlayerViewModel,
+    newPlaylistViewModel: NewPlaylistViewModel
 ) {
     Box(
     ) {
@@ -60,7 +63,13 @@ fun NavGraph(
                 )
             }
             composable(route = NavRoutes.NewPlaylistPage.route) {
-                NewPlaylistPage(onBackClick = { navController.popBackStack() })
+                NewPlaylistPage(
+                    newPlaylistViewModel = newPlaylistViewModel,
+                    navHostController = navController
+                )
+            }
+            composable(route = NavRoutes.PlaylistDetails.route) {
+                PlaylistDetailsScreen()
             }
         }
     }

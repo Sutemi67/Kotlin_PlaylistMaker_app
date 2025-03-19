@@ -49,7 +49,9 @@ fun FavouritesTracksScreen(
             PlaceholderError(error = Errors.NoFavourites)
         }
     } else {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
             items(tracks.size) { index ->
                 TrackElement(
                     navController = navController,

@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -20,6 +19,7 @@ import com.example.playlistmaker.compose.BottomNavBar
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
 import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
+import com.example.playlistmaker.media.ui.NewPlaylistViewModel
 import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.settings.ui.FragmentSettingsViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -31,19 +31,21 @@ fun PlaylistMakerApp() {
     val activityViewModel: SingleActivityViewModel = koinViewModel()
     val settingsViewModel: FragmentSettingsViewModel = koinViewModel()
     val playerViewModel: PlayerViewModel = koinViewModel()
-    val context = LocalContext.current
+    val newPlaylistViewModel: NewPlaylistViewModel = koinViewModel()
+
     val navController = rememberNavController()
     val darkModeState: Boolean by activityViewModel.viewStates().collectAsState()
 
     PlaylistMakerTheme(
         darkTheme = darkModeState
     ) {
-        Surface() {
+        Surface {
             PlaylistMakerScreen(
                 playerViewModel = playerViewModel,
                 navController = navController,
                 activityViewModel = activityViewModel,
-                settingsViewModel = settingsViewModel
+                settingsViewModel = settingsViewModel,
+                newPlaylistViewModel = newPlaylistViewModel
             )
         }
     }
@@ -55,7 +57,8 @@ fun PlaylistMakerScreen(
     navController: NavHostController,
     activityViewModel: SingleActivityViewModel,
     settingsViewModel: FragmentSettingsViewModel,
-    playerViewModel: PlayerViewModel
+    playerViewModel: PlayerViewModel,
+    newPlaylistViewModel: NewPlaylistViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
@@ -76,7 +79,8 @@ fun PlaylistMakerScreen(
             navController = navController,
             activityViewModel = activityViewModel,
             settingsViewModel = settingsViewModel,
-            playerViewModel = playerViewModel
+            playerViewModel = playerViewModel,
+            newPlaylistViewModel = newPlaylistViewModel
         )
     }
 }

@@ -26,7 +26,12 @@ fun PlaceholderNoConnection() {
         )
         Text("Проблемы со связью")
         Text("Загрузка не удалась. Проверьте ваше подключение к интернету")
-        AppBaseButton("Обновить") { }
+        AppBaseButton(
+            text = "Обновить",
+            modifier = Modifier,
+            onClick = {},
+            isEnabled = true
+        )
     }
 }
 

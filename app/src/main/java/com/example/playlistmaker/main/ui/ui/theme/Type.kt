@@ -22,27 +22,16 @@ val Typography = Typography(
         fontSize = 24.sp,
         fontFamily = FontFamily(Font(R.font.ys_display_medium))
     ),
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
     titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        fontFamily = FontFamily(Font(R.font.ys_display_medium)),
+        fontWeight = FontWeight(700),
+        fontSize = 24.sp,
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.ys_display_regular)),
+        fontWeight = FontWeight(400),
+        fontSize = 18.sp
+    ),
 )
 
 val playlistInfo = TextStyle(

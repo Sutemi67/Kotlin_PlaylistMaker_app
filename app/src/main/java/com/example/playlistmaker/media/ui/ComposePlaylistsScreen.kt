@@ -1,10 +1,12 @@
 package com.example.playlistmaker.media.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -12,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,6 +44,8 @@ fun PlaylistsScreen(
     playlistsViewModel: PlaylistsViewModel = koinViewModel(),
 ) {
     val playerState by playlistsViewModel.playlistState.collectAsState()
+    LaunchedEffect(Unit) { playlistsViewModel.getPlaylists() }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -48,7 +53,9 @@ fun PlaylistsScreen(
     ) {
         AppBaseButton(
             onClick = { navHostController.navigate(route = NavRoutes.NewPlaylistPage.route) },
-            text = "Создать плейлист"
+            text = "Создать плейлист",
+            modifier = Modifier.padding(top = 24.dp),
+            isEnabled = true
         )
         when (playerState) {
             is PlaylistState.EmptyList -> {
@@ -58,7 +65,12 @@ fun PlaylistsScreen(
             is PlaylistState.FullList -> {
                 val list = (playerState as PlaylistState.FullList).playlist
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 128.dp)
+                    columns = GridCells.Adaptive(minSize = 160.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 60.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    contentPadding = PaddingValues(16.dp)
                 ) {
                     items(list.size) { index ->
                         PlaylistElement(list[index])
@@ -73,21 +85,26 @@ fun PlaylistsScreen(
 fun PlaylistElement(playlist: Playlist) {
     val imageUri = playlist.coverUrl?.toUri()
     Column(
-        modifier = Modifier.size(height = 196.dp, width = 160.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier = Modifier.clickable() {
+
+        },
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.Start
     ) {
         AsyncImage(
             model = imageUri,
             contentDescription = "Обложка плейлиста",
             modifier = Modifier
-                .fillMaxWidth()
+                .size(160.dp)
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(5.dp)),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(R.drawable.img_placeholder),
-            error = painterResource(R.drawable.img_connection_problem)
+            error = painterResource(R.drawable.img_placeholder)
         )
         Text(
+            modifier = Modifier
+                .padding(top = 4.dp),
             text = playlist.name,
             style = playlistInfo
         )
