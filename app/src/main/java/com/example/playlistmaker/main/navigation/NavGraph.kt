@@ -29,8 +29,7 @@ fun NavGraph(
     playerViewModel: PlayerViewModel,
     newPlaylistViewModel: NewPlaylistViewModel
 ) {
-    Box(
-    ) {
+    Box {
         NavHost(
             navController = navController,
             startDestination = NavRoutes.Media.route

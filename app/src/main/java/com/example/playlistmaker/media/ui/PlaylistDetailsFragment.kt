@@ -34,7 +34,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlin.getValue
 
 class PlaylistDetailsFragment : Fragment() {
 
@@ -45,11 +44,9 @@ class PlaylistDetailsFragment : Fragment() {
     }
 
     private lateinit var bottomSheetMenu: BottomSheetBehavior<ConstraintLayout>
-
     private lateinit var binding: FragmentPlaylistDetailsBinding
     private val vm by viewModel<PlaylistDetailsViewModel>()
     private val adapter = TrackAdapter()
-
     private lateinit var playlist: Playlist
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +78,6 @@ class PlaylistDetailsFragment : Fragment() {
         binding.detailsMore.post {
             val bottomPosition = binding.detailsMore.bottom
             val screenHeight = resources.displayMetrics.heightPixels
-//            val margin = ((screenHeight - bottomPosition) * 0.3).toInt()
             val margin = screenHeight - bottomPosition - getStatusBarHeight() * 4
             bottomSheetTracks.peekHeight = margin
             Log.d(

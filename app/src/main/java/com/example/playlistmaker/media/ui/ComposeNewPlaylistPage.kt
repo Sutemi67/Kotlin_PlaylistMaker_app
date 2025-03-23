@@ -1,8 +1,18 @@
 package com.example.playlistmaker.media.ui
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,10 +23,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,16 +45,23 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.NewPlaylistConfirmationDialog
 import com.example.playlistmaker.compose.fDp2Px
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun NewPlaylistPage(
@@ -51,6 +71,18 @@ fun NewPlaylistPage(
     var nameText by remember { mutableStateOf("") }
     var descriptionText by remember { mutableStateOf("") }
     var shouldShowDialog by remember { mutableStateOf(false) }
+    var savedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+    val pickMediaLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let {
+            getPermissions(context, it)
+            savedImageUri = saveImageToPrivateStorage(context, it)
+        }
+    }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     NewPlaylistConfirmationDialog(
         visible = shouldShowDialog,
@@ -59,6 +91,7 @@ fun NewPlaylistPage(
     )
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AppTopBar(
                 isIconNeeded = true,
@@ -83,6 +116,9 @@ fun NewPlaylistPage(
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .padding(20.dp)
+                    .clickable {
+                        pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    }
                     .drawBehind {
                         drawRoundRect(
                             color = Color.Gray,
@@ -99,10 +135,25 @@ fun NewPlaylistPage(
                     },
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painter = painterResource(R.drawable.add_image),
-                    contentDescription = null
-                )
+                if (savedImageUri == null) {
+                    Image(
+                        painter = painterResource(R.drawable.add_image),
+                        contentDescription = null
+                    )
+                } else {
+                    AsyncImage(
+                        model = savedImageUri,
+                        contentDescription = "Выбранное изображение",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable {
+                                pickMediaLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            },
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
             OutlinedTextField(
                 value = nameText,
@@ -141,12 +192,17 @@ fun NewPlaylistPage(
                     newPlaylistViewModel.addPlaylist(
                         name = nameText,
                         description = descriptionText,
-                        image = null,
+                        image = savedImageUri.toString(),
                         onResult = {
                             if (it) {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Альбом успешно добавлен")
+                                }
                                 navHostController.popBackStack()
-                                Log.i("compose", "добавилось")
                             } else {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Такие название альбома уже используется")
+                                }
                                 Log.e("compose", "Не добавилось")
                             }
                         }
@@ -155,4 +211,36 @@ fun NewPlaylistPage(
             )
         }
     }
+}
+
+private fun getPermissions(context: Context, uri: Uri) {
+    val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+    try {
+        context.contentResolver.takePersistableUriPermission(uri, takeFlags)
+    } catch (e: SecurityException) {
+        Log.e("DATABASE", "Persistable permission not supported for URI: $uri, ${e.message}")
+    }
+}
+
+private fun saveImageToPrivateStorage(context: Context, uri: Uri): Uri {
+    // Определяем путь к каталогу для хранения изображений приложения
+    val directory = File(
+        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+        "playlists_covers"
+    )
+    if (!directory.exists()) directory.mkdirs()
+
+    // Генерируем имя файла с текущей меткой времени
+    val file = File(directory, "${System.currentTimeMillis()}_cover.jpg")
+    context.contentResolver.openInputStream(uri)?.use { inputStream ->
+        FileOutputStream(file).use { outputStream ->
+            // Декодируем и сжимаем изображение
+            BitmapFactory.decodeStream(inputStream)?.compress(
+                Bitmap.CompressFormat.JPEG,
+                30,
+                outputStream
+            )
+        }
+    }
+    return file.toUri()
 }

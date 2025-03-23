@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media.ui
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,7 +44,10 @@ fun PlaylistsScreen(
     playlistsViewModel: PlaylistsViewModel = koinViewModel(),
 ) {
     val playerState by playlistsViewModel.playlistState.collectAsState()
-    LaunchedEffect(Unit) { playlistsViewModel.getPlaylists() }
+    LaunchedEffect(Unit) {
+        Log.i("compose", "запуск обновления плейлистов")
+        playlistsViewModel.getPlaylists()
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
