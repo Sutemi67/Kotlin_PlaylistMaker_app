@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,9 @@ class PlayerViewModel(
     //for compose
     private val _playerStateAsState = MutableStateFlow<PlayerState>(PlayerState.Loading())
     val playerStateAsState: StateFlow<PlayerState> = _playerStateAsState.asStateFlow()
+
+    private val _addingStatus2 = MutableStateFlow<Boolean>(false)
+    val addingStatus2: StateFlow<Boolean> = _addingStatus2.asStateFlow()
 
     fun setAudioPlayerControl(playerControl: PlayerControlsInterface) {
         playerControls = playerControl
@@ -95,6 +99,8 @@ class PlayerViewModel(
                 playlist,
                 interactor.addTrackInPlaylist(track, playlist)
             )
+            _addingStatus2.value = interactor.addTrackInPlaylist(track, playlist)
+            Log.i("compose", "статус добавления трека ${addingStatus2.value}")
         }
     }
 

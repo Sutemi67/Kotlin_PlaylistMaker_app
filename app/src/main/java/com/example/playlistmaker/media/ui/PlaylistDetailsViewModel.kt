@@ -14,6 +14,9 @@ import com.example.playlistmaker.media.ui.stateInterfaces.TrackListState
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -25,12 +28,17 @@ class PlaylistDetailsViewModel(
     private val _listState = MutableLiveData<TrackListState>(TrackListState.Empty(emptyList()))
     val listState: LiveData<TrackListState> = _listState
 
+    private val _playlist = MutableStateFlow<List<Track>>(emptyList())
+    val playlist: StateFlow<List<Track>> = _playlist.asStateFlow()
+
     suspend fun getPlaylistTracks(playlist: Playlist) {
         interactor.getPlaylistTracks(playlist).collect {
             if (it.isEmpty()) {
                 _listState.value = TrackListState.Empty(emptyList())
+                _playlist.value = emptyList()
             } else {
                 _listState.value = TrackListState.Filled(it)
+                _playlist.value = emptyList()
             }
         }
     }

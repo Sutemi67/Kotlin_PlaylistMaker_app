@@ -58,7 +58,7 @@ fun NavGraph(
                     viewModel = playerViewModel,
                     screenSettings = NavRoutes.Player,
                     track = track,
-                    onBackClick = { navController.popBackStack() }
+                    navHostController = navController
                 )
             }
             composable(route = NavRoutes.NewPlaylistPage.route) {

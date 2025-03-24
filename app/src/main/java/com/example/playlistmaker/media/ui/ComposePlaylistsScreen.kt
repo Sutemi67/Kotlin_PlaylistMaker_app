@@ -122,24 +122,3 @@ fun PlaylistElement(
         )
     }
 }
-
-//@ThemePreviews
-//
-//@Composable
-//private fun PlaylistPreview() {
-//    PlaylistMakerTheme {
-//        Surface {
-//            PlaylistElement(
-//                playlist = Playlist(
-//                    id = 2,
-//                    name = "My playlist",
-//                    description = "Discription od a playlist",
-//                    coverUrl = "https://cs15.pikabu.ru/video/2024/06/14/1718364391216151475_375a057d_1168x864.jpg",
-//                    tracks = emptyList(),
-//                    count = 3
-//                ),
-//                navHostController = r
-//            )
-//        }
-//    }
-//}

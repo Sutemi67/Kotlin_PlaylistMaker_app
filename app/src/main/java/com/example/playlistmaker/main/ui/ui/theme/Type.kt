@@ -15,7 +15,7 @@ val Typography = Typography(
         textAlign = TextAlign.Start,
         fontSize = 16.sp,
         fontWeight = FontWeight(400),
-        fontFamily = FontFamily(Font(R.font.ys_display_regular))
+        fontFamily = FontFamily(Font(R.font.ys_display_regular)),
     ),
     bodyMedium = TextStyle(
         textAlign = TextAlign.Start,
@@ -28,9 +28,9 @@ val Typography = Typography(
         fontSize = 24.sp,
     ),
     titleMedium = TextStyle(
-        fontFamily = FontFamily(Font(R.font.ys_display_regular)),
-        fontWeight = FontWeight(400),
-        fontSize = 18.sp
+        fontFamily = FontFamily(Font(R.font.ys_display_medium)),
+        fontWeight = FontWeight(500),
+        fontSize = 19.sp
     ),
     titleSmall = TextStyle(
         fontFamily = FontFamily(Font(R.font.ys_display_regular)),

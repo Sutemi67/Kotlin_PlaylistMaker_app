@@ -8,18 +8,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +39,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.main.ui.ui.theme.Typography
+import com.example.playlistmaker.player.ui.PlaylistElementMini
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,12 +50,11 @@ fun PlaylistDetailsScreen(
     navHostController: NavHostController,
     playlistDetailsViewModel: PlaylistDetailsViewModel = koinViewModel()
 ) {
-    var showBottomSheet by remember { mutableStateOf(true) }
+    var showMenuSheet by remember { mutableStateOf(false) }
     val sheetState2 = rememberBottomSheetScaffoldState()
-    var list =
-        LaunchedEffect(Unit) {
-            list = playlistDetailsViewModel.getPlaylistTracks(playlist)
-        }
+    val sheetState = rememberModalBottomSheetState()
+    val tracklist = playlistDetailsViewModel.playlist.collectAsState().value
+
     Scaffold(
         topBar = {
             AppTopBar(
@@ -116,43 +120,78 @@ fun PlaylistDetailsScreen(
                     modifier = Modifier
                         .size(18.dp)
                         .clickable(
-                            onClick = {}
+                            onClick = { showMenuSheet = true }
                         ),
                     painter = painterResource(R.drawable.ic_more),
                     contentDescription = null
                 )
             }
         }
-        if (showBottomSheet) {
-            BottomSheetScaffold(
-//                modifier = Modifier.fillMaxHeight(),
-//                sheetState = sheetState,
-//                onDismissRequest = { showBottomSheet = false }
-                scaffoldState = sheetState2,
-                sheetContent = {
-
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        items(list.size) { index ->
-                            TrackElement(
-                                navController = navController,
-                                track = tracks[index]
-                            )
-                        }
+//        if (showBottomSheet) {
+        BottomSheetScaffold(
+            scaffoldState = sheetState2,
+            sheetContent = {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(tracklist.size) { index ->
+                        TrackElement(
+                            navController = navHostController,
+                            track = tracklist[index]
+                        )
                     }
-                },
-                sheetPeekHeight = 250.dp
-            ) {}
+                }
+            },
+            sheetPeekHeight = 250.dp
+        ) {}
+        if (showMenuSheet) {
+            ModalBottomSheet(
+                modifier = Modifier.fillMaxWidth(),
+                sheetState = sheetState,
+                onDismissRequest = { showMenuSheet = false }
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    PlaylistElementMini(
+                        playlist = playlist,
+                        onClick = {},
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 8.dp)
+                            .height(61.dp)
+                            .wrapContentHeight(align = Alignment.CenterVertically)
+                            .clickable {
+
+                            },
+                        style = Typography.bodySmall,
+                        text = "Поделиться"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .height(61.dp)
+                            .padding(start = 16.dp)
+                            .wrapContentHeight(align = Alignment.CenterVertically)
+                            .clickable {
+
+                            },
+                        style = Typography.bodySmall,
+                        text = "Редактировать информацию"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .height(61.dp)
+                            .padding(start = 16.dp)
+                            .wrapContentHeight(align = Alignment.CenterVertically)
+                            .clickable {
+
+                            },
+                        style = Typography.bodySmall,
+                        text = "Удалить плейлист"
+                    )
+                }
+            }
         }
     }
 }
-
-
-//@ThemePreviews
-//@Composable
-//fun PlaylistDetailsScreenPreview() {
-//    PlaylistMakerTheme {
-//        PlaylistDetailsScreen()
-//    }
-//}
