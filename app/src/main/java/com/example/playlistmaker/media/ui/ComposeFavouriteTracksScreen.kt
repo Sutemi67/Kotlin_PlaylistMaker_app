@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +41,10 @@ fun FavouritesTracksScreen(
     navController: NavHostController
 ) {
     val tracks = viewModel.favouriteTracks.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.refreshFavourites()
+    }
 
     if (tracks.isEmpty()) {
         Box(

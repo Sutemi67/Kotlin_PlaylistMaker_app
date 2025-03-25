@@ -13,16 +13,19 @@ import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.Errors
+import com.example.playlistmaker.main.ui.SingleActivityViewModel
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,30 +68,26 @@ fun ComposableMediaScreen(
 
 
 @Composable
-fun PlaceholderError(error: Errors) {
-
-    lateinit var text: String
-    lateinit var image: Painter
-
-    when (error) {
-        Errors.NoFavourites -> {
-            text = "Ваши медиатека пуста"
-            image = painterResource(R.drawable.img_nothing_found_light)
-        }
-
-        Errors.NoPlaylists -> {
-            text = "Вы не создали ни одного плейлиста"
-            image = painterResource(R.drawable.img_nothing_found_light)
-        }
-
-        Errors.SearchNoConnection -> {
-            text = "Не т подключени к интернету"
-            image = painterResource(R.drawable.img_connection_problem)
-        }
-
-        Errors.SearchNothingFound -> {
-            text = "По вашему запросу ничего не найдено"
-            image = painterResource(R.drawable.img_nothing_found_light)
+fun PlaceholderError(
+    error: Errors,
+    activityViewModel: SingleActivityViewModel = koinViewModel()
+) {
+    LaunchedEffect(Unit) {
+        activityViewModel.getThemeValue()
+    }
+    val isDark = activityViewModel.viewStates().collectAsState().value
+    val (text, image) = when (error) {
+        Errors.NoFavourites -> "Ваши медиатека пуста" to painterResource(R.drawable.img_nothing_found_light)
+        Errors.NoPlaylists -> "Вы не создали ни одного плейлиста" to painterResource(R.drawable.img_nothing_found_light)
+        Errors.SearchNoConnection -> "Нет подключения к интернету" to painterResource(R.drawable.img_connection_problem)
+        Errors.SearchNothingFound -> "По вашему запросу ничего не найдено" to painterResource(R.drawable.img_nothing_found_light)
+        Errors.NoTracksInPlaylist -> {
+            val text = "В плейлисте отсутствуют треки"
+            val image = if (isDark)
+                painterResource(R.drawable.img_nothing_found_dark)
+            else
+                painterResource(R.drawable.img_nothing_found_light)
+            text to image
         }
     }
 

@@ -50,7 +50,7 @@ import com.example.playlistmaker.compose.ThemePreviews
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import com.example.playlistmaker.main.ui.ui.theme.likeFillColor
 import com.example.playlistmaker.main.ui.ui.theme.playlistInfo
-import com.example.playlistmaker.main.ui.ui.theme.yp_lightGray
+import com.example.playlistmaker.main.ui.ui.theme.yp_gray
 import com.example.playlistmaker.media.ui.PlaylistsViewModel
 import com.example.playlistmaker.media.ui.stateInterfaces.PlayerState
 import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
@@ -61,20 +61,20 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComposePlayerScreen(
-    viewModel: PlayerViewModel,
+    playerViewModel: PlayerViewModel,
     playlistsViewModel: PlaylistsViewModel = koinViewModel(),
-    playerViewModel: PlayerViewModel = koinViewModel(),
     screenSettings: NavRoutes,
     track: Track,
     navHostController: NavHostController
 ) {
     val state = rememberScrollState()
     val context = LocalContext.current
-    val serviceConnection = remember { MusicServiceConnection(viewModel) }
-    val playerState = viewModel.playerStateAsState.collectAsState().value
+    val serviceConnection = remember { MusicServiceConnection(playerViewModel) }
+    val playerState = playerViewModel.playerStateAsState.collectAsState().value
     val playlistState = playlistsViewModel.playlistState.collectAsState().value
     val addingTrackStatus = playerViewModel.addingStatus2.collectAsState().value
     var isBottomMenuVisible by remember { mutableStateOf(false) }
+    var isTrackFavourite by remember { mutableStateOf(track.isFavourite) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
@@ -138,23 +138,31 @@ fun ComposePlayerScreen(
                         },
                         painter = painterResource(R.drawable.add_playlist_button),
                         contentDescription = null,
-                        tint = yp_lightGray
+                        tint = yp_gray
                     )
                     Icon(
                         modifier = Modifier
                             .padding(horizontal = 10.dp, vertical = 5.dp)
-                            .clickable { viewModel.onPlayerButtonClicked() },
-                        painter = if (playerState is PlayerState.Playing) painterResource(R.drawable.pauseIcon)
-                        else painterResource(
-                            R.drawable.playIcon
-                        ),
+                            .clickable { playerViewModel.onPlayerButtonClicked() },
+                        painter = if (playerState is PlayerState.Playing) {
+                            painterResource(R.drawable.pauseIcon)
+                        } else {
+                            painterResource(R.drawable.playIcon)
+                        },
                         contentDescription = null,
                     )
                     Icon(
-                        painter = if (!track.isFavourite) painterResource(R.drawable.like_button)
-                        else painterResource(R.drawable.like_button_active),
+                        modifier = Modifier.clickable {
+                            playerViewModel.toggleFavourite(track)
+                            isTrackFavourite = !isTrackFavourite
+                        },
+                        painter = if (!isTrackFavourite) {
+                            painterResource(R.drawable.like_button)
+                        } else {
+                            painterResource(R.drawable.like_button_active)
+                        },
                         contentDescription = null,
-                        tint = if (track.isFavourite) likeFillColor else yp_lightGray
+                        tint = if (isTrackFavourite) likeFillColor else yp_gray
                     )
                 }
                 Text(
@@ -201,7 +209,7 @@ fun ComposePlayerScreen(
 
                     val list = when (playlistState) {
                         is PlaylistState.EmptyList -> emptyList<Playlist>()
-                        is PlaylistState.FullList -> (playlistState as PlaylistState.FullList).playlist
+                        is PlaylistState.FullList -> playlistState.playlist
                     }
                     if (list.isNotEmpty()) {
                         LazyColumn(
@@ -232,7 +240,6 @@ fun ComposePlayerScreen(
                                                 Toast.LENGTH_SHORT
                                             ).show()
                                         }
-
                                     }
                                 )
                             }
@@ -291,7 +298,7 @@ private fun TextRow(leftText: String, rightText: String) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = leftText, color = yp_lightGray, style = Typography.titleSmall
+            text = leftText, color = yp_gray, style = Typography.titleSmall
         )
         Text(
             text = rightText, style = Typography.titleSmall

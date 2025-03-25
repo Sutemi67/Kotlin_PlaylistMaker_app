@@ -15,9 +15,9 @@ enum class Errors {
     NoFavourites,
     NoPlaylists,
     SearchNoConnection,
-    SearchNothingFound
+    SearchNothingFound,
+    NoTracksInPlaylist
 }
-
 
 fun formatTime(millis: Int): String {
     val minutes = millis / 1000 / 60

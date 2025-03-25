@@ -1,6 +1,5 @@
 package com.example.playlistmaker.settings.ui
 
-import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,12 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.main.ui.SingleActivityViewModel
-import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -78,30 +75,28 @@ private fun TextIconRow(text: String, icon: Painter, onClick: () -> Unit) {
 @Composable
 private fun SwitcherRow(
     vm: SingleActivityViewModel,
+    settingsViewModel: FragmentSettingsViewModel = koinViewModel()
 ) {
-    val darkModeState = vm.viewStates().collectAsState()
+    val darkModeState = vm.viewStates().collectAsState().value
 
     Row(
         modifier = rowModifier
             .clickable(
-                onClick = { vm.toggleTheme() }
+                onClick = {
+                    vm.toggleTheme()
+                    settingsViewModel.onThemeCheckerClick()
+                }
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text("Темная тема", modifier = Modifier.padding(5.dp), style = Typography.bodySmall)
         Switch(
-            checked = darkModeState.value,
-            onCheckedChange = { vm.toggleTheme() }
+            checked = darkModeState,
+            onCheckedChange = {
+                vm.toggleTheme()
+                settingsViewModel.onThemeCheckerClick()
+            }
         )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun TextIconRowPreview() {
-    PlaylistMakerTheme {
-        SwitcherRow(vm = koinViewModel())
     }
 }

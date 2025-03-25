@@ -55,7 +55,7 @@ fun NavGraph(
                 val jsonTrack = URLDecoder.decode(encodedJson, "UTF-8")
                 val track = JsonConverter.jsonToTrack(jsonTrack)
                 ComposePlayerScreen(
-                    viewModel = playerViewModel,
+                    playerViewModel = playerViewModel,
                     screenSettings = NavRoutes.Player,
                     track = track,
                     navHostController = navController

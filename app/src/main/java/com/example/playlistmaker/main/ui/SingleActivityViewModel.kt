@@ -19,17 +19,7 @@ class SingleActivityViewModel(
         Log.i("theme", "Сменил тему во воюмодели на ${_viewStates.value}")
     }
 
-//    fun setThemeValue() {
-//        when (interactor.getTheme()) {
-//            true -> {
-//                setDefaultNightMode(MODE_NIGHT_YES)
-//            }
-//
-//            false -> {
-//                setDefaultNightMode(MODE_NIGHT_NO)
-//            }
-//        }
-//    }
-
+    fun getThemeValue() {
+        _viewStates.value = interactor.getTheme()
+    }
 }
-

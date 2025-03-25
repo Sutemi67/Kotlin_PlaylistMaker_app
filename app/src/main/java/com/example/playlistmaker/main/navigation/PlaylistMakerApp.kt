@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -34,7 +34,11 @@ fun PlaylistMakerApp() {
     val newPlaylistViewModel: NewPlaylistViewModel = koinViewModel()
 
     val navController = rememberNavController()
-    val darkModeState: Boolean by activityViewModel.viewStates().collectAsState()
+    val darkModeState = activityViewModel.viewStates().collectAsState().value
+
+    LaunchedEffect(Unit) {
+        activityViewModel.getThemeValue()
+    }
 
     PlaylistMakerTheme(
         darkTheme = darkModeState
@@ -84,9 +88,4 @@ fun PlaylistMakerScreen(
             newPlaylistViewModel = newPlaylistViewModel
         )
     }
-}
-
-@Preview
-@Composable
-fun Fdsf() {
 }

@@ -15,33 +15,35 @@ import androidx.compose.ui.platform.LocalContext
 
 
 private val darkScheme = darkColorScheme(
-    primary = yp_primary_light,
+    primary = yp_primary,
     onPrimary = Color(0xFFFFFFFF),
     background = yp_bg_dark,
     onBackground = Color(0xFFFFFFFF),
     surface = yp_surface_dark,
     onSurface = Color(0xFFFFFFFF),
     surfaceVariant = Color(0xFFAEAFB4),
-    onSurfaceVariant = Color(0xFFFFFFFF),
+    onSurfaceVariant = yp_bg_light,
     error = Color(0xFFF56B6C),
     primaryContainer = yp_primary_container_dark,
     secondaryContainer = Color(0xFFFFFFFF),
-    onPrimaryContainer = yp_onPrimary_container_dark
+    onPrimaryContainer = yp_onPrimary_container_dark,
+    surfaceContainerLow = yp_bg_dark, // Низкоуровневый контейнер (BottomSheet Modal)
 )
 
 private val lightScheme = lightColorScheme(
-    primary = yp_primary_light,
+    primary = yp_primary,
     onPrimary = Color(0xFFFFFFFF),
     background = yp_bg_light,
     onBackground = Color(0xFF000000),
     surface = yp_surface_light,
     onSurface = Color(0xFF000000),
     surfaceVariant = Color(0xFFAEAFB4),
-    onSurfaceVariant = Color(0xFFFFFFFF),
+    onSurfaceVariant = yp_bg_dark,
     error = Color(0xFFF56B6C),
     primaryContainer = yp_primary_container_light,
     secondaryContainer = Color(0xFF000000),
     onPrimaryContainer = yp_onPrimary_container_light,
+    surfaceContainerLow = yp_bg_light, // Низкоуровневый контейнер (BottomSheet Modal)
 )
 
 @Composable
