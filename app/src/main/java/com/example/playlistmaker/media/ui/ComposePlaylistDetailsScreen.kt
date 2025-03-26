@@ -1,6 +1,7 @@
 package com.example.playlistmaker.media.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +59,8 @@ import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -68,13 +72,7 @@ fun PlaylistDetailsScreen(
 ) {
     val playlistTracks = playlistDetailsViewModel.listState.collectAsState().value
     var playlist: Playlist by remember { mutableStateOf(incomingPlaylist) }
-
-    if (playlistTracks is TrackListState.Filled) {
-        playlist = playlist.copy(
-            tracks = playlistTracks.tracklist,
-            count = playlistTracks.tracklist.size
-        )
-    }
+    var totalDuration = 0
 
     var showMenuSheet by remember { mutableStateOf(false) }
     var isPlaylistDeleteDialogVisible by remember { mutableStateOf(false) }
@@ -85,6 +83,29 @@ fun PlaylistDetailsScreen(
     val sheetStateModal = rememberModalBottomSheetState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = playlistTracks) {
+        playlistDetailsViewModel.getPlaylistTracks(playlist)
+        when (playlistTracks) {
+            is TrackListState.Filled -> {
+                playlist = playlist.copy(
+                    tracks = playlistTracks.tracklist,
+                    count = playlistTracks.tracklist.size
+                )
+                totalDuration = playlistTracks.tracklist.sumOf { it.trackTime }
+                Log.i("compose", "$totalDuration секунд")
+            }
+
+            is TrackListState.Empty -> {
+                playlist = playlist.copy(
+                    tracks = playlistTracks.tracklist,
+                    count = playlistTracks.tracklist.size
+                )
+                totalDuration = playlistTracks.tracklist.sumOf { it.trackTime }
+                Log.i("compose", "$totalDuration секунд")
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -124,7 +145,17 @@ fun PlaylistDetailsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "200 minutes", style = Typography.titleMedium, color = yp_bg_dark
+                    text = SimpleDateFormat(
+                        "mm минут${
+                            when ((totalDuration / 1000 / 60) % 10) {
+                                1 -> "а"
+                                in 2..4 -> "ы"
+                                else -> ""
+                            }
+                        }",
+                        Locale.getDefault()
+                    ).format(totalDuration),
+                    style = Typography.titleMedium, color = yp_bg_dark
                 )
                 Icon(
                     modifier = Modifier.padding(horizontal = 9.dp),
@@ -133,7 +164,11 @@ fun PlaylistDetailsScreen(
                     tint = yp_bg_dark
                 )
                 Text(
-                    text = "${playlist.count} tracks",
+                    text = when (playlist.tracks.size % 10) {
+                        1 -> "${playlist.tracks.size} трек"
+                        in 2..4 -> "${playlist.tracks.size} трека"
+                        else -> "${playlist.tracks.size} треков"
+                    },
                     style = Typography.titleMedium,
                     color = yp_bg_dark
                 )
@@ -178,20 +213,16 @@ fun PlaylistDetailsScreen(
                     ) {
                         items(playlist.tracks.size) { index ->
                             val track = playlist.tracks[index]
-                            TrackElement(
-                                track = track,
-                                onClick = {
-                                    val jsonTrack = JsonConverter.trackToJson(track)
-                                    val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
-                                    navHostController.navigate(
-                                        route = "${NavRoutes.Player.route}/$encodedJson"
-                                    )
-                                },
-                                onLongClick = {
-                                    trackToDelete = track
-                                    isTrackDeleteDialogVisible = true
-                                }
-                            )
+                            TrackElement(track = track, onClick = {
+                                val jsonTrack = JsonConverter.trackToJson(track)
+                                val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
+                                navHostController.navigate(
+                                    route = "${NavRoutes.Player.route}/$encodedJson"
+                                )
+                            }, onLongClick = {
+                                trackToDelete = track
+                                isTrackDeleteDialogVisible = true
+                            })
                         }
                     }
                 } else {
