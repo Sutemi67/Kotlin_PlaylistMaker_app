@@ -1,6 +1,7 @@
 package com.example.playlistmaker.media.ui
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.Errors
@@ -59,8 +59,16 @@ fun FavouritesTracksScreen(
         ) {
             items(tracks.size) { index ->
                 TrackElement(
-                    navController = navController,
-                    track = tracks[index]
+//                    navController = navController,
+                    track = tracks[index],
+                    onLongClick = {},
+                    onClick = {
+                        val jsonTrack = JsonConverter.trackToJson(tracks[index])
+                        val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
+                        navController.navigate(
+                            route = "${NavRoutes.Player.route}/$encodedJson"
+                        )
+                    }
                 )
             }
         }
@@ -68,21 +76,30 @@ fun FavouritesTracksScreen(
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TrackElement(
-    navController: NavHostController,
-    track: Track
+//    navController: NavHostController,
+    track: Track,
+    onLongClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                val jsonTrack = JsonConverter.trackToJson(track)
-                val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
-                navController.navigate(
-                    route = "${NavRoutes.Player.route}/$encodedJson"
-                )
-            }
+            .combinedClickable(
+                onClick = {
+//                    val jsonTrack = JsonConverter.trackToJson(track)
+//                    val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
+//                    navController.navigate(
+//                        route = "${NavRoutes.Player.route}/$encodedJson"
+//                    )
+                    onClick()
+                },
+                onLongClick = {
+                    onLongClick()
+                }
+            )
             .height(60.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -142,7 +159,7 @@ fun TrackElement(
 private fun TrackElementPreview() {
     PlaylistMakerTheme {
         TrackElement(
-            navController = rememberNavController(),
+//            navController = rememberNavController(),
             Track(
                 trackId = 2,
                 previewUrl = null,
@@ -157,7 +174,9 @@ private fun TrackElementPreview() {
                 releaseDate = null,
                 isFavourite = false,
                 latestTimeAdded = 234234
-            )
+            ),
+            onLongClick = {},
+            onClick = {}
         )
     }
 }

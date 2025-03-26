@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 
 @Composable
-fun PlaylistEditingDialpg(
+fun PlaylistEditingDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
@@ -126,6 +126,45 @@ fun NoTracksToShareDialog(
                     )
                 }
             },
+        )
+    }
+}
+
+@Composable
+fun TrackRemovingConfirmationDialog(
+    isVisible: Boolean,
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit
+) {
+    if (isVisible) {
+        AlertDialog(
+            onDismissRequest = { onDismissRequest() },
+            title = {
+                Text(
+                    style = Typography.titleLarge,
+                    text = "Хотите удалить трек?"
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { onConfirmation() }
+                ) {
+                    Text(
+                        style = Typography.labelMedium,
+                        text = "Да"
+                    )
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { onDismissRequest() }
+                ) {
+                    Text(
+                        style = Typography.labelMedium,
+                        text = "Нет"
+                    )
+                }
+            }
         )
     }
 }

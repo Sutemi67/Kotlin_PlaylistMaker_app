@@ -57,7 +57,7 @@ import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.AppTopBar
-import com.example.playlistmaker.compose.PlaylistEditingDialpg
+import com.example.playlistmaker.compose.PlaylistEditingDialog
 import com.example.playlistmaker.compose.fDp2Px
 import kotlinx.coroutines.launch
 import java.io.File
@@ -84,7 +84,7 @@ fun NewPlaylistPage(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    PlaylistEditingDialpg(
+    PlaylistEditingDialog(
         visible = shouldShowDialog,
         onConfirmation = { navHostController.popBackStack() },
         onDismissRequest = { shouldShowDialog = false }

@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,13 +42,19 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.Errors
+import com.example.playlistmaker.compose.JsonConverter
+import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.compose.NoTracksToShareDialog
 import com.example.playlistmaker.compose.PlaylistDeleteConfirmationDialog
+import com.example.playlistmaker.compose.TrackRemovingConfirmationDialog
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import com.example.playlistmaker.main.ui.ui.theme.yp_bg_dark
 import com.example.playlistmaker.main.ui.ui.theme.yp_light_gray
 import com.example.playlistmaker.player.ui.PlaylistElementMini
+import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -55,24 +62,23 @@ import org.koin.compose.viewmodel.koinViewModel
 fun PlaylistDetailsScreen(
     playlist: Playlist,
     navHostController: NavHostController,
-    playlistDetailsViewModel: PlaylistDetailsViewModel = koinViewModel()
+    playlistDetailsViewModel: PlaylistDetailsViewModel = koinViewModel(),
 ) {
     var showMenuSheet by remember { mutableStateOf(false) }
-    var isDialogVisible by remember { mutableStateOf(false) }
+    var isPlaylistDeleteDialogVisible by remember { mutableStateOf(false) }
+    var isTrackDeleteDialogVisible by remember { mutableStateOf(false) }
     var isNoTracksDialogVisible by remember { mutableStateOf(false) }
+    var trackToDelete: Track? = null
     val sheetStateScaffold = rememberBottomSheetScaffoldState()
     val sheetStateModal = rememberModalBottomSheetState()
-//    val tracklist = playlistDetailsViewModel.playlist.collectAsState().value
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             AppTopBar(
-                isIconNeeded = true,
-                text = "",
-                onClick = { navHostController.popBackStack() })
-        }
-    ) {
+                isIconNeeded = true, text = "", onClick = { navHostController.popBackStack() })
+        }) {
         Column(
             Modifier
                 .background(color = yp_light_gray)
@@ -106,9 +112,7 @@ fun PlaylistDetailsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "200 minutes",
-                    style = Typography.titleMedium,
-                    color = yp_bg_dark
+                    text = "200 minutes", style = Typography.titleMedium, color = yp_bg_dark
                 )
                 Icon(
                     modifier = Modifier.padding(horizontal = 9.dp),
@@ -134,12 +138,10 @@ fun PlaylistDetailsScreen(
                                     isNoTracksDialogVisible = true
                                 } else {
                                     playlistDetailsViewModel.onShareClick(
-                                        context = context,
-                                        playlist = playlist
+                                        context = context, playlist = playlist
                                     )
                                 }
-                            }
-                        ),
+                            }),
                     painter = painterResource(R.drawable.ic_share),
                     contentDescription = null,
                     tint = yp_bg_dark
@@ -149,8 +151,7 @@ fun PlaylistDetailsScreen(
                     modifier = Modifier
                         .size(18.dp)
                         .clickable(
-                            onClick = { showMenuSheet = true }
-                        ),
+                            onClick = { showMenuSheet = true }),
                     painter = painterResource(R.drawable.ic_more),
                     contentDescription = null,
                     tint = yp_bg_dark
@@ -158,36 +159,58 @@ fun PlaylistDetailsScreen(
             }
         }
         BottomSheetScaffold(
-            scaffoldState = sheetStateScaffold,
-            sheetContent = {
+            scaffoldState = sheetStateScaffold, sheetContent = {
                 if (playlist.tracks.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(playlist.tracks.size) { index ->
+                            val track = playlist.tracks[index]
                             TrackElement(
-                                navController = navHostController,
-                                track = playlist.tracks[index]
+                                track = track,
+                                onClick = {
+                                    val jsonTrack = JsonConverter.trackToJson(track)
+                                    val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
+                                    navHostController.navigate(
+                                        route = "${NavRoutes.Player.route}/$encodedJson"
+                                    )
+                                },
+                                onLongClick = {
+                                    trackToDelete = track
+                                    isTrackDeleteDialogVisible = true
+                                }
                             )
                         }
                     }
                 } else {
                     Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
                     ) {
                         PlaceholderError(Errors.NoTracksInPlaylist)
                     }
                 }
-            },
-            sheetPeekHeight = 250.dp
+            }, sheetPeekHeight = 250.dp
         ) {}
+        TrackRemovingConfirmationDialog(
+            isVisible = isTrackDeleteDialogVisible,
+            onDismissRequest = { isTrackDeleteDialogVisible = false },
+            onConfirmation = {
+                scope.launch {
+                    trackToDelete?.let {
+                        playlistDetailsViewModel.removeTrackFromPlaylist(
+                            track = it, playlist = playlist
+                        )
+                    }
+                    trackToDelete = null
+                }
+                isTrackDeleteDialogVisible = false
+            },
+        )
         if (showMenuSheet) {
             ModalBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 sheetState = sheetStateModal,
-                onDismissRequest = { showMenuSheet = false }
-            ) {
+                onDismissRequest = { showMenuSheet = false }) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                 ) {
@@ -205,21 +228,17 @@ fun PlaylistDetailsScreen(
                                     isNoTracksDialogVisible = true
                                 } else {
                                     playlistDetailsViewModel.onShareClick(
-                                        context = context,
-                                        playlist = playlist
+                                        context = context, playlist = playlist
                                     )
                                 }
-                            },
-                        style = Typography.bodySmall,
-                        text = "Поделиться"
+                            }, style = Typography.bodySmall, text = "Поделиться"
                     )
                     Text(
                         modifier = Modifier
                             .height(61.dp)
                             .padding(start = 16.dp)
                             .wrapContentHeight(align = Alignment.CenterVertically)
-                            .clickable {
-                            },
+                            .clickable {},
                         style = Typography.bodySmall,
                         text = "Редактировать информацию"
                     )
@@ -229,27 +248,24 @@ fun PlaylistDetailsScreen(
                             .padding(start = 16.dp)
                             .wrapContentHeight(align = Alignment.CenterVertically)
                             .clickable {
-                                isDialogVisible = true
-                            },
-                        style = Typography.bodySmall,
-                        text = "Удалить плейлист"
+                                isPlaylistDeleteDialogVisible = true
+                            }, style = Typography.bodySmall, text = "Удалить плейлист"
                     )
                 }
             }
         }
+
         PlaylistDeleteConfirmationDialog(
-            visible = isDialogVisible,
-            onDismissRequest = { isDialogVisible = false },
+            visible = isPlaylistDeleteDialogVisible,
+            onDismissRequest = { isPlaylistDeleteDialogVisible = false },
             onConfirmation = {
                 playlistDetailsViewModel.deletePlaylist(playlist)
                 showMenuSheet = false
-                isDialogVisible = false
+                isPlaylistDeleteDialogVisible = false
                 navHostController.popBackStack()
-            }
-        )
+            })
         NoTracksToShareDialog(
             visible = isNoTracksDialogVisible,
-            onDismissRequest = { isNoTracksDialogVisible = false }
-        )
+            onDismissRequest = { isNoTracksDialogVisible = false })
     }
 }

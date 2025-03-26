@@ -1,7 +1,5 @@
 package com.example.playlistmaker.media.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.media.ui.stateInterfaces.PlaylistState
@@ -13,8 +11,8 @@ class PlaylistsViewModel(
     private val interactor: DatabaseInteractorInterface
 ) : ViewModel() {
 
-    private val _listState = MutableLiveData<PlaylistState>(PlaylistState.EmptyList)
-    val listState: LiveData<PlaylistState> = _listState
+//    private val _listState = MutableLiveData<PlaylistState>(PlaylistState.EmptyList)
+//    val listState: LiveData<PlaylistState> = _listState
 
     private val _playlistState = MutableStateFlow<PlaylistState>(PlaylistState.EmptyList)
     val playlistState: StateFlow<PlaylistState> = _playlistState.asStateFlow()

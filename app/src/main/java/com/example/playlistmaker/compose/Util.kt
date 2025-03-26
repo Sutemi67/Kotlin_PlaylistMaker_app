@@ -25,6 +25,14 @@ fun formatTime(millis: Int): String {
     return String.format("%02d:%02d", minutes, seconds)
 }
 
+
+//fun text() = when (model.count % 10) {
+//    0 -> "Нет треков"
+//    1 -> "${model.count} трек"
+//    in 2..4 -> "${model.count} трека"
+//    else -> "${model.count} треков"
+//}
+
 object JsonConverter {
     private val gson = Gson()
     fun trackToJson(track: Track): String {

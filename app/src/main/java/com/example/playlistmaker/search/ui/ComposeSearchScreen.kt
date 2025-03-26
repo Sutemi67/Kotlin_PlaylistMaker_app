@@ -37,6 +37,8 @@ import androidx.navigation.NavHostController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.Errors
+import com.example.playlistmaker.compose.JsonConverter
+import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import com.example.playlistmaker.main.ui.ui.theme.yp_gray
 import com.example.playlistmaker.main.ui.ui.theme.yp_light_gray
@@ -47,11 +49,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import java.net.URLEncoder
 
 @Composable
 fun ComposeSearchScreen(
-    viewModel: SearchViewModel = koinViewModel(),
-    navController: NavHostController
+    viewModel: SearchViewModel = koinViewModel(), navController: NavHostController
 ) {
     var inputText by remember { mutableStateOf("") }
     var trackList: List<Track> by remember { mutableStateOf(emptyList()) }
@@ -68,8 +70,7 @@ fun ComposeSearchScreen(
     }
 
     Scaffold(
-        topBar = { AppTopBar(false, "Поиск") {} }
-    ) { paddingValues ->
+        topBar = { AppTopBar(false, "Поиск") {} }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -129,20 +130,19 @@ fun ComposeSearchScreen(
                     }
                 },
                 trailingIcon = {
-                    if (inputText.isNotEmpty())
-                        Icon(
-                            modifier = Modifier.clickable {
-                                inputText = ""
-                                searchJob?.cancel()
-                                loading = false
-                                isTextVisible = true
-                                historySearchKey++
-                                isTracklistVisible = true
-                            },
-                            painter = painterResource(R.drawable.ic_clear),
-                            contentDescription = null,
-                            tint = yp_gray
-                        )
+                    if (inputText.isNotEmpty()) Icon(
+                        modifier = Modifier.clickable {
+                            inputText = ""
+                            searchJob?.cancel()
+                            loading = false
+                            isTextVisible = true
+                            historySearchKey++
+                            isTracklistVisible = true
+                        },
+                        painter = painterResource(R.drawable.ic_clear),
+                        contentDescription = null,
+                        tint = yp_gray
+                    )
                 },
                 shape = RoundedCornerShape(15.dp)
             )
@@ -173,8 +173,15 @@ fun ComposeSearchScreen(
                         LazyColumn {
                             items(trackList.size) { index ->
                                 TrackElement(
-                                    navController = navController,
-                                    track = trackList[index]
+                                    track = trackList[index],
+                                    onClick = {
+                                        val jsonTrack = JsonConverter.trackToJson(trackList[index])
+                                        val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
+                                        navController.navigate(
+                                            route = "${NavRoutes.Player.route}/$encodedJson"
+                                        )
+                                    },
+                                    onLongClick = {}
                                 )
                             }
                         }
