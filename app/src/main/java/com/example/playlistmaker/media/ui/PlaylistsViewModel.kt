@@ -11,9 +11,6 @@ class PlaylistsViewModel(
     private val interactor: DatabaseInteractorInterface
 ) : ViewModel() {
 
-//    private val _listState = MutableLiveData<PlaylistState>(PlaylistState.EmptyList)
-//    val listState: LiveData<PlaylistState> = _listState
-
     private val _playlistState = MutableStateFlow<PlaylistState>(PlaylistState.EmptyList)
     val playlistState: StateFlow<PlaylistState> = _playlistState.asStateFlow()
 

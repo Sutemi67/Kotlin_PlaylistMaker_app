@@ -58,11 +58,14 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.AppTopBar
+import com.example.playlistmaker.compose.JsonConverter
+import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.compose.PlaylistEditingDialog
 import com.example.playlistmaker.compose.fDp2Px
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URLEncoder
 
 @Composable
 fun NewPlaylistPage(
@@ -130,18 +133,19 @@ fun NewPlaylistPage(
                         pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     }
                     .drawBehind {
-                        drawRoundRect(
-                            color = Color.Gray,
-                            style = Stroke(
-                                width = 1.dp.toPx(),
-                                cap = StrokeCap.Butt,
-                                pathEffect = PathEffect.dashPathEffect(
-                                    intervals = floatArrayOf(40.dp.toPx(), 40.dp.toPx()),
-                                    phase = 0f
-                                )
-                            ),
-                            cornerRadius = CornerRadius(100f)
-                        )
+                        if (savedImageUri == null)
+                            drawRoundRect(
+                                color = Color.Gray,
+                                style = Stroke(
+                                    width = 1.dp.toPx(),
+                                    cap = StrokeCap.Butt,
+                                    pathEffect = PathEffect.dashPathEffect(
+                                        intervals = floatArrayOf(40.dp.toPx(), 40.dp.toPx()),
+                                        phase = 0f
+                                    )
+                                ),
+                                cornerRadius = CornerRadius(100f)
+                            )
                     },
                 contentAlignment = Alignment.Center,
             ) {
@@ -219,14 +223,24 @@ fun NewPlaylistPage(
                             }
                         )
                     } else {
-                        newPlaylistViewModel.updatePlaylist(
-                            playlist = playlistForEdit.copy(
-                                name = nameText,
-                                description = descriptionText,
-                                coverUrl = savedImageUri.toString()
-                            )
+                        val playlist = playlistForEdit.copy(
+                            name = nameText,
+                            description = descriptionText,
+                            coverUrl = savedImageUri.toString()
                         )
-                        navHostController.popBackStack()
+                        newPlaylistViewModel.updatePlaylist(playlist = playlist)
+
+                        val jsonPlaylist = JsonConverter.playlistToJson(playlist)
+                        val encodedJson = URLEncoder.encode(jsonPlaylist, "UTF-8")
+                        navHostController.navigate(route = "${NavRoutes.PlaylistDetails.route}/$encodedJson") {
+                            popUpTo(
+                                navHostController.currentBackStackEntry?.destination?.route
+                                    ?: return@navigate
+                            ) {
+                                inclusive = true // Удаляем и сам текущий экран
+                            }
+                            launchSingleTop = true
+                        }
                     }
                 },
             )

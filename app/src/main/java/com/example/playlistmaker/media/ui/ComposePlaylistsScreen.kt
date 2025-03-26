@@ -99,7 +99,9 @@ fun PlaylistElement(
         modifier = Modifier.clickable {
             val jsonPlaylist = JsonConverter.playlistToJson(playlist)
             val encodedJson = URLEncoder.encode(jsonPlaylist, "UTF-8")
-            navHostController.navigate(route = "${NavRoutes.PlaylistDetails.route}/$encodedJson")
+            navHostController.navigate(route = "${NavRoutes.PlaylistDetails.route}/$encodedJson") {
+
+            }
         },
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.Start
