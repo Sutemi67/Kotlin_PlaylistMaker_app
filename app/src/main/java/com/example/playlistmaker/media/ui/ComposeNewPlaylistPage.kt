@@ -55,6 +55,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.playlistmaker.R
+import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.PlaylistEditingDialog
@@ -66,13 +67,22 @@ import java.io.FileOutputStream
 @Composable
 fun NewPlaylistPage(
     newPlaylistViewModel: NewPlaylistViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    playlistForEdit: Playlist?
 ) {
+
     var nameText by remember { mutableStateOf("") }
     var descriptionText by remember { mutableStateOf("") }
     var shouldShowDialog by remember { mutableStateOf(false) }
     var savedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
+
+    if (playlistForEdit != null) {
+        nameText = playlistForEdit.name
+        descriptionText = playlistForEdit.description ?: ""
+        savedImageUri = playlistForEdit.coverUrl?.toUri()
+    }
+
     val pickMediaLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -189,24 +199,35 @@ fun NewPlaylistPage(
                 text = "Создать",
                 isEnabled = nameText.isNotEmpty(),
                 onClick = {
-                    newPlaylistViewModel.addPlaylist(
-                        name = nameText,
-                        description = descriptionText,
-                        image = savedImageUri.toString(),
-                        onResult = {
-                            if (it) {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Альбом успешно добавлен")
+                    if (playlistForEdit == null) {
+                        newPlaylistViewModel.addPlaylist(
+                            name = nameText,
+                            description = descriptionText,
+                            image = savedImageUri.toString(),
+                            onResult = {
+                                if (it) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("Альбом успешно добавлен")
+                                    }
+                                    navHostController.popBackStack()
+                                } else {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("Такие название альбома уже используется")
+                                    }
+                                    Log.e("compose", "Не добавилось")
                                 }
-                                navHostController.popBackStack()
-                            } else {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Такие название альбома уже используется")
-                                }
-                                Log.e("compose", "Не добавилось")
                             }
-                        }
-                    )
+                        )
+                    } else {
+                        newPlaylistViewModel.updatePlaylist(
+                            playlist = playlistForEdit.copy(
+                                name = nameText,
+                                description = descriptionText,
+                                coverUrl = savedImageUri.toString()
+                            )
+                        )
+                        navHostController.popBackStack()
+                    }
                 },
             )
         }

@@ -55,7 +55,12 @@ fun PlaylistsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AppBaseButton(
-            onClick = { navHostController.navigate(route = NavRoutes.NewPlaylistPage.route) },
+            onClick = {
+                val nullPlaylist = ""
+                navHostController.navigate(
+                    route = "${NavRoutes.NewPlaylistPage.route}/$nullPlaylist",
+                )
+            },
             text = "Создать плейлист",
             modifier = Modifier.padding(top = 24.dp),
             isEnabled = true

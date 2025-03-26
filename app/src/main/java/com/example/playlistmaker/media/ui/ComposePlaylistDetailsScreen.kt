@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -72,7 +73,7 @@ fun PlaylistDetailsScreen(
 ) {
     val playlistTracks = playlistDetailsViewModel.listState.collectAsState().value
     var playlist: Playlist by remember { mutableStateOf(incomingPlaylist) }
-    var totalDuration = 0
+    var totalDuration by remember { mutableIntStateOf(0) }
 
     var showMenuSheet by remember { mutableStateOf(false) }
     var isPlaylistDeleteDialogVisible by remember { mutableStateOf(false) }
@@ -232,7 +233,8 @@ fun PlaylistDetailsScreen(
                         PlaceholderError(Errors.NoTracksInPlaylist)
                     }
                 }
-            }, sheetPeekHeight = 250.dp
+            },
+            sheetPeekHeight = 250.dp
         ) {}
         TrackRemovingConfirmationDialog(
             isVisible = isTrackDeleteDialogVisible,
@@ -282,7 +284,11 @@ fun PlaylistDetailsScreen(
                             .height(61.dp)
                             .padding(start = 16.dp)
                             .wrapContentHeight(align = Alignment.CenterVertically)
-                            .clickable {},
+                            .clickable {
+                                val jsonPlaylist = JsonConverter.playlistToJson(playlist)
+                                val encodedJson = URLEncoder.encode(jsonPlaylist, "UTF-8")
+                                navHostController.navigate(route = "${NavRoutes.NewPlaylistPage.route}/$encodedJson")
+                            },
                         style = Typography.bodySmall,
                         text = "Редактировать информацию"
                     )
@@ -307,9 +313,11 @@ fun PlaylistDetailsScreen(
                 showMenuSheet = false
                 isPlaylistDeleteDialogVisible = false
                 navHostController.popBackStack()
-            })
+            }
+        )
         NoTracksToShareDialog(
             visible = isNoTracksDialogVisible,
-            onDismissRequest = { isNoTracksDialogVisible = false })
+            onDismissRequest = { isNoTracksDialogVisible = false }
+        )
     }
 }
