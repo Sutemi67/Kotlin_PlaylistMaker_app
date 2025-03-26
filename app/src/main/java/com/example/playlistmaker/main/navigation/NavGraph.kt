@@ -76,7 +76,7 @@ fun NavGraph(
                 val playlist = JsonConverter.jsonToPlaylist(jsonPlaylist)
                 PlaylistDetailsScreen(
                     navHostController = navController,
-                    playlist = playlist
+                    incomingPlaylist = playlist
                 )
             }
         }

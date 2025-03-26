@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.app.database.domain.model.Playlist
+import com.example.playlistmaker.media.ui.stateInterfaces.TrackListState
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +22,21 @@ class PlaylistDetailsViewModel(
     private val interactor: DatabaseInteractorInterface
 ) : ViewModel() {
 
+    private val _listState = MutableStateFlow<TrackListState>(TrackListState.Empty(emptyList()))
+    val listState: StateFlow<TrackListState> = _listState.asStateFlow()
+
     private val _playlist = MutableStateFlow<List<Track>>(emptyList())
     val playlist: StateFlow<List<Track>> = _playlist.asStateFlow()
+
+    suspend fun getPlaylistTracks(playlist: Playlist) {
+        interactor.getPlaylistTracks(playlist).collect {
+            if (it.isEmpty()) {
+                _listState.value = TrackListState.Empty(emptyList())
+            } else {
+                _listState.value = TrackListState.Filled(it)
+            }
+        }
+    }
 
     suspend fun removeTrackFromPlaylist(track: Track, playlist: Playlist) {
         interactor.removeTrackFromPlaylist(track, playlist)

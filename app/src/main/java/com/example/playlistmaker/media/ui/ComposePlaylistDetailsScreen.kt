@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,7 @@ import com.example.playlistmaker.compose.TrackRemovingConfirmationDialog
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import com.example.playlistmaker.main.ui.ui.theme.yp_bg_dark
 import com.example.playlistmaker.main.ui.ui.theme.yp_light_gray
+import com.example.playlistmaker.media.ui.stateInterfaces.TrackListState
 import com.example.playlistmaker.player.ui.PlaylistElementMini
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.launch
@@ -60,10 +62,20 @@ import java.net.URLEncoder
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PlaylistDetailsScreen(
-    playlist: Playlist,
+    incomingPlaylist: Playlist,
     navHostController: NavHostController,
     playlistDetailsViewModel: PlaylistDetailsViewModel = koinViewModel(),
 ) {
+    val playlistTracks = playlistDetailsViewModel.listState.collectAsState().value
+    var playlist: Playlist by remember { mutableStateOf(incomingPlaylist) }
+
+    if (playlistTracks is TrackListState.Filled) {
+        playlist = playlist.copy(
+            tracks = playlistTracks.tracklist,
+            count = playlistTracks.tracklist.size
+        )
+    }
+
     var showMenuSheet by remember { mutableStateOf(false) }
     var isPlaylistDeleteDialogVisible by remember { mutableStateOf(false) }
     var isTrackDeleteDialogVisible by remember { mutableStateOf(false) }
@@ -200,6 +212,7 @@ fun PlaylistDetailsScreen(
                         playlistDetailsViewModel.removeTrackFromPlaylist(
                             track = it, playlist = playlist
                         )
+                        playlistDetailsViewModel.getPlaylistTracks(playlist)
                     }
                     trackToDelete = null
                 }
