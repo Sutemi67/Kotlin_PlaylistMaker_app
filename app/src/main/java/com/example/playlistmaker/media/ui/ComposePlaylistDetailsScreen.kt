@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,8 +38,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -78,7 +82,6 @@ fun PlaylistDetailsScreen(
     val playlistTracks = playlistDetailsViewModel.listState.collectAsState().value
     var playlist: Playlist by remember { mutableStateOf(incomingPlaylist) }
     var totalDuration by remember { mutableIntStateOf(0) }
-
     var showMenuSheet by remember { mutableStateOf(false) }
     var isPlaylistDeleteDialogVisible by remember { mutableStateOf(false) }
     var isTrackDeleteDialogVisible by remember { mutableStateOf(false) }
@@ -89,6 +92,12 @@ fun PlaylistDetailsScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+
+    //bottomSheetPeekHeight calculation
+    val configuration = LocalConfiguration.current
+    val screenHeightDp = configuration.screenHeightDp.dp
+    val density = LocalDensity.current
+    var rowBottomDp by remember { mutableStateOf(0.dp) }
 
     LaunchedEffect(key1 = playlistTracks) {
         playlistDetailsViewModel.getPlaylistTracks(playlist)
@@ -122,9 +131,7 @@ fun PlaylistDetailsScreen(
             Modifier
                 .background(color = yp_light_gray)
                 .fillMaxSize()
-                .padding(bottom = 50.dp)
-                .scrollable(state = scrollState, orientation = Orientation.Vertical)
-            //TODO допилить прокрутку экрана и разворот
+                .verticalScroll(state = scrollState)
         ) {
             AsyncImage(
                 model = playlist.coverUrl,
@@ -188,7 +195,13 @@ fun PlaylistDetailsScreen(
                 )
             }
             Row(
-                modifier = Modifier.padding(all = 16.dp),
+                modifier = Modifier
+                    .padding(all = 16.dp)
+                    .onGloballyPositioned { coordinates ->
+                        val position: Offset = coordinates.positionInRoot()
+                        rowBottomDp =
+                            with(density) { (position.y + coordinates.size.height).toDp() }
+                    }
             ) {
                 Icon(
                     modifier = Modifier
@@ -220,7 +233,8 @@ fun PlaylistDetailsScreen(
             }
         }
         BottomSheetScaffold(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             scaffoldState = sheetStateScaffold,
             sheetContent = {
                 if (playlist.tracks.isNotEmpty()) {
@@ -249,7 +263,7 @@ fun PlaylistDetailsScreen(
                     }
                 }
             },
-            sheetPeekHeight = 250.dp
+            sheetPeekHeight = if ((screenHeightDp - rowBottomDp) > 50.dp) screenHeightDp - rowBottomDp else 50.dp
         ) {}
         TrackRemovingConfirmationDialog(
             isVisible = isTrackDeleteDialogVisible,
