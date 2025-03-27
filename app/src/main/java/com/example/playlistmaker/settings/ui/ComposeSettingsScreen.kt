@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,10 @@ fun ComposeSettingsScreen(
     Scaffold(
         topBar = { AppTopBar(true, "Настройки") { onBackClick() } }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+        ) {
             SwitcherRow(vm = singleActivityViewModel)
             TextIconRow(
                 text = "Поделиться приложением",
@@ -55,15 +59,15 @@ fun ComposeSettingsScreen(
     }
 }
 
-private val rowModifier = Modifier
-    .padding(start = 16.dp, end = 12.dp)
+private val commonRowsModifier = Modifier
     .fillMaxWidth()
+    .padding(start = 16.dp, end = 16.dp)
     .height(61.dp)
 
 @Composable
 private fun TextIconRow(text: String, icon: Painter, onClick: () -> Unit) {
     Row(
-        modifier = rowModifier.clickable(true, onClick = onClick),
+        modifier = commonRowsModifier.clickable(true, onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -80,7 +84,7 @@ private fun SwitcherRow(
     val darkModeState = vm.viewStates().collectAsState().value
 
     Row(
-        modifier = rowModifier
+        modifier = commonRowsModifier
             .clickable(
                 onClick = {
                     vm.toggleTheme()
@@ -92,6 +96,7 @@ private fun SwitcherRow(
     ) {
         Text("Темная тема", modifier = Modifier.padding(5.dp), style = Typography.bodySmall)
         Switch(
+            modifier = Modifier.scale(0.8f),
             checked = darkModeState,
             onCheckedChange = {
                 vm.toggleTheme()

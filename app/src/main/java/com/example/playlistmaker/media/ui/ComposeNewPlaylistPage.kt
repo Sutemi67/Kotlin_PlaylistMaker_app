@@ -13,6 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,11 +22,14 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -79,6 +84,7 @@ fun NewPlaylistPage(
     var shouldShowDialog by remember { mutableStateOf(false) }
     var savedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     if (playlistForEdit != null) {
         nameText = playlistForEdit.name
@@ -121,6 +127,7 @@ fun NewPlaylistPage(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .scrollable(state = scrollState, orientation = Orientation.Vertical)
                 .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -170,11 +177,23 @@ fun NewPlaylistPage(
                 }
             }
             OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 32.dp),
                 value = nameText,
+                label = { Text("Название*") },
+                shape = RoundedCornerShape(7.dp),
                 onValueChange = { nameText = it }
             )
             OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp),
                 value = descriptionText,
+                label = { Text("Описание") },
+                shape = RoundedCornerShape(7.dp),
                 onValueChange = { descriptionText = it }
             )
             Spacer(Modifier.weight(1f))
@@ -237,7 +256,7 @@ fun NewPlaylistPage(
                                 navHostController.currentBackStackEntry?.destination?.route
                                     ?: return@navigate
                             ) {
-                                inclusive = true // Удаляем и сам текущий экран
+                                inclusive = true
                             }
                             launchSingleTop = true
                         }

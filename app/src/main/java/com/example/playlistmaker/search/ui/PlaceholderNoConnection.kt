@@ -21,7 +21,7 @@ fun PlaceholderNoConnection() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(R.drawable.img_connection_problem),
+            painter = painterResource(R.drawable.img_connection_problem_light),
             contentDescription = "nothing found"
         )
         Text("Проблемы со связью")

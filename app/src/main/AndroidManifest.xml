@@ -23,7 +23,8 @@
             android:name=".main.ui.MainComposeActivity"
             android:exported="true"
             android:label="@string/title_activity_main_compose"
-            android:theme="@style/Base.Theme.PlaylistMaker">
+            android:theme="@style/Base.Theme.PlaylistMaker"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

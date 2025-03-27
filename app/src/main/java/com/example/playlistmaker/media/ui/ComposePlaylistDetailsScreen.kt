@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
@@ -84,6 +88,7 @@ fun PlaylistDetailsScreen(
     val sheetStateModal = rememberModalBottomSheetState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(key1 = playlistTracks) {
         playlistDetailsViewModel.getPlaylistTracks(playlist)
@@ -117,6 +122,9 @@ fun PlaylistDetailsScreen(
             Modifier
                 .background(color = yp_light_gray)
                 .fillMaxSize()
+                .padding(bottom = 50.dp)
+                .scrollable(state = scrollState, orientation = Orientation.Vertical)
+            //TODO допилить прокрутку экрана и разворот
         ) {
             AsyncImage(
                 model = playlist.coverUrl,
@@ -130,8 +138,11 @@ fun PlaylistDetailsScreen(
                 error = painterResource(R.drawable.img_placeholder)
             )
             Text(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
                 text = playlist.name,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 style = Typography.titleLarge,
                 color = yp_bg_dark
             )
@@ -139,6 +150,8 @@ fun PlaylistDetailsScreen(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 text = playlist.description ?: "",
                 style = Typography.titleMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 color = yp_bg_dark
             )
             Row(
@@ -207,7 +220,9 @@ fun PlaylistDetailsScreen(
             }
         }
         BottomSheetScaffold(
-            scaffoldState = sheetStateScaffold, sheetContent = {
+            modifier = Modifier.fillMaxWidth(),
+            scaffoldState = sheetStateScaffold,
+            sheetContent = {
                 if (playlist.tracks.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()

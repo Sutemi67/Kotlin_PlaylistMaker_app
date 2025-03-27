@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     debugImplementation(libs.ui.tooling)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.systemuicontroller)
 
     //Coil
     implementation(libs.coil.compose)

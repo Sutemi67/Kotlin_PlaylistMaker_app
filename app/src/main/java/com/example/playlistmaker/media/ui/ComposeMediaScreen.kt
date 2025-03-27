@@ -59,7 +59,7 @@ fun ComposableMediaScreen(
             ) { page ->
                 when (page) {
                     0 -> FavouritesTracksScreen(navController = navController)
-                    1 -> PlaylistsScreen(navController)
+                    1 -> PlaylistsScreen(navHostController = navController)
                 }
             }
         }
@@ -76,19 +76,38 @@ fun PlaceholderError(
         activityViewModel.getThemeValue()
     }
     val isDark = activityViewModel.viewStates().collectAsState().value
+
     val (text, image) = when (error) {
-        Errors.NoFavourites -> "Ваши медиатека пуста" to painterResource(R.drawable.img_nothing_found_light)
-        Errors.NoPlaylists -> "Вы не создали ни одного плейлиста" to painterResource(R.drawable.img_nothing_found_light)
-        Errors.SearchNoConnection -> "Нет подключения к интернету" to painterResource(R.drawable.img_connection_problem)
-        Errors.SearchNothingFound -> "По вашему запросу ничего не найдено" to painterResource(R.drawable.img_nothing_found_light)
-        Errors.NoTracksInPlaylist -> {
-            val text = "В плейлисте отсутствуют треки"
-            val image = if (isDark)
-                painterResource(R.drawable.img_nothing_found_dark)
-            else
-                painterResource(R.drawable.img_nothing_found_light)
-            text to image
-        }
+        Errors.NoFavourites -> "Ваши медиатека пуста" to
+                if (isDark)
+                    painterResource(R.drawable.img_nothing_found_dark)
+                else
+                    painterResource(R.drawable.img_nothing_found_light)
+
+        Errors.NoPlaylists -> "Вы не создали ни одного плейлиста" to
+                if (isDark)
+                    painterResource(R.drawable.img_nothing_found_dark)
+                else
+                    painterResource(R.drawable.img_nothing_found_light)
+
+        Errors.SearchNoConnection -> "Нет подключения к интернету" to
+                if (isDark)
+                    painterResource(R.drawable.img_connection_problem_dark)
+                else
+                    painterResource(R.drawable.img_connection_problem_light)
+
+        Errors.SearchNothingFound -> "По вашему запросу ничего не найдено" to
+                if (isDark)
+                    painterResource(R.drawable.img_nothing_found_dark)
+                else
+                    painterResource(R.drawable.img_nothing_found_light)
+
+        Errors.NoTracksInPlaylist -> "В плейлисте отсутствуют треки" to
+                if (isDark)
+                    painterResource(R.drawable.img_nothing_found_dark)
+                else
+                    painterResource(R.drawable.img_nothing_found_light)
+
     }
 
     Column(

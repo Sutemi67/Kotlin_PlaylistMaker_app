@@ -17,9 +17,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,20 +28,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.playlistmaker.R
+import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.Errors
 import com.example.playlistmaker.compose.JsonConverter
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.main.ui.ui.theme.Typography
+import com.example.playlistmaker.main.ui.ui.theme.customEditTextFieldsColors
 import com.example.playlistmaker.main.ui.ui.theme.yp_gray
-import com.example.playlistmaker.main.ui.ui.theme.yp_light_gray
 import com.example.playlistmaker.media.ui.PlaceholderError
 import com.example.playlistmaker.media.ui.TrackElement
 import com.example.playlistmaker.search.domain.models.Track
@@ -57,12 +57,12 @@ fun ComposeSearchScreen(
 ) {
     var inputText by remember { mutableStateOf("") }
     var trackList: List<Track> by remember { mutableStateOf(emptyList()) }
+    var historySearchKey by remember { mutableIntStateOf(0) }
+
+    var uiState = viewModel.uiState.collectAsState().value
+
     val scope = rememberCoroutineScope()
     var searchJob: Job? = null
-    var isTracklistVisible by remember { mutableStateOf(true) }
-    var isTextVisible by remember { mutableStateOf(true) }
-    var loading by remember { mutableStateOf(false) }
-    var historySearchKey by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(key1 = historySearchKey) {
         trackList = viewModel.getHistory()
@@ -80,14 +80,8 @@ fun ComposeSearchScreen(
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                colors = TextFieldDefaults.colors().copy(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = yp_light_gray,
-                    focusedContainerColor = yp_light_gray,
-                ),
+                    .padding(horizontal = 16.dp),
+                colors = customEditTextFieldsColors(),
                 textStyle = Typography.bodySmall,
                 value = inputText,
                 onValueChange = {
@@ -95,19 +89,11 @@ fun ComposeSearchScreen(
                     if (it.isEmpty()) {
                         searchJob?.cancel()
                         trackList = viewModel.getHistory()
-                        isTextVisible = true
-                        isTracklistVisible = true
-
                     } else {
                         searchJob?.cancel()
                         searchJob = scope.launch {
                             delay(3000L)
-                            loading = true
-                            isTracklistVisible = false
                             trackList = viewModel.searchAction(it)
-                            loading = false
-                            isTracklistVisible = true
-                            isTextVisible = false
                         }
                     }
                 },
@@ -134,10 +120,7 @@ fun ComposeSearchScreen(
                         modifier = Modifier.clickable {
                             inputText = ""
                             searchJob?.cancel()
-                            loading = false
-                            isTextVisible = true
                             historySearchKey++
-                            isTracklistVisible = true
                         },
                         painter = painterResource(R.drawable.ic_clear),
                         contentDescription = null,
@@ -146,50 +129,102 @@ fun ComposeSearchScreen(
                 },
                 shape = RoundedCornerShape(15.dp)
             )
-            if (loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .padding(top = 140.dp)
-                        .width(44.dp)
-                )
-            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(vertical = 15.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                if (trackList.isNotEmpty() && !loading) {
-                    Column {
-                        if (isTextVisible) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                text = "Вы искали",
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                        LazyColumn {
-                            items(trackList.size) { index ->
-                                TrackElement(
-                                    track = trackList[index],
-                                    onClick = {
-                                        val jsonTrack = JsonConverter.trackToJson(trackList[index])
-                                        val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
-                                        navController.navigate(
-                                            route = "${NavRoutes.Player.route}/$encodedJson"
-                                        )
-                                    },
-                                    onLongClick = {}
+                UiState(
+                    state = uiState,
+                    trackList = trackList,
+                    viewModel = viewModel,
+                    navController = navController,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun UiState(
+    state: UiState,
+    trackList: List<Track>,
+    viewModel: SearchViewModel,
+    navController: NavHostController
+) {
+    when (state) {
+        UiState.EmptyHistory -> {}
+        UiState.FullHistory -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    text = "Вы искали",
+                    textAlign = TextAlign.Center
+                )
+                LazyColumn {
+                    items(trackList.size) { index ->
+                        TrackElement(
+                            track = trackList[index],
+                            onClick = {
+                                viewModel.addTrackInHistory(trackList[index])
+                                val jsonTrack = JsonConverter.trackToJson(trackList[index])
+                                val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
+                                navController.navigate(
+                                    route = "${NavRoutes.Player.route}/$encodedJson"
                                 )
-                            }
-                        }
+                            },
+                            onLongClick = {}
+                        )
                     }
-                } else if (!loading) {
-                    PlaceholderError(Errors.SearchNothingFound)
+                }
+                AppBaseButton(
+                    text = "Очистить историю",
+                    onClick = { viewModel.clearHistory() },
+                    modifier = Modifier.padding(10.dp),
+                    isEnabled = true
+                )
+            }
+        }
+
+        UiState.FullSearch -> {
+            LazyColumn {
+                items(trackList.size) { index ->
+                    TrackElement(
+                        track = trackList[index],
+                        onClick = {
+                            viewModel.addTrackInHistory(trackList[index])
+                            val jsonTrack = JsonConverter.trackToJson(trackList[index])
+                            val encodedJson = URLEncoder.encode(jsonTrack, "UTF-8")
+                            navController.navigate(
+                                route = "${NavRoutes.Player.route}/$encodedJson"
+                            )
+                        },
+                        onLongClick = {}
+                    )
                 }
             }
+        }
+
+        UiState.Loading -> {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(top = 140.dp)
+                    .width(44.dp)
+            )
+        }
+
+        UiState.NoConnection -> {
+            PlaceholderError(Errors.SearchNoConnection)
+        }
+
+        UiState.NothingFound -> {
+            PlaceholderError(Errors.SearchNothingFound)
         }
     }
 }
