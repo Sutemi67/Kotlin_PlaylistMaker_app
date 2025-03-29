@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -53,6 +54,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -184,7 +186,8 @@ fun NewPlaylistPage(
                 value = nameText,
                 label = { Text("Название*") },
                 shape = RoundedCornerShape(7.dp),
-                onValueChange = { nameText = it }
+                onValueChange = { nameText = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -194,7 +197,8 @@ fun NewPlaylistPage(
                 value = descriptionText,
                 label = { Text("Описание") },
                 shape = RoundedCornerShape(7.dp),
-                onValueChange = { descriptionText = it }
+                onValueChange = { descriptionText = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
             )
             Spacer(Modifier.weight(1f))
             AppBaseButton(

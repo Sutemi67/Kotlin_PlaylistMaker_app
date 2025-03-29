@@ -17,14 +17,13 @@ class PlayerViewModel(
     private val interactor: PlayerInteractorInterface,
     private val searchRepository: SearchRepositoryInterface
 ) : ViewModel() {
-
     private var playerControls: PlayerControlsInterface? = null
 
     private val _playerStateAsState = MutableStateFlow<PlayerState>(PlayerState.Loading())
     val playerStateAsState: StateFlow<PlayerState> = _playerStateAsState.asStateFlow()
 
-    private val _addingStatus2 = MutableStateFlow<Boolean>(false)
-    val addingStatus2: StateFlow<Boolean> = _addingStatus2.asStateFlow()
+    private val _addingStatus = MutableStateFlow<Boolean>(false)
+    val addingStatus: StateFlow<Boolean> = _addingStatus.asStateFlow()
 
     fun setAudioPlayerControl(playerControl: PlayerControlsInterface) {
         playerControls = playerControl
@@ -64,8 +63,9 @@ class PlayerViewModel(
 
     fun addInPlaylist(track: Track, playlist: Playlist) {
         viewModelScope.launch {
-            _addingStatus2.value = interactor.addTrackInPlaylist(track, playlist)
-            Log.i("compose", "статус добавления трека ${addingStatus2.value}")
+            _addingStatus.value = interactor.addTrackInPlaylist(track, playlist)
+            Log.i("DATABASE", "статус добавления трека ${_addingStatus.value}")
+            Log.i("DATABASE", "статус добавления трека ${addingStatus.value}")
         }
     }
 }

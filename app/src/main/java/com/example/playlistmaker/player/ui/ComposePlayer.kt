@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -47,6 +49,7 @@ import com.example.playlistmaker.compose.AppBaseButton
 import com.example.playlistmaker.compose.AppTopBar
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.compose.ThemePreviews
+import com.example.playlistmaker.compose.formatTrackTime
 import com.example.playlistmaker.main.ui.ui.theme.Typography
 import com.example.playlistmaker.main.ui.ui.theme.likeFillColor
 import com.example.playlistmaker.main.ui.ui.theme.playlistInfo
@@ -70,9 +73,9 @@ fun ComposePlayerScreen(
     val state = rememberScrollState()
     val context = LocalContext.current
     val serviceConnection = remember { MusicServiceConnection(playerViewModel) }
-    val playerState = playerViewModel.playerStateAsState.collectAsState().value
+    val playerState = playerViewModel.playerStateAsState.collectAsState()
     val playlistState = playlistsViewModel.playlistState.collectAsState().value
-    val addingTrackStatus = playerViewModel.addingStatus2.collectAsState().value
+    val addingTrackStatus = playerViewModel.addingStatus.collectAsState().value
     var isBottomMenuVisible by remember { mutableStateOf(false) }
     var isTrackFavourite by remember { mutableStateOf(track.isFavourite) }
     val sheetState = rememberModalBottomSheetState()
@@ -140,22 +143,33 @@ fun ComposePlayerScreen(
                         contentDescription = null,
                         tint = yp_gray
                     )
+                    if (playerState.value is PlayerState.Loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp, vertical = 5.dp)
+                                .size(100.dp)
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp, vertical = 5.dp)
+                                .clickable {
+                                    playerViewModel.onPlayerButtonClicked()
+                                },
+                            painter = if (playerState.value is PlayerState.Playing) {
+                                painterResource(R.drawable.pauseIcon)
+                            } else {
+                                painterResource(R.drawable.playIcon)
+                            },
+                            contentDescription = null,
+                        )
+                    }
                     Icon(
                         modifier = Modifier
-                            .padding(horizontal = 10.dp, vertical = 5.dp)
-                            .clickable { playerViewModel.onPlayerButtonClicked() },
-                        painter = if (playerState is PlayerState.Playing) {
-                            painterResource(R.drawable.pauseIcon)
-                        } else {
-                            painterResource(R.drawable.playIcon)
-                        },
-                        contentDescription = null,
-                    )
-                    Icon(
-                        modifier = Modifier.clickable {
-                            playerViewModel.toggleFavourite(track)
-                            isTrackFavourite = !isTrackFavourite
-                        },
+                            .clickable {
+                                playerViewModel.toggleFavourite(track)
+                                isTrackFavourite = !isTrackFavourite
+                            },
                         painter = if (!isTrackFavourite) {
                             painterResource(R.drawable.like_button)
                         } else {
@@ -169,7 +183,7 @@ fun ComposePlayerScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp),
-                    text = track.trackTime.toString(),
+                    text = playerState.value.progress,
                     textAlign = TextAlign.Center
                 )
             }
@@ -178,7 +192,7 @@ fun ComposePlayerScreen(
                     .fillMaxSize()
                     .padding(horizontal = 16.dp, vertical = 30.dp)
             ) {
-                TextRow("Длительность", track.trackTime.toString())
+                TextRow("Длительность", formatTrackTime(track.trackTime))
                 TextRow("Альбом", track.collectionName)
                 TextRow("Год", track.releaseDate ?: "-")
                 TextRow("Жанр", track.primaryGenreName)
@@ -192,6 +206,7 @@ fun ComposePlayerScreen(
                 onDismissRequest = { isBottomMenuVisible = false }
             ) {
                 Column(
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
@@ -202,7 +217,12 @@ fun ComposePlayerScreen(
                     )
                     AppBaseButton(
                         text = "Новый плейлист",
-                        onClick = { navHostController.navigate(route = NavRoutes.NewPlaylistPage.route) },
+                        onClick = {
+                            val nullPlaylist = ""
+                            navHostController.navigate(
+                                route = "${NavRoutes.NewPlaylistPage.route}/$nullPlaylist",
+                            )
+                        },
                         modifier = Modifier.padding(bottom = 24.dp),
                         isEnabled = true
                     )
@@ -229,14 +249,14 @@ fun ComposePlayerScreen(
                                         if (addingTrackStatus) {
                                             Toast.makeText(
                                                 context,
-                                                "success",
+                                                "Трек успешно добавлен в плейлист",
                                                 Toast.LENGTH_SHORT
                                             )
                                                 .show()
                                         } else {
                                             Toast.makeText(
                                                 context,
-                                                "not success",
+                                                "Трек уже был добавлен в этот плейлист",
                                                 Toast.LENGTH_SHORT
                                             ).show()
                                         }

@@ -134,12 +134,10 @@ class PlayerService() : Service(), PlayerControlsInterface {
         Log.d(LOG_TAG, "Media Player started")
         mediaPlayer?.start()
         startTimer()
-//        startForeground()
     }
 
     override fun pausePlayer() {
         Log.d(LOG_TAG, "Media Player paused")
-
         mediaPlayer?.pause()
         timerJob?.cancel()
         _playerState.value = PlayerState.Paused(getCurrentPlayerPosition())

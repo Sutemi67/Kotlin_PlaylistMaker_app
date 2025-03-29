@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.compose.AppBaseButton
@@ -59,10 +59,10 @@ fun ComposeSearchScreen(
     var trackList: List<Track> by remember { mutableStateOf(emptyList()) }
     var historySearchKey by remember { mutableIntStateOf(0) }
 
-    var uiState = viewModel.uiState.collectAsState().value
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
-    var searchJob: Job? = null
+    var searchJob: Job? by remember { mutableStateOf(null) }
 
     LaunchedEffect(key1 = historySearchKey) {
         trackList = viewModel.getHistory()

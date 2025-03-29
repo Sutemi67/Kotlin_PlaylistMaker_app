@@ -28,7 +28,7 @@ import com.example.playlistmaker.compose.Errors
 import com.example.playlistmaker.compose.JsonConverter
 import com.example.playlistmaker.compose.NavRoutes
 import com.example.playlistmaker.compose.ThemePreviews
-import com.example.playlistmaker.compose.formatTime
+import com.example.playlistmaker.compose.formatTrackTime
 import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
 import com.example.playlistmaker.search.domain.models.Track
 import org.koin.compose.viewmodel.koinViewModel
@@ -140,7 +140,7 @@ fun TrackElement(
                 //todo пофиксить разметку нижней строки со временем трека
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = formatTime(track.trackTime)
+                    text = formatTrackTime(track.trackTime)
                 )
             }
         }
