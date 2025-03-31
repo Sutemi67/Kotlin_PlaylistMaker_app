@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -75,11 +76,21 @@ fun ComposePlayerScreen(
     val serviceConnection = remember { MusicServiceConnection(playerViewModel) }
     val playerState = playerViewModel.playerStateAsState.collectAsState()
     val playlistState = playlistsViewModel.playlistState.collectAsState().value
-    val addingTrackStatus = playerViewModel.addingStatus.collectAsState().value
     var isBottomMenuVisible by remember { mutableStateOf(false) }
     var isTrackFavourite by remember { mutableStateOf(track.isFavourite) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        playerViewModel.addingEvent.collect { success ->
+            val message = if (success) {
+                "Трек успешно добавлен"
+            } else {
+                "Трек уже был ранее добавлен в этот плейлист"
+            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     DisposableEffect(Unit) {
         val intent = Intent(context, PlayerService::class.java).apply {
@@ -246,20 +257,20 @@ fun ComposePlayerScreen(
                                             playlist = list[index]
                                         )
                                         isBottomMenuVisible = false
-                                        if (addingTrackStatus) {
-                                            Toast.makeText(
-                                                context,
-                                                "Трек успешно добавлен в плейлист",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                                .show()
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                "Трек уже был добавлен в этот плейлист",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
+//                                        if (addingTrackStatus) {
+//                                            Toast.makeText(
+//                                                context,
+//                                                "Трек успешно добавлен в плейлист",
+//                                                Toast.LENGTH_SHORT
+//                                            )
+//                                                .show()
+//                                        } else {
+//                                            Toast.makeText(
+//                                                context,
+//                                                "Трек уже был добавлен в этот плейлист",
+//                                                Toast.LENGTH_SHORT
+//                                            ).show()
+//                                        }
                                     }
                                 )
                             }
