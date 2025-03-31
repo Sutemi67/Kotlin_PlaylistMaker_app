@@ -257,20 +257,6 @@ fun ComposePlayerScreen(
                                             playlist = list[index]
                                         )
                                         isBottomMenuVisible = false
-//                                        if (addingTrackStatus) {
-//                                            Toast.makeText(
-//                                                context,
-//                                                "Трек успешно добавлен в плейлист",
-//                                                Toast.LENGTH_SHORT
-//                                            )
-//                                                .show()
-//                                        } else {
-//                                            Toast.makeText(
-//                                                context,
-//                                                "Трек уже был добавлен в этот плейлист",
-//                                                Toast.LENGTH_SHORT
-//                                            ).show()
-//                                        }
                                     }
                                 )
                             }
