@@ -4,16 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.app.database.domain.DatabaseInteractorInterface
 import com.example.playlistmaker.app.database.domain.model.Playlist
 import com.example.playlistmaker.media.ui.stateInterfaces.TrackListState
 import com.example.playlistmaker.search.domain.models.Track
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -22,8 +22,11 @@ class PlaylistDetailsViewModel(
     private val interactor: DatabaseInteractorInterface
 ) : ViewModel() {
 
-    private val _listState = MutableLiveData<TrackListState>(TrackListState.Empty(emptyList()))
-    val listState: LiveData<TrackListState> = _listState
+    private val _listState = MutableStateFlow<TrackListState>(TrackListState.Empty(emptyList()))
+    val listState: StateFlow<TrackListState> = _listState.asStateFlow()
+
+    private val _playlist = MutableStateFlow<List<Track>>(emptyList())
+    val playlist: StateFlow<List<Track>> = _playlist.asStateFlow()
 
     suspend fun getPlaylistTracks(playlist: Playlist) {
         interactor.getPlaylistTracks(playlist).collect {
@@ -77,14 +80,4 @@ class PlaylistDetailsViewModel(
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         ContextCompat.startActivity(context, intent, null)
     }
-
-    fun showNoTracksDialog(context: Context) {
-        MaterialAlertDialogBuilder(context)
-            .setTitle("В плейлисте отсутствуют треки")
-            .setPositiveButton("Ok") { dialog, witch ->
-                //
-            }
-            .show()
-    }
-
 }

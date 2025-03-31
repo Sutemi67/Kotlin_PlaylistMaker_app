@@ -1,24 +1,25 @@
 package com.example.playlistmaker.main.ui
 
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.main.domain.MainInteractorInterface
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class SingleActivityViewModel(
     private val interactor: MainInteractorInterface
 ) : ViewModel() {
 
-    fun setThemeValue() {
-        when (interactor.getTheme()) {
-            true -> {
-                setDefaultNightMode(MODE_NIGHT_YES)
-            }
+    private val _viewStates: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    fun viewStates(): StateFlow<Boolean> = _viewStates.asStateFlow()
 
-            false -> {
-                setDefaultNightMode(MODE_NIGHT_NO)
-            }
-        }
+    fun toggleTheme() {
+        _viewStates.value = !_viewStates.value
+        Log.i("theme", "Сменил тему во воюмодели на ${_viewStates.value}")
+    }
+
+    fun getThemeValue() {
+        _viewStates.value = interactor.getTheme()
     }
 }

@@ -1,32 +1,32 @@
 package com.example.playlistmaker.search.ui
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.app.SEARCH_UI_STATE_FILLED
-import com.example.playlistmaker.app.SEARCH_UI_STATE_NOCONNECTION
-import com.example.playlistmaker.app.SEARCH_UI_STATE_NOTHINGFOUND
 import com.example.playlistmaker.search.domain.SearchInteractorInterface
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class SearchViewModel(
     private val interactor: SearchInteractorInterface,
 ) : ViewModel() {
-    private var _uiState: MutableLiveData<Int> = MutableLiveData(SEARCH_UI_STATE_FILLED)
-    val uiState: LiveData<Int> = _uiState
-    private var _isHistoryEmpty = MutableLiveData(true)
-    val isHistoryEmpty: LiveData<Boolean> = _isHistoryEmpty
+    private var _uiState = MutableStateFlow<UiState>(UiState.FullSearch)
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     fun getHistory(): List<Track> {
         val result = interactor.getHistory()
-        _isHistoryEmpty.postValue(result.isEmpty())
+        _uiState.value = if (result.isEmpty()) {
+            UiState.EmptyHistory
+        } else {
+            UiState.FullHistory
+        }
         return result
     }
 
     fun clearHistory() {
         interactor.clearHistory()
-        _isHistoryEmpty.postValue(true)
+        _uiState.value = UiState.EmptyHistory
     }
 
     fun addTrackInHistory(track: Track) {
@@ -35,26 +35,33 @@ class SearchViewModel(
 
     suspend fun searchAction(expression: String): List<Track> {
         var tl: List<Track> = emptyList()
+        _uiState.value = UiState.Loading
         interactor
             .searchAction(expression)
             .collect {
                 if (it.trackList.isEmpty()) {
                     if (it.responseCode == 400) {
                         Log.e("ee", "400, no connection")
-                        setUIState(SEARCH_UI_STATE_NOCONNECTION)
+                        _uiState.value = UiState.NoConnection
                         return@collect
                     }
                     Log.e("ee", "${it.responseCode}, nothing found")
-                    setUIState(SEARCH_UI_STATE_NOTHINGFOUND)
+                    _uiState.value = UiState.NothingFound
                 } else {
                     tl = it.trackList
-                    setUIState(SEARCH_UI_STATE_FILLED)
+                    _uiState.value = UiState.FullSearch
                     Log.e("ee", "${it.responseCode}, full list: $tl")
                 }
             }
         return tl
     }
+}
 
-    private fun setUIState(state: Int) = _uiState.postValue(state)
-
+sealed interface UiState {
+    object FullSearch : UiState
+    object FullHistory : UiState
+    object NothingFound : UiState
+    object NoConnection : UiState
+    object Loading : UiState
+    object EmptyHistory : UiState
 }

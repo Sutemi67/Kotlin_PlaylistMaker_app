@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.media.domain.MediaInteractorInterface
@@ -15,10 +16,15 @@ class FavouritesViewModel(
     private val _favouriteTracks = MutableStateFlow<List<Track>>(emptyList())
     val favouriteTracks: StateFlow<List<Track>> = _favouriteTracks
 
+    init {
+        refreshFavourites()
+    }
+
     fun refreshFavourites() {
         viewModelScope.launch {
             interactor.getFavouritesList().collect { _favouriteTracks.value = it }
         }
+        Log.i("compose1", "refreshing favourites, ${favouriteTracks.value}")
     }
 
 }

@@ -31,7 +31,6 @@ data class Track(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Track) return false
-
         return trackId == other.trackId
     }
 
